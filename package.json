@@ -1,0 +1,30 @@
+{
+  "name": "tff-ras",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SU-CS308-22FA/Team18-TFF-RAS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SU-CS308-22FA/Team18-TFF-RAS/issues"
+  },
+  "homepage": "https://github.com/SU-CS308-22FA/Team18-TFF-RAS#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.0",
+    "validator": "^13.7.0"
+  }
+}
