@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.a678896c.css",
-    "main.js": "/static/js/main.f11553e0.js",
-    "static/media/not-found.svg": "/static/media/not-found.5eb3e64476624b8a49d7d75cc64a0d40.svg",
-    "static/media/main.svg": "/static/media/main.f1624efcba3ac7e36d1e54d5606200bb.svg",
-    "static/media/logo.svg": "/static/media/logo.8909db2ecbc4e002e7fd09e0aaae7296.svg",
+    "main.css": "/static/css/main.ce9516c0.css",
+    "main.js": "/static/js/main.c254e9bb.js",
+    "static/media/tffLogo.png": "/static/media/tffLogo.30357abfff30f0998400.png",
+    "static/media/not-found.svg": "/static/media/not-found.5cbf8af137fc62087832342c8129ab4b.svg",
+    "static/media/main.svg": "/static/media/main.99cdc9a0a4c5fbb553142f5d1e19f5ff.svg",
     "index.html": "/index.html",
-    "main.a678896c.css.map": "/static/css/main.a678896c.css.map",
-    "main.f11553e0.js.map": "/static/js/main.f11553e0.js.map"
+    "main.ce9516c0.css.map": "/static/css/main.ce9516c0.css.map",
+    "main.c254e9bb.js.map": "/static/js/main.c254e9bb.js.map"
   },
   "entrypoints": [
-    "static/css/main.a678896c.css",
-    "static/js/main.f11553e0.js"
+    "static/css/main.ce9516c0.css",
+    "static/js/main.c254e9bb.js"
   ]
 }
