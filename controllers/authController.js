@@ -74,4 +74,12 @@ const updateUser = async (req, res) => {
   });
 };
 
-export { register, login, updateUser };
+const deleteUser = async (req, res) => {
+  const user = await User.findOne({ _id: req.user.userId });
+
+  await user.remove();
+
+  res.status(StatusCodes.OK).json({ msg: "Success! Account removed" });
+};
+
+export { register, login, updateUser, deleteUser };

@@ -4,7 +4,7 @@ import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 
 const Profile = () => {
-  const { user, showAlert, displayAlert, updateUser, isLoading } =
+  const { user, showAlert, displayAlert, updateUser, isLoading, deleteUser } =
     useAppContext();
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
@@ -57,6 +57,13 @@ const Profile = () => {
           />
           <button className="btn btn-block" type="submit" disabled={isLoading}>
             {isLoading ? "Please Wait..." : "save changes"}
+          </button>
+          <button
+            type="button"
+            className="btn delete-btn"
+            onClick={() => deleteUser(user)}
+          >
+            Delete Account
           </button>
         </div>
       </form>
