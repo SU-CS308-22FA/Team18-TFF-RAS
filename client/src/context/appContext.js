@@ -12,6 +12,9 @@ import {
   LOGIN_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -35,6 +38,7 @@ const AppContext = React.createContext();
 // eslint-disable-next-line react/prop-types
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  // axios.defaults.headers["Authorization"] = `Bearer ${state.token}`;
 
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
@@ -108,6 +112,61 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
 
+  const authFetch = axios.create({
+    baseURL: "/api/v1",
+    headers: {
+      Authorization: `Bearer ${state.token}`,
+    },
+  });
+
+  // request interceptor
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  // response interceptor
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        logoutUser();
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN });
+    try {
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+
+      // no token
+      const { user, location } = data;
+
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, location, token },
+      });
+
+      addUserToLocalStorage({ user, location, token: initialState.token });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -117,6 +176,7 @@ const AppProvider = ({ children }) => {
         loginUser,
         toggleSidebar,
         logoutUser,
+        updateUser,
       }}
     >
       {children}
