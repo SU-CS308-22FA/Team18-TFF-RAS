@@ -15,6 +15,9 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  DELETE_USER_BEGIN,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -23,6 +26,7 @@ const userLocation = localStorage.getItem("location");
 
 const initialState = {
   isLoading: false,
+  isDeleting: false,
   showAlert: false,
   alertText: "",
   alertType: "",
@@ -167,6 +171,26 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const deleteUser = async (currentUser) => {
+    dispatch({ type: DELETE_USER_BEGIN });
+    try {
+      await authFetch.delete("/auth/deleteUser", currentUser);
+      // logoutUser();
+      dispatch({
+        type: DELETE_USER_SUCCESS,
+      });
+      setTimeout(logoutUser, 3000);
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: DELETE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -177,6 +201,7 @@ const AppProvider = ({ children }) => {
         toggleSidebar,
         logoutUser,
         updateUser,
+        deleteUser,
       }}
     >
       {children}

@@ -12,6 +12,9 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  DELETE_USER_BEGIN,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -115,6 +118,27 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === DELETE_USER_BEGIN) {
+    return { ...state, isDeleting: true };
+  }
+  if (action.type === DELETE_USER_SUCCESS) {
+    return {
+      ...state,
+      isDeleting: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Account Deleted!",
+    };
+  }
+  if (action.type === DELETE_USER_ERROR) {
+    return {
+      ...state,
+      isDeleting: false,
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
