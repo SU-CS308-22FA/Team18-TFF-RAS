@@ -124,15 +124,12 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === DELETE_USER_BEGIN) {
-    return { ...state, isLoading: true };
+    return { ...state, isDeleting: true };
   }
   if (action.type === DELETE_USER_SUCCESS) {
     return {
-      ...initialState,
-      user: null,
-      token: null,
-      userLocation: "",
-      jobLocation: "",
+      ...state,
+      isDeleting: false,
       showAlert: true,
       alertType: "success",
       alertText: "Account Deleted!",
@@ -141,7 +138,7 @@ const reducer = (state, action) => {
   if (action.type === DELETE_USER_ERROR) {
     return {
       ...state,
-      isLoading: false,
+      isDeleting: false,
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,

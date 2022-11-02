@@ -26,6 +26,7 @@ const userLocation = localStorage.getItem("location");
 
 const initialState = {
   isLoading: false,
+  isDeleting: false,
   showAlert: false,
   alertText: "",
   alertType: "",
@@ -178,6 +179,7 @@ const AppProvider = ({ children }) => {
       dispatch({
         type: DELETE_USER_SUCCESS,
       });
+      setTimeout(logoutUser, 3000);
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({

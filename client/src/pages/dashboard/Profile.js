@@ -4,8 +4,15 @@ import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 
 const Profile = () => {
-  const { user, showAlert, displayAlert, updateUser, isLoading, deleteUser } =
-    useAppContext();
+  const {
+    user,
+    showAlert,
+    displayAlert,
+    updateUser,
+    isLoading,
+    deleteUser,
+    isDeleting,
+  } = useAppContext();
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [lastName, setLastName] = useState(user?.lastName);
@@ -60,10 +67,11 @@ const Profile = () => {
           </button>
           <button
             type="button"
+            disabled={isDeleting}
             className="btn delete-btn"
             onClick={() => deleteUser(user)}
           >
-            Delete Account
+            {isDeleting ? "Please Wait..." : "delete account"}
           </button>
         </div>
       </form>
