@@ -11,6 +11,9 @@
     border-bottom-left-radius: 16px;
     box-shadow: rgba(34, 34, 38, 0.08) 0px 1px 4px;
     padding: 20px 10px;
+
+    display: inline-block;
+    margin-right: 15px;
   }
   .react-calendar--doubleView {
     width: 700px;
@@ -128,3 +131,25 @@
     background-color: #e6e6e6;
   }
   
+  .matches-container {
+    width: calc(100% - 350px - 15px);
+    /* width: 350px; */
+    /* max-width: 100%; */
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    box-shadow: rgba(34, 34, 38, 0.08) 0px 1px 4px;
+    padding: 0;
+    overflow: hidden;
+
+    display: inline-block;
+    background-color: var(--primary-700);
+  }
+
+  .matches-page-container {
+    display: flex;
+    flex: auto;
+    flex-wrap: wrap;
+  }
