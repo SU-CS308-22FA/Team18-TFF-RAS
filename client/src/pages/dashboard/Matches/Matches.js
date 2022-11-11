@@ -3,35 +3,42 @@ import Calendar from "react-calendar";
 import MatchItem from "../../../components/MatchItem/MatchItem";
 import { getMatches } from "../../../utils/api";
 import "./Matches.css";
+import moment from "moment";
 
 const Matches = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [matches, setMatches] = useState([]);
 
   const onDateSelect = (newDate) => {
-    console.log(newDate);
+    console.log(moment(newDate).format("YYYY-MM-DD"));
     setCurrentDate(newDate);
   };
 
   useEffect(() => {
-    getMatches();
-  }, []);
+    getMatches(moment(currentDate).format("YYYY-MM-DD")).then((data) =>
+      setMatches(data)
+    );
+  }, [currentDate]);
 
   return (
     <div>
       <h1>Matches Page</h1>
       <Calendar onChange={onDateSelect} value={currentDate} />
-      <MatchItem
-        link="/"
-        homeTeam="Fenerbahce"
-        awayTeam="Galatasaray"
-        homeTeamImg="https://media.api-sports.io/football/teams/1002.png"
-        awayTeamImg="https://media.api-sports.io/football/teams/3577.png"
-        isUpcoming={false}
-        matchTime="23:00"
-        matchScore="1-2"
-        isOver={false}
-        currentTime={73}
-      />
+      {matches.map((match, idx) => (
+        <MatchItem
+          key={idx}
+          link="/"
+          homeTeam={match.teams.home.name}
+          awayTeam={match.teams.away.name}
+          homeTeamImg={match.teams.home.logo}
+          awayTeamImg={match.teams.away.logo}
+          isUpcoming={match.fixture.status.short == "NS"}
+          matchTime={new Date(match.fixture.date).toTimeString().slice(0, 5)}
+          matchScore={match.goals.home + "-" + match.goals.away}
+          isOver={match.fixture.status.short == "FT"}
+          currentTime={73}
+        />
+      ))}
     </div>
   );
 };
