@@ -1,5 +1,5 @@
 import Home from "./Home";
-import Matches from "./Matches";
+import Matches from "./Matches/Matches";
 import Referees from "./Referees";
 import Profile from "./Profile";
 import SharedLayout from "./SharedLayout";
