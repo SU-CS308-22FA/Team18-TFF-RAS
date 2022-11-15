@@ -5,10 +5,9 @@ import React, { useState } from "react";
 // React
 // value, onChange
 
-const GetObjection = () => {
+const Objection = () => {
   const [objection, setObjection] = useState({
-    isGetting: true,
-    teamName: "",
+    showError: false,
     referee: "",
     objectionText: ""
   });
@@ -16,30 +15,26 @@ const GetObjection = () => {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setObjection({ ...objection, [name]: value });
+    const newObjection = { ...objection, [name]: value };
+
+    if (newObjection.referee &&
+        newObjection.objectionText) {
+           newObjection.showError = false;
+        }
+    setObjection(newObjection);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (objection.teamName && objection.referee && objection.objectionText) {
-      setObjection({ teamName: "", referee: "", objectionText: "" });
+    if (objection.referee && objection.objectionText) {
+      setObjection({ referee: "", objectionText: "", showError:false });
     } else {
-      setObjection({ ...objection, isGetting: false });
+      setObjection({ ...objection, showError: true });
     }
   };
   return (
     <>
       <article className="form">
         <form>
-          <div className="form-control">
-            <label htmlFor="teamName">Team name: </label>
-            <input
-              type="text"
-              id="teamName"
-              name="teamName"
-              value={objection.teamName}
-              onChange={handleChange}
-            />
-          </div>
           <div className="form-control">
             <label htmlFor="email">Referee name: </label>
             <input
@@ -64,11 +59,10 @@ const GetObjection = () => {
             Submit
           </button>
         </form>
-        {!objection.isGetting ? (
+        {objection.showError ? (
           <h4 className="form-error">
-            {(objection.teamName &&
-              objection.referee &&
-              objection.objectionText) ||
+            {(objection.referee &&
+              objection.objectionText) ? null:
               "ERROR!!! Please fill all the blanks."}
           </h4>
         ) : null}
@@ -77,4 +71,4 @@ const GetObjection = () => {
   );
 };
 
-export default GetObjection;
+export default Objection;
