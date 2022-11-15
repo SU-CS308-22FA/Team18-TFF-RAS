@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 const GetObjection = () => {
   const [objection, setObjection] = useState({
+    isGetting: true,
     teamName: "",
     referee: "",
     objectionText: ""
@@ -21,6 +22,8 @@ const GetObjection = () => {
     e.preventDefault();
     if (objection.teamName && objection.referee && objection.objectionText) {
       setObjection({ teamName: "", referee: "", objectionText: "" });
+    } else {
+      setObjection({ ...objection, isGetting: false });
     }
   };
   return (
@@ -61,6 +64,14 @@ const GetObjection = () => {
             Submit
           </button>
         </form>
+        {!objection.isGetting ? (
+          <h4 className="form-error">
+            {(objection.teamName &&
+              objection.referee &&
+              objection.objectionText) ||
+              "ERROR!!! Please fill all the blanks."}
+          </h4>
+        ) : null}
       </article>
     </>
   );
