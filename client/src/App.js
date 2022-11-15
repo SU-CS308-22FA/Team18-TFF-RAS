@@ -6,6 +6,7 @@ import {
   Referees,
   Profile,
   SharedLayout,
+  Match,
 } from "./pages/dashboard";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         >
           <Route index element={<Home />} />
           <Route path="matches" element={<Matches />} />
+          <Route path="test-match" element={<Match />} />
           <Route path="referees" element={<Referees />} />
           <Route path="profile" element={<Profile />} />
         </Route>
