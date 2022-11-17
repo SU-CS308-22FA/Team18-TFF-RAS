@@ -3,10 +3,10 @@ import { Register, Landing, Error, ProtectedRoute } from "./pages";
 import {
   Home,
   Matches,
-  Referees,
   Profile,
   SharedLayout,
 } from "./pages/dashboard";
+import Referees from "./pages/dashboard/Referees"
 
 function App() {
   return (

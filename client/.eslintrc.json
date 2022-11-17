@@ -23,6 +23,6 @@
         "no-unused-vars": "off"
     },
     "prettier/prettier": {
-        "endOfLine": "auto",
+        "endOfLine": "auto"
     }
 }
