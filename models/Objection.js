@@ -8,23 +8,25 @@ const objectionSchema = new mongoose.Schema({
     type: String,
     required: [true, "No club ID!"],
     unique: true,
-    validate: {
-        validator: validator.isMongoId,
-        message: "Club ID is not valid!"
-    },
-
   },
   clubName: {
     type: String,
     required: [true, "No club Name"],
     unique: true,
-    trim: true,
   },
-  password: {
+  refereeId: {
     type: String,
-    required: [true, "Please provide password"],
-    minlength: 6,
-    select: false,
+    required: [true, "No referee ID!!!"],
+    unique: true,
+  },
+  isInProcess: {
+    type: Boolean,
+    default: false,
+  },
+  isResolved: {
+    type: Boolean,
+    default: false,
+    
   }
 });
 
