@@ -1,5 +1,17 @@
+import {React, useState} from "react"
+
 const Referees = () => {
-  return <h1>Referees Page</h1>;
+  return (
+    <>
+    <article className="form">
+        <form>
+          <button type="submit" className="btn" onClick={handleSubmit}>
+            Submit
+          </button>
+        </form>
+      </article>
+    </>
+  )
 };
 
 export default Referees;
