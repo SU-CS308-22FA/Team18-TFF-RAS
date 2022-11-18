@@ -210,11 +210,18 @@ ul {
 }
 /* form */
 .referee-rating {
-  color: black;
+  color: var(--primary-500);
   display: inline-block;
+  font-size:xx-large;
+  padding-left: 0.1rem;
+  padding-right: 2rem;
 }
 
-.rate-button {
+.radio-input {
+
+}
+
+.rate-btn {
   cursor: pointer;
   color: var(--white);
   background: var(--primary-500);
