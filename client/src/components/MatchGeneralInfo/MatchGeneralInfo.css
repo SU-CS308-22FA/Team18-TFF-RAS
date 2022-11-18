@@ -1078,3 +1078,459 @@ img.Image.PlayerImage {
     -webkit-box-align: center;
     align-items: center;
 }
+
+.coaches-container-items-container-style {
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.coach-container-item-container-style-applyMediumHover-left {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-basis: 325px;
+    order: -1;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.coach-container-item-container-style-applyMediumHover-right {
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-basis: 325px;
+    order: 1;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.coach-container-item-container-style-applyMediumHover-left:hover {
+    opacity: 0.6;
+}
+
+.coach-container-item-container-style-applyMediumHover-right:hover {
+    opacity: 0.6;
+}
+
+.coach-container-item-container-style-applyMediumHover-left :not(:last-child) {
+    margin-right: 15px;
+}
+
+.coach-container-item-container-style-applyMediumHover-right :not(:last-child) {
+    margin-left: 15px;
+}
+
+.coach-icon-css {
+    display: flex;
+    position: relative;
+    box-sizing: content-box;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: end;
+    align-items: end;
+    background-color: rgba(74, 74, 74, 1);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.coach-icon-css * {
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+
+img.Image.CoachImage {
+    width: 30px;
+    aspect-ratio: auto 30 / 30;
+    height: 30px;
+} 
+
+.coach-container-item-container-style-applyMediumHover-left span {
+    font-size: 18px;
+}
+
+.coach-container-item-container-style-applyMediumHover-right span {
+    font-size: 18px;
+}
+
+.coaches-container-title {
+    font-size: 18px;
+    font-family: GTWalsheim-Md;
+}
+
+.expand-button-container {
+    height: 70px;
+    text-align: center;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    border-top-style: none;
+}
+
+.expand-button {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    font-size: 18px;
+    font-family: GTWalsheim-Md;
+}
+
+.expand-button-container a, .expand-button-container button {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: white;
+    outline: none;
+    border: 0;
+    background: 0;
+    cursor: pointer;
+    padding: 0;
+}
+
+.expand-button-container button {
+    appearance: button;
+}
+
+.expandable-subs-container {
+    height: 100%;
+    /* min-height: 841px; */
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+    transition-delay: 0s;
+    transition-property: height;
+}
+
+.expandable-subs-container div {
+    visibility: visible;
+}
+
+.benches-container {
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    /* background-color: red; */
+}
+
+.bench-container {
+    width: calc(50% - 20px);
+    /* background-color: blue; */
+    margin: 0;
+    padding: 0;
+}
+
+.bench-container .bench-item:last-of-type {
+    border-bottom: 0;
+}
+
+.bench-item {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(51, 51, 51);
+    height: 60px;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    text-align: match-parent;
+    /* background-color: yellow; */
+}
+
+.left-bench-item-outer {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.left-bench-item {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.sub-icon-css {
+    display: flex;
+    position: relative;
+    box-sizing: content-box;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: end;
+    align-items: end;
+    background-color: rgba(74, 74, 74, 1);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+}
+
+.sub-icon-css * {
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+
+img.Image.SubImage {
+    width: 30px;
+    aspect-ratio: auto 30 / 30;
+    height: 30px;
+}
+
+.left-bench-item > [class*="sub-rating-styled"] {
+    margin-right: 15px;
+}
+
+.sub-rating-styled {
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    row-gap: 2px;
+    column-gap: 2px;
+    min-width: 32px;
+    min-height: 21px;
+    width: auto;
+    height: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding-top: 2px;
+    padding-right: 6px;
+    padding-bottom: 2px;
+    padding-left: 6px;
+    background-color: rgb(240, 128, 34);
+}
+
+.left-bench-item > [class*="sub-rating-styled"] span {
+    font-size: 14px;
+}
+.bench-item span {
+    font-size: 16px;
+    line-height: 1.13;
+}
+
+.sub-rating-styled span {
+    white-space: nowrap;
+    letter-spacing: 0px;
+    font-family: GTWalsheim-Md;
+    color: white;
+}
+
+.sub-shirt {
+    color: rgba(159, 159, 159, 1);
+    width: 20px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.right-bench-item {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    justify-content: right;
+}
+
+.subs-badge-container {
+    display: flex;
+    margin-right: 20px;
+}
+
+.subs-sub-time-text {
+    min-width: 21px;
+    margin-right: 10px;
+    color: rgba(97, 223, 110, 1);
+}
+
+.right-bench-item > img {
+    width: 20px;
+    height: 20px;
+}
+
+.stats-title-container {
+    height: 70px;
+    width: 100%;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.stats-title {
+    font-size: 18px;
+    font-family: GTWalsheim-Md;
+}
+
+.stats-expandable-card-container-style {
+    padding-bottom: 20px;
+}
+
+.top-stats-container-common-title-css {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 10px;
+    min-height: 324px;
+}
+
+.stats-possession-wheel {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    position: relative;
+}
+
+.stats-possession-wheel > span:first-of-type {
+    font-size: 18px;
+    color: rgba(159, 159, 159, 1);
+    line-height: 36px;
+}
+
+.stats-possession-wheel div:first-of-type {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 30px;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.stats-possession-wheel div:first-of-type img:first-of-type {
+    justify-self: flex-end;
+}
+
+.stats-possession-wheel div:first-of-type img {
+    margin-top: 50px;
+    width: 48px;
+    height: 48px;
+}
+
+img.Image.stats-team-icon {
+    width: 35px;
+    aspect-ratio: auto 35 / 35;
+    height: 35px;
+}
+
+.stats-possession-wheel svg {
+    margin-top: 44px;
+    width: 200px;
+    height: 200px;
+}
+
+.stats-possession-wheel div:first-of-type img:last-of-type {
+    justify-self: flex-start;
+}
+
+.stats-possession-wheel div:first-of-type img {
+    margin-top: 50px;
+    width: 48px;
+    height: 48px;
+}
+
+.stats-possession-wheel div:last-of-type {
+    position: absolute;
+    top: 170px;
+    width: 160px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.stats-percentage-value {
+    font-size: 30px;
+    font-family: GTWalsheim-Md;
+    color: rgb(255, 255, 255);
+}
+
+.top-stats-container-common-title-css [class*="stat-group-container"] {
+    border-left-width: 0.5px;
+    border-left-style: solid;
+    border-left-color: rgb(51, 51, 51);
+}
+
+.stat-group-container {
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 0px;
+    padding-right: 21px;
+}
+
+.stat {
+    display: grid;
+    grid-template-columns: minmax(20px, 100px) 1fr minmax(20px, 100px);
+    height: 46px;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.stat-value-won {
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 12px;
+    padding-left: 12px;
+    background-image: initial;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: rgb(51, 51, 51);
+    justify-self: center;
+    font-size: 18px;
+    font-family: GTWalsheim-Md;
+    letter-spacing: 0.01px;
+    color: rgb(255, 255, 255);
+    white-space: nowrap;
+}
+
+.top-stats-container-common-title-css [class*="stat-default-title"] {
+    font-size: 18px;
+    line-height: 1.69;
+    justify-self: center;
+    color: rgba(159, 159, 159, 1);
+}
+
+.stat-value-title {
+    font-family: GTWalsheim-Rg;
+    /* font-size: 14px;
+    line-height: 1.57; */
+    letter-spacing: 0px;
+}
+
+.stat-value-lost {
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 12px;
+    padding-left: 12px;
+    justify-self: center;
+    font-size: 18px;
+    font-family: GTWalsheim-Md;
+    letter-spacing: 0.01px;
+    white-space: nowrap;
+}
