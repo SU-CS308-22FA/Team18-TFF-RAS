@@ -1,6 +1,11 @@
 import express from "express";
 const app = express();
 
+//scrape requires
+const date = require("./tff-bot-date");
+const match = require("./tff-bot-matchID")
+const ref = require("./tff-bot-refereeID")
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -50,7 +55,25 @@ app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);
+// copy here
 
+app.get('/api/match/:id', async(req, res)=>{
+	let data  = await match.leech(req.params.id);
+	console.log(data);
+	res.json(data);
+});
+
+app.get('/api/referee/:id', async(req, res)=>{
+	let data  = await ref.leech(req.params.id);
+	// console.log(data);
+	res.json(data);
+});
+
+app.get('/api/matchByDate/:date', async(req, res)=>{
+	let data  = await date.leech(req.params.date);
+	// console.log(data);
+	res.json(data);
+});
 // only when ready to deploy
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
