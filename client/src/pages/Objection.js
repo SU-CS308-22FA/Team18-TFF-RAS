@@ -48,6 +48,7 @@ const Objection = () => {
               name="referee"
               value={objection.referee}
               onChange={handleChange}
+              className="form-input"
             />
           </div>
           <div className="form-control">
@@ -58,6 +59,7 @@ const Objection = () => {
               name="objectionText"
               value={objection.objectionText}
               onChange={handleChange}
+              className="form-input"
             />
           </div>
           <button type="submit" className="btn" onClick={handleSubmit}>
