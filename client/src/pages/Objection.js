@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Wrapper from "../assets/wrappers/LandingPage";
 // JS
 // const input = document.getElementById('myText');
 // const inputValue = input.value

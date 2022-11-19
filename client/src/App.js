@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Register, Landing, Error, ProtectedRoute } from "./pages";
+import { Register, Landing, Error, ProtectedRoute, Objection } from "./pages";
 import {
   Home,
   Matches,
@@ -7,7 +7,6 @@ import {
   Profile,
   SharedLayout,
 } from "./pages/dashboard";
-import Objection from "./pages/Objections"
 
 function App() {
   return (
@@ -28,6 +27,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
+        <Route path="/objection" element={<Objection />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>
