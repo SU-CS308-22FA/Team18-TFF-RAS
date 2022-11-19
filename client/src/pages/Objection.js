@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/LandingPage";
+import { Logo } from "../components";
 // JS
 // const input = document.getElementById('myText');
 // const inputValue = input.value
@@ -38,6 +39,7 @@ const Objection = () => {
     <Wrapper className="full-page">
       <article className="form">
         <form>
+          <Logo/>
           <div className="form-control">
             <label htmlFor="email">Referee name: </label>
             <input
