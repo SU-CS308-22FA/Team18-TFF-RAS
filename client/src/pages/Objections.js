@@ -34,7 +34,7 @@ const Objection = () => {
     }
   };
   return (
-    <>
+    <Wrapper className="full-page">
       <article className="form">
         <form>
           <div className="form-control">
@@ -69,7 +69,7 @@ const Objection = () => {
           </h4>
         ) : null}
       </article>
-    </>
+    </Wrapper>
   );
 };
 
