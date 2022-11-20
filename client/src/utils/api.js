@@ -2,10 +2,10 @@
 import axios from "axios";
 
 const getMatch = async (matchId) => {
-  const { data } = axios.get(
+  const { data } = await axios.get(
     "https://api-football-v1.p.rapidapi.com/v3/fixtures",
     {
-      params: { id: "884454" },
+      params: { id: "884458" },
       headers: {
         "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
         "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
@@ -13,7 +13,7 @@ const getMatch = async (matchId) => {
     }
   );
 
-  console.log(data);
+  return data.response[0];
 };
 
 export { getMatch };
