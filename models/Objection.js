@@ -19,6 +19,10 @@ const objectionSchema = new mongoose.Schema({
     required: [true, "No referee ID!!!"],
     unique: true,
   },
+  objection: {
+    type: String,
+    required: [true, "Objection is not entered!!!"]
+  },
   isInProcess: {
     type: Boolean,
     default: false,
@@ -30,22 +34,6 @@ const objectionSchema = new mongoose.Schema({
   }
 });
 
-// UserSchema.pre("save", async function () {
-//   // console.log(this.modifiedPaths());
-//   if (!this.isModified("password")) return;
-//   const salt = await bcrypt.genSalt(10);
-//   this.password = await bcrypt.hash(this.password, salt);
-// });
 
-// UserSchema.methods.createJWT = function () {
-//   return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
-//     expiresIn: process.env.JWT_LIFETIME,
-//   });
-// };
 
-// UserSchema.methods.comparePassword = async function (candidatePassword) {
-//   const isMatch = await bcrypt.compare(candidatePassword, this.password);
-//   return isMatch;
-// };
-
-export default mongoose.model("User", UserSchema);
+export default mongoose.model("Objection", objectionSchema);
