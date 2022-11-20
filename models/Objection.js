@@ -9,11 +9,6 @@ const objectionSchema = new mongoose.Schema({
     required: [true, "No club ID!"],
     unique: true,
   },
-  clubName: {
-    type: String,
-    required: [true, "No club Name"],
-    unique: true,
-  },
   refereeId: {
     type: String,
     required: [true, "No referee ID!!!"],
@@ -30,7 +25,6 @@ const objectionSchema = new mongoose.Schema({
   isResolved: {
     type: Boolean,
     default: false,
-    
   }
 });
 
