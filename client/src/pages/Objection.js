@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Wrapper from "../assets/wrappers/LandingPage";
-import { Logo } from "../components";
+import { Logo, FormRow } from "../components";
 // JS
 // const input = document.getElementById('myText');
 // const inputValue = input.value
@@ -37,35 +37,27 @@ const Objection = () => {
   };
   return (
     <Wrapper className="full-page">
-      <article className="form">
-        <form>
-          <Logo/>
-          <div className="form-control">
-            <label htmlFor="email">Referee name: </label>
-            <input
-              type="text"
-              id="referee"
-              name="referee"
-              value={objection.referee}
-              onChange={handleChange}
-              className="form-input"
-            />
+        <form className="form">
+          <div style={{"textAlign": "center"}}>
+            <Logo/>
+            <h3>Objection</h3>
           </div>
-          <div className="form-control">
-            <label htmlFor="age">Objection: </label>
-            <input
-              type="text"
-              id="objectionText"
-              name="objectionText"
-              value={objection.objectionText}
-              onChange={handleChange}
-              className="form-input"
-            />
-          </div>
+          <FormRow
+            type="text"
+            name="referee"
+            value={objection.referee}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="text"
+            name="objectionText"
+            value={objection.objectionText}
+            handleChange={handleChange}
+            labelText="Objection"
+          />
           <button type="submit" className="btn" onClick={handleSubmit}>
             Submit
           </button>
-        </form>
         {objection.showError ? (
           <h4 className="form-error">
             {(objection.referee &&
@@ -73,7 +65,7 @@ const Objection = () => {
               "ERROR!!! Please fill all the blanks."}
           </h4>
         ) : null}
-      </article>
+        </form>
     </Wrapper>
   );
 };
