@@ -470,6 +470,10 @@ li {
     align-items: center;
 }
 
+.event-list li:not(:last-child) {
+    margin-bottom: 15px;
+}
+
 .event-meat-applyHover-right {
     grid-row-start: 1;
     grid-column-start: 3;
@@ -558,7 +562,8 @@ li {
 
 .goal-container-player-layout-common {
     display: grid;
-    row-gap: 5px;
+    /* row-gap: 5px; */
+    row-gap: 0;
 }
 
 .goal-container-player-layout-common span > a:first-of-type {
@@ -584,7 +589,8 @@ li {
 .penalty, .assist > a {
     line-height: 1.21;
     letter-spacing: 0.21px;
-    color: rgb(113, 113, 113);
+    /* color: rgb(113, 113, 113); */
+    color: white;
 }
 
 .substitution-container-player-layout-common-left, .substitution-container-player-layout-common-right {

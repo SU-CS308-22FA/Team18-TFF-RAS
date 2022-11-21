@@ -42,7 +42,7 @@ const Match = () => {
   return (
     <div className="match-page">
       <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
-      <MatchEventsInfo />
+      <MatchEventsInfo data={matchData} />
       <MatchSubsInfo />
       <MatchStatsInfo />
     </div>
