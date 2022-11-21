@@ -23,6 +23,7 @@
     "test": "eact-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --fix --ext .js,.jsx ."
+    
   },
   "eslintConfig": {
     "extends": [

@@ -1,4 +1,6 @@
-require('dotenv').config();
+// require('dotenv').config();
+import dotenv from "dotenv";
+dotenv.config();
 import fs from "fs";
 import Log from "./Log.js"
 let logger = new Log();
