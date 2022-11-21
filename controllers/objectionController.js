@@ -23,11 +23,16 @@ const createObjection = async (req, res) => {
   });
 };
 
-const getObjections = async (req, res) => {
+const getAllObjections = async (req, res) => {
     const objections = await Objection.find({}.toArray(function(err, result){ 
         if (err) throw err;
-        console.log(result);
+        res.status(StatusCodes.OK).json({ objections });
     }));
+}
+
+const getObjection = async (req, res) => {
+  const objection = await Objection.findOne({ _id: req.objection.objectionId });
+  res.status(StatusCodes.OK).json({ objection });
 }
 
 
@@ -39,4 +44,4 @@ const deleteObjection = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Success! Objection removed" });
 };
 
-export { createObjection, getObjections, deleteObjection };
+export { createObjection, getObjection, getAllObjections, deleteObjection };
