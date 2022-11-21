@@ -2,9 +2,9 @@ import express from "express";
 const app = express();
 
 //scrape requires
-const date = require("./tff-bot-date");
-const match = require("./tff-bot-matchID")
-const ref = require("./tff-bot-refereeID")
+import date from "./web-scraping/tff-bot-date.js";
+import match from "./web-scraping/tff-bot-matchID.js";
+import ref from "./web-scraping/tff-bot-refereeID.js";
 
 import dotenv from "dotenv";
 dotenv.config();

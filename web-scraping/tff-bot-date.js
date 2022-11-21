@@ -1,6 +1,6 @@
 require('dotenv').config();
-const fs = require('fs');
-const Log = require("./Log");
+import fs from "fs";
+import Log from "./Log.js"
 let logger = new Log();
 logger.setLevel();
 
@@ -93,4 +93,4 @@ async function leech(date) {
     return data;
 }
 
-module.exports={leech}
+export default leech

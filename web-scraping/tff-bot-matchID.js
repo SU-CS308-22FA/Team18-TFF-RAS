@@ -1,12 +1,17 @@
-require('dotenv').config();
-const fs = require('fs');
-const Log = require("./Log");
+import dotenv from "dotenv";
+dotenv.config();
+import {chromium} from "playwright";
+import { readFileSync } from 'fs';
+import Log from "./Log.js";
 let logger = new Log();
 logger.setLevel();
 
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+
 async function initializePage() {
     logger.debug("browser init started");
-    const {chromium} = require('playwright');
 
     const browser = await chromium.launch({
         headless: process.env.NODE_ENV === "production",
@@ -23,7 +28,8 @@ async function initializePage() {
     });
 
     const page = await context.newPage();
-    const preloadFile = fs.readFileSync(__dirname + '/headless-spoof.js', 'utf8');
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const preloadFile = readFileSync(__dirname + '/headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
@@ -209,11 +215,11 @@ async function leech(matchid) {
     } catch (e) {
         logger.error("Exception in leech : ", e);
     }
-    logger.debug("will close the browser", browser.close);
-    if (browser && browser.close) await browser.close();
+    logger.debug("will close the browser", browser.close());
+    if (browser && browser.close()) await browser.close();
 
     
     return data;
 }
 
-module.exports={leech}
+export default leech
