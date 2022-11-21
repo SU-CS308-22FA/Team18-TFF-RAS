@@ -4,9 +4,89 @@ import LineupCardYellow from "../../assets/images/lineup-card-yellow.svg";
 import PlayerRatingStar from "../../assets/images/player-rating-star.svg";
 import LineupPlayerGoal from "../../assets/images/lineup-player-goal.svg";
 import LineupPlayerAssist from "../../assets/images/lineup-player-assist.svg";
+import PropTypes from "prop-types";
+
 import "../MatchGeneralInfo/MatchGeneralInfo.css";
 
-const MatchSubsInfo = () => {
+const MatchSubsInfo = ({ data }) => {
+  let homeStarting11 = {};
+  let homeFormation = ["1"].concat(data.lineups[0].formation.split("-"));
+  for (let i = 0; i < data.lineups[0].startXI.length; i++) {
+    const { id, name, number, grid } = data.lineups[0].startXI[i].player;
+    homeStarting11[grid] = { name, number };
+
+    for (let j = 0; j < data.players[0].players.length; j++) {
+      const currentPlayer = data.players[0].players[j].player;
+      if (currentPlayer.id === id) {
+        homeStarting11[grid].photo = currentPlayer.photo;
+        const currentStats = data.players[0].players[j].statistics[0];
+        homeStarting11[grid].cards = { ...currentStats.cards };
+        homeStarting11[grid].goals = currentStats.goals.total
+          ? currentStats.goals.total
+          : 0;
+        homeStarting11[grid].assists = currentStats.goals.assists
+          ? currentStats.goals.assists
+          : 0;
+        homeStarting11[grid].rating = currentStats.games.rating;
+
+        // check for sub
+        homeStarting11[grid].subOut = null;
+        for (let k = 0; k < data.events.length; k++) {
+          if (
+            data.events[k].type === "subst" &&
+            data.events[k].player.id === id
+          ) {
+            homeStarting11[grid].subOut = data.events[k].time.elapsed;
+            break;
+          }
+        }
+
+        break;
+      }
+    }
+  }
+
+  let awayStarting11 = {};
+  let awayFormation = data.lineups[1].formation.split("-");
+  awayFormation.reverse();
+  awayFormation = awayFormation.concat("1");
+  for (let i = 0; i < data.lineups[1].startXI.length; i++) {
+    const { id, name, number, grid } = data.lineups[1].startXI[i].player;
+    awayStarting11[grid] = { name, number };
+
+    for (let j = 0; j < data.players[1].players.length; j++) {
+      const currentPlayer = data.players[1].players[j].player;
+      if (currentPlayer.id === id) {
+        awayStarting11[grid].photo = currentPlayer.photo;
+        const currentStats = data.players[1].players[j].statistics[0];
+        awayStarting11[grid].cards = { ...currentStats.cards };
+        awayStarting11[grid].goals = currentStats.goals.total
+          ? currentStats.goals.total
+          : 0;
+        awayStarting11[grid].assists = currentStats.goals.assists
+          ? currentStats.goals.assists
+          : 0;
+        awayStarting11[grid].rating = currentStats.games.rating;
+
+        // check for sub
+        awayStarting11[grid].subOut = null;
+        for (let k = 0; k < data.events.length; k++) {
+          if (
+            data.events[k].type === "subst" &&
+            data.events[k].player.id === id
+          ) {
+            awayStarting11[grid].subOut = data.events[k].time.elapsed;
+            break;
+          }
+        }
+
+        break;
+      }
+    }
+  }
+
+  console.log(awayStarting11);
+
   return (
     <div className="lineup card-css">
       <section className="expandable-card-container-style">
@@ -17,10 +97,10 @@ const MatchSubsInfo = () => {
               className="Image-small team-icon-small"
               width="30"
               height="30"
-              src="https://images.fotmob.com/image_resources/logo/teamlogo/9742.png"
+              src={data.teams.home.logo}
             />
-            <span className="lineup-text">4-3-3</span>
-            <h2>Ankaragücü</h2>
+            <span className="lineup-text">{data.lineups[0].formation}</span>
+            <h2>{data.teams.home.name}</h2>
           </a>
           <a className="lineup-container-item-container-style-applyMediumHover-right">
             <img
@@ -28,10 +108,10 @@ const MatchSubsInfo = () => {
               className="Image-small team-icon-small"
               width="30"
               height="30"
-              src="https://images.fotmob.com/image_resources/logo/teamlogo/9752.png"
+              src={data.teams.away.logo}
             />
-            <span className="lineup-text">4-2-3-1</span>
-            <h2>Trabzonspor</h2>
+            <span className="lineup-text">{data.lineups[1].formation}</span>
+            <h2>{data.teams.away.name}</h2>
           </a>
           <div className="lineup-title-container">
             <h2 className="lineup-title">Lineup</h2>
@@ -103,523 +183,179 @@ const MatchSubsInfo = () => {
             </svg>
           </div>
           <div className="lineup-team-container">
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon  player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/712040.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.4</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">99</span>
-                    Güngördü
-                  </span>
-                </div>
-              </a>
-            </div>
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon  player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/813915.png"
-                      />
-                    </div>
-                    <div className="lineup-sub-container">
-                      <span className="sub-out-text">78'</span>
-                      <div className="player-badge-container">
-                        <img src={SubOut} />
-                      </div>
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-card-badge-container">
-                        <div className="badge-container">
-                          <img src={LineupCardYellow} />
+            {homeFormation.map((col, idx) => {
+              let cols = [];
+              for (let i = col; i >= 1; i--) {
+                cols.push(i);
+              }
+
+              return (
+                <div key={"row-" + idx} className="lineup-team-row-container">
+                  {cols.map((pos) => {
+                    const currentPlayer =
+                      homeStarting11[
+                        (idx + 1).toString() + ":" + pos.toString()
+                      ];
+
+                    return (
+                      <a key={"cell-" + pos}>
+                        <div className="lineup-player-container-applyMediumHover-left">
+                          <div className="lineup-player-head-container">
+                            <div
+                              className="PlayerIcon  player-icon-css"
+                              width="40"
+                              height="40"
+                            >
+                              <img
+                                alt=""
+                                className="Image PlayerImage"
+                                width="40"
+                                height="40"
+                                src={currentPlayer.photo}
+                              />
+                            </div>
+                            {currentPlayer.subOut === null ? null : (
+                              <div className="lineup-sub-container">
+                                <span className="sub-out-text">
+                                  {currentPlayer.subOut}'
+                                </span>
+                                <div className="player-badge-container">
+                                  <img src={SubOut} />
+                                </div>
+                              </div>
+                            )}
+                            <div className="lineup-player-rating-container">
+                              <div className="player-rating-styled-left">
+                                <span>{currentPlayer.rating}</span>
+                              </div>
+                            </div>
+                            <div className="middle-lineup-badges-container">
+                              {currentPlayer.cards.yellow > 0 ? (
+                                <div className="lineup-card-badge-container">
+                                  <div className="badge-container">
+                                    <img src={LineupCardYellow} />
+                                  </div>
+                                </div>
+                              ) : null}
+                              <div className="lineup-missed-penalty-badge-container"></div>
+                            </div>
+                            <div className="bottom-right-lineup-badges-container">
+                              {currentPlayer.goals > 0 ? (
+                                <div className="player-badge-container">
+                                  <img src={LineupPlayerGoal} />
+                                </div>
+                              ) : null}
+                            </div>
+                            <div className="bottom-left-lineup-badges-container">
+                              {currentPlayer.assists > 0 ? (
+                                <div className="player-badge-container">
+                                  <img src={LineupPlayerAssist} />
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+                          <span className="lineup-player-text">
+                            <span className="lineup-player-shirt">
+                              {currentPlayer.number}
+                            </span>
+                            {currentPlayer.name}
+                          </span>
                         </div>
-                      </div>
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">17</span>
-                    Güreler
-                  </span>
+                      </a>
+                    );
+                  })}
                 </div>
-              </a>
-            </div>
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/387439.png"
-                      />
-                    </div>
-                    <div className="lineup-sub-container">
-                      <span className="sub-out-text">78'</span>
-                      <div className="player-badge-container">
-                        <img src={SubOut} />
-                      </div>
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">8</span>
-                    Pedrinho
-                  </span>
-                </div>
-              </a>
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/212881.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <img src={PlayerRatingStar} />
-                        <span>8.0</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container">
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerGoal} />
-                      </div>
-                    </div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">30</span>
-                    Cigerci
-                  </span>
-                </div>
-              </a>
-            </div>
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/387439.png"
-                      />
-                    </div>
-                    <div className="lineup-sub-container">
-                      <span className="sub-out-text">78'</span>
-                      <div className="player-badge-container">
-                        <img src={SubOut} />
-                      </div>
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">8</span>
-                    Pedrinho
-                  </span>
-                </div>
-              </a>
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/212881.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <img src={PlayerRatingStar} />
-                        <span>8.0</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container">
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerGoal} />
-                      </div>
-                    </div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">30</span>
-                    Cigerci
-                  </span>
-                </div>
-              </a>
-            </div>
+              );
+            })}
           </div>
           <div className="lineup-team-container">
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/687700.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>7.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container">
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerAssist} />
-                      </div>
-                    </div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">30</span>
-                    Gomez
-                  </span>
-                </div>
-              </a>
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon  player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/712040.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.4</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">99</span>
-                    Güngördü
-                  </span>
-                </div>
-              </a>
-            </div>
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon  player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/813915.png"
-                      />
-                    </div>
-                    <div className="lineup-sub-container">
-                      <span className="sub-out-text">78'</span>
-                      <div className="player-badge-container">
-                        <img src={SubOut} />
-                      </div>
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-card-badge-container">
-                        <div className="badge-container">
-                          <img src={LineupCardYellow} />
+            {awayFormation.map((col, idx) => {
+              let cols = [];
+              for (let i = col; i >= 1; i--) {
+                cols.push(i);
+              }
+
+              return (
+                <div key={"row-" + idx} className="lineup-team-row-container">
+                  {cols.map((pos) => {
+                    const currentPlayer =
+                      awayStarting11[
+                        (awayFormation.length - idx).toString() +
+                          ":" +
+                          pos.toString()
+                      ];
+                    console.log(currentPlayer);
+
+                    return (
+                      <a key={"cell-" + pos}>
+                        <div className="lineup-player-container-applyMediumHover-left">
+                          <div className="lineup-player-head-container">
+                            <div
+                              className="PlayerIcon  player-icon-css"
+                              width="40"
+                              height="40"
+                            >
+                              <img
+                                alt=""
+                                className="Image PlayerImage"
+                                width="40"
+                                height="40"
+                                src={currentPlayer.photo}
+                              />
+                            </div>
+                            {currentPlayer.subOut === null ? null : (
+                              <div className="lineup-sub-container">
+                                <span className="sub-out-text">
+                                  {currentPlayer.subOut}'
+                                </span>
+                                <div className="player-badge-container">
+                                  <img src={SubOut} />
+                                </div>
+                              </div>
+                            )}
+                            <div className="lineup-player-rating-container">
+                              <div className="player-rating-styled-left">
+                                <span>{currentPlayer.rating}</span>
+                              </div>
+                            </div>
+                            <div className="middle-lineup-badges-container">
+                              {currentPlayer.cards.yellow > 0 ? (
+                                <div className="lineup-card-badge-container">
+                                  <div className="badge-container">
+                                    <img src={LineupCardYellow} />
+                                  </div>
+                                </div>
+                              ) : null}
+                              <div className="lineup-missed-penalty-badge-container"></div>
+                            </div>
+                            <div className="bottom-right-lineup-badges-container">
+                              {currentPlayer.goals > 0 ? (
+                                <div className="player-badge-container">
+                                  <img src={LineupPlayerGoal} />
+                                </div>
+                              ) : null}
+                            </div>
+                            <div className="bottom-left-lineup-badges-container">
+                              {currentPlayer.assists > 0 ? (
+                                <div className="player-badge-container">
+                                  <img src={LineupPlayerAssist} />
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+                          <span className="lineup-player-text">
+                            <span className="lineup-player-shirt">
+                              {currentPlayer.number}
+                            </span>
+                            {currentPlayer.name}
+                          </span>
                         </div>
-                      </div>
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">17</span>
-                    Güreler
-                  </span>
+                      </a>
+                    );
+                  })}
                 </div>
-              </a>
-            </div>
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/387439.png"
-                      />
-                    </div>
-                    <div className="lineup-sub-container">
-                      <span className="sub-out-text">78'</span>
-                      <div className="player-badge-container">
-                        <img src={SubOut} />
-                      </div>
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">8</span>
-                    Pedrinho
-                  </span>
-                </div>
-              </a>
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/212881.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <img src={PlayerRatingStar} />
-                        <span>8.0</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container">
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerGoal} />
-                      </div>
-                    </div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">30</span>
-                    Cigerci
-                  </span>
-                </div>
-              </a>
-            </div>
-            <div className="lineup-team-row-container">
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/387439.png"
-                      />
-                    </div>
-                    <div className="lineup-sub-container">
-                      <span className="sub-out-text">78'</span>
-                      <div className="player-badge-container">
-                        <img src={SubOut} />
-                      </div>
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <span>6.5</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container"></div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">8</span>
-                    Pedrinho
-                  </span>
-                </div>
-              </a>
-              <a>
-                <div className="lineup-player-container-applyMediumHover-left">
-                  <div className="lineup-player-head-container">
-                    <div
-                      className="PlayerIcon player-icon-css"
-                      width="40"
-                      height="40"
-                    >
-                      <img
-                        alt=""
-                        className="Image PlayerImage"
-                        width="40"
-                        height="40"
-                        src="https://images.fotmob.com/image_resources/playerimages/212881.png"
-                      />
-                    </div>
-                    <div className="lineup-player-rating-container">
-                      <div className="player-rating-styled-left">
-                        <img src={PlayerRatingStar} />
-                        <span>8.0</span>
-                      </div>
-                    </div>
-                    <div className="middle-lineup-badges-container">
-                      <div className="lineup-missed-penalty-badge-container"></div>
-                    </div>
-                    <div className="bottom-right-lineup-badges-container">
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerGoal} />
-                      </div>
-                    </div>
-                    <div className="bottom-left-lineup-badges-container"></div>
-                  </div>
-                  <span className="lineup-player-text">
-                    <span className="lineup-player-shirt">30</span>
-                    Cigerci
-                  </span>
-                </div>
-              </a>
-            </div>
+              );
+            })}
           </div>
         </section>
         <div className="separator-style"></div>
@@ -1158,4 +894,13 @@ const MatchSubsInfo = () => {
     </div>
   );
 };
+
+MatchSubsInfo.propTypes = {
+  data: PropTypes.any,
+};
+
+MatchSubsInfo.defaultProps = {
+  data: {},
+};
+
 export default MatchSubsInfo;
