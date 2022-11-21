@@ -1,6 +1,6 @@
-import Objection from "../models/Objection";
+import Objection from "../models/Objection.js";
 import { StatusCodes } from "http-status-codes";
-import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
+import { BadRequestError } from "../errors/index.js";
 
 const createObjection = async (req, res) => {
   const { clubId, refereeId, obejction, isInProcess, isResolved } = req.body;
