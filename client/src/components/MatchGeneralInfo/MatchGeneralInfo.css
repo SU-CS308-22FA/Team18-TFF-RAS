@@ -994,6 +994,10 @@ img.Image.PlayerImage {
     flex-direction: row;
 }
 
+.bottom-right-lineup-badges-container > * {
+    margin-left: -9px;
+}
+
 .bottom-left-lineup-badges-container {
     position: absolute;
     display: flex;
@@ -1017,7 +1021,7 @@ img.Image.PlayerImage {
 }
 
 .lineup-player-shirt {
-    color: rgba(178, 222, 206, 1);
+    color: rgba(178, 222, 206, 1) !important;
     margin-right: 10px;
 }
 
@@ -1034,7 +1038,7 @@ img.Image.PlayerImage {
 }
 
 .sub-out-text {
-    color: rgba(229, 94, 91, 1);
+    color: rgba(229, 94, 91, 1) !important;
 }
 
 .player-badge-container {

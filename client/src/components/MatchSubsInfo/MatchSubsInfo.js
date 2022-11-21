@@ -225,7 +225,17 @@ const MatchSubsInfo = ({ data }) => {
                               </div>
                             )}
                             <div className="lineup-player-rating-container">
-                              <div className="player-rating-styled-left">
+                              <div
+                                className="player-rating-styled-left"
+                                style={{
+                                  backgroundColor:
+                                    parseFloat(currentPlayer.rating) >= 6.9
+                                      ? "rgb(30, 200, 83)"
+                                      : parseFloat(currentPlayer.rating) >= 5.0
+                                      ? "rgb(240, 128, 34)"
+                                      : "rgb(229, 94, 91)",
+                                }}
+                              >
                                 <span>{currentPlayer.rating}</span>
                               </div>
                             </div>
@@ -240,18 +250,32 @@ const MatchSubsInfo = ({ data }) => {
                               <div className="lineup-missed-penalty-badge-container"></div>
                             </div>
                             <div className="bottom-right-lineup-badges-container">
-                              {currentPlayer.goals > 0 ? (
-                                <div className="player-badge-container">
-                                  <img src={LineupPlayerGoal} />
-                                </div>
-                              ) : null}
+                              {currentPlayer.goals > 0
+                                ? [...Array(currentPlayer.goals)].map(
+                                    (goalEvent, goalIdx) => (
+                                      <div
+                                        key={goalIdx}
+                                        className="player-badge-container"
+                                      >
+                                        <img src={LineupPlayerGoal} />
+                                      </div>
+                                    )
+                                  )
+                                : null}
                             </div>
                             <div className="bottom-left-lineup-badges-container">
-                              {currentPlayer.assists > 0 ? (
-                                <div className="player-badge-container">
-                                  <img src={LineupPlayerAssist} />
-                                </div>
-                              ) : null}
+                              {currentPlayer.assists > 0
+                                ? [...Array(currentPlayer.assists)].map(
+                                    (assistEvent, assistIdx) => (
+                                      <div
+                                        key={assistIdx}
+                                        className="player-badge-container"
+                                      >
+                                        <img src={LineupPlayerAssist} />
+                                      </div>
+                                    )
+                                  )
+                                : null}
                             </div>
                           </div>
                           <span className="lineup-player-text">
@@ -314,7 +338,17 @@ const MatchSubsInfo = ({ data }) => {
                               </div>
                             )}
                             <div className="lineup-player-rating-container">
-                              <div className="player-rating-styled-left">
+                              <div
+                                className="player-rating-styled-left"
+                                style={{
+                                  backgroundColor:
+                                    parseFloat(currentPlayer.rating) >= 6.9
+                                      ? "rgb(30, 200, 83)"
+                                      : parseFloat(currentPlayer.rating) >= 5.0
+                                      ? "rgb(240, 128, 34)"
+                                      : "rgb(229, 94, 91)",
+                                }}
+                              >
                                 <span>{currentPlayer.rating}</span>
                               </div>
                             </div>
@@ -329,18 +363,32 @@ const MatchSubsInfo = ({ data }) => {
                               <div className="lineup-missed-penalty-badge-container"></div>
                             </div>
                             <div className="bottom-right-lineup-badges-container">
-                              {currentPlayer.goals > 0 ? (
-                                <div className="player-badge-container">
-                                  <img src={LineupPlayerGoal} />
-                                </div>
-                              ) : null}
+                              {currentPlayer.goals > 0
+                                ? [...Array(currentPlayer.goals)].map(
+                                    (goalEvent, goalIdx) => (
+                                      <div
+                                        key={goalIdx}
+                                        className="player-badge-container"
+                                      >
+                                        <img src={LineupPlayerGoal} />
+                                      </div>
+                                    )
+                                  )
+                                : null}
                             </div>
                             <div className="bottom-left-lineup-badges-container">
-                              {currentPlayer.assists > 0 ? (
-                                <div className="player-badge-container">
-                                  <img src={LineupPlayerAssist} />
-                                </div>
-                              ) : null}
+                              {currentPlayer.assists > 0
+                                ? [...Array(currentPlayer.assists)].map(
+                                    (assistEvent, assistIdx) => (
+                                      <div
+                                        key={assistIdx}
+                                        className="player-badge-container"
+                                      >
+                                        <img src={LineupPlayerAssist} />
+                                      </div>
+                                    )
+                                  )
+                                : null}
                             </div>
                           </div>
                           <span className="lineup-player-text">
