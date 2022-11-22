@@ -27,7 +27,7 @@ const Matches = () => {
         {matches.map((match, idx) => (
           <MatchItem
             key={idx}
-            link="/"
+            link={"/matches/" + match.fixture.id}
             homeTeam={match.teams.home.name}
             awayTeam={match.teams.away.name}
             homeTeamImg={match.teams.home.logo}

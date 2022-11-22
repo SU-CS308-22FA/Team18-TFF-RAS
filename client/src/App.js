@@ -23,7 +23,7 @@ function App() {
         >
           <Route index element={<Home />} />
           <Route path="matches" element={<Matches />} />
-          <Route path="test-match" element={<Match />} />
+          <Route path="matches/:id" element={<Match />} />
           <Route path="referees" element={<Referees />} />
           <Route path="profile" element={<Profile />} />
         </Route>

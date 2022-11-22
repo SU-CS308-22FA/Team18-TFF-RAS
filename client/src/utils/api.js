@@ -26,7 +26,7 @@ const getMatch = async (matchId) => {
   const { data } = await axios.get(
     "https://api-football-v1.p.rapidapi.com/v3/fixtures",
     {
-      params: { id: "884364" },
+      params: { id: matchId },
       headers: {
         "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
         "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
