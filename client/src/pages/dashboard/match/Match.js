@@ -44,7 +44,7 @@ const Match = () => {
       <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
       <MatchEventsInfo data={matchData} />
       <MatchSubsInfo data={matchData} />
-      <MatchStatsInfo />
+      <MatchStatsInfo data={matchData.statistics} />
     </div>
   );
 };

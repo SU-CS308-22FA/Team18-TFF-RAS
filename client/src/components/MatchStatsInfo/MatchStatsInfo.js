@@ -1,6 +1,28 @@
 import "../MatchGeneralInfo/MatchGeneralInfo.css";
+import PropTypes from "prop-types";
 
-const MatchStatsInfo = () => {
+const MatchStatsInfo = ({ data }) => {
+  console.log(data);
+  let homeStatistics = data[0].statistics;
+  let awayStatistics = data[1].statistics;
+
+  let homePossession = null;
+  let awayPossession = null;
+
+  for (let i = 0; i < homeStatistics.length; i++) {
+    if (homeStatistics[i].type === "Ball Possession") {
+      homePossession = parseInt(homeStatistics[i].value.slice(0, 2));
+      break;
+    }
+  }
+
+  for (let i = 0; i < awayStatistics.length; i++) {
+    if (awayStatistics[i].type === "Ball Possession") {
+      awayPossession = parseInt(awayStatistics[i].value.slice(0, 2));
+      break;
+    }
+  }
+
   return (
     <div className="mf-stats card-css">
       <section className="stat-wrapper">
@@ -17,23 +39,27 @@ const MatchStatsInfo = () => {
                   className="Image stats-team-icon"
                   width="35"
                   height="35"
-                  src="https://images.fotmob.com/image_resources/logo/teamlogo/9742.png"
+                  src={data[0].team.logo}
                 />
                 <svg width="200px" height="200px" viewBox="0 0 36 36">
                   <path
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
-                    strokeDasharray="52 48"
+                    strokeDasharray={`${awayPossession} ${homePossession}`}
                     strokeWidth="2"
-                    stroke="#881020"
+                    stroke={
+                      awayPossession >= homePossession ? "#921e1e" : "#DC143C"
+                    }
                     pathLength="100"
                   ></path>
                   <path
-                    strokeDasharray="0 52.5 47 0.25"
+                    strokeDasharray={`0 ${awayPossession} ${homePossession} 0`}
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
                     strokeWidth="2"
-                    stroke="#333333"
+                    stroke={
+                      awayPossession >= homePossession ? "#DC143C" : "#921e1e"
+                    }
                     pathLength="100"
                   ></path>
                 </svg>
@@ -42,74 +68,133 @@ const MatchStatsInfo = () => {
                   className="Image stats-team-icon"
                   width="35"
                   height="35"
-                  src="https://images.fotmob.com/image_resources/logo/teamlogo/9752.png"
+                  src={data[1].team.logo}
                 />
               </div>
               <div>
                 <span color="#fff" className="stats-percentage-value">
-                  48%
+                  {homePossession}%
                 </span>
                 <span color="#fff" className="stats-percentage-value">
-                  52%
+                  {awayPossession}%
                 </span>
               </div>
             </div>
             <ul className="stat-group-container">
               <li className="stat">
-                <span className="stat-value-won">1.76</span>
-                <span className="stat-default-title stat-value-title">
-                  Expected goals (xG)
+                <span
+                  className={
+                    homeStatistics[2].value > awayStatistics[2].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {homeStatistics[2].value}
                 </span>
-                <span className="stat-value-won">0.76</span>
-              </li>
-              <li className="stat">
-                <span className="stat-value-won">10</span>
                 <span className="stat-default-title stat-value-title">
                   Total shots
                 </span>
-                <span className="stat-value-lost">9</span>
-              </li>
-              <li className="stat">
-                <span className="stat-value-won">2</span>
-                <span className="stat-default-title stat-value-title">
-                  Big chances
+                <span
+                  className={
+                    homeStatistics[2].value < awayStatistics[2].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {awayStatistics[2].value}
                 </span>
-                <span className="stat-value-lost">1</span>
               </li>
               <li className="stat">
-                <span className="stat-value-lost">1</span>
-                <span className="stat-default-title stat-value-title">
-                  Big chances missed
+                <span
+                  className={
+                    homeStatistics[14].value > awayStatistics[14].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {homeStatistics[14].value} ({homeStatistics[15].value})
                 </span>
-                <div></div>
-              </li>
-              <li className="stat">
-                <span className="stat-value-lost">325 (79%)</span>
                 <span className="stat-default-title stat-value-title">
                   Accurate passes
                 </span>
-                <span className="stat-value-won">349 (78%)</span>
+                <span
+                  className={
+                    homeStatistics[14].value < awayStatistics[14].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {awayStatistics[14].value} ({awayStatistics[15].value})
+                </span>
               </li>
               <li className="stat">
-                <span className="stat-value-lost">11</span>
+                <span
+                  className={
+                    homeStatistics[6].value < awayStatistics[6].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {homeStatistics[6].value}
+                </span>
                 <span className="stat-default-title stat-value-title">
                   Fouls committed
                 </span>
-                <span className="stat-value-won">7</span>
+                <span
+                  className={
+                    homeStatistics[6].value > awayStatistics[6].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {awayStatistics[6].value}
+                </span>
               </li>
               <li className="stat">
-                <span className="stat-value-lost">2</span>
+                <span
+                  className={
+                    homeStatistics[8].value < awayStatistics[8].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {homeStatistics[8].value}
+                </span>
                 <span className="stat-default-title stat-value-title">
                   Offsides
                 </span>
-                <span className="stat-value-won">1</span>
+                <span
+                  className={
+                    homeStatistics[8].value > awayStatistics[8].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {awayStatistics[8].value}
+                </span>
               </li>
               <li className="stat">
-                <span className="stat-value-won">5</span>
+                <span
+                  className={
+                    homeStatistics[7].value > awayStatistics[7].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {homeStatistics[7].value}
+                </span>
                 <span className="stat-default-title stat-value-title">
                   Corners
                 </span>
-                <span className="stat-value-lost">4</span>
+                <span
+                  className={
+                    homeStatistics[7].value < awayStatistics[7].value
+                      ? "stat-value-won"
+                      : "stat-value-lost"
+                  }
+                >
+                  {awayStatistics[7].value}
+                </span>
               </li>
             </ul>
           </div>
@@ -117,6 +202,14 @@ const MatchStatsInfo = () => {
       </section>
     </div>
   );
+};
+
+MatchStatsInfo.propTypes = {
+  data: PropTypes.any,
+};
+
+MatchStatsInfo.defaultProps = {
+  data: [],
 };
 
 export default MatchStatsInfo;
