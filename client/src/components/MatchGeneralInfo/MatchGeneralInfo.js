@@ -30,7 +30,7 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                     name="Path 4504"
                     d="M4919.5 17007a9.5 9.5 0 1 1 9.5-9.5 9.511 9.511 0 0 1-9.5 9.5zm1.079-13.1a.991.991 0 0 0-.7.293l-2.586 2.592a.993.993 0 0 0 0 1.412l2.586 2.586a1 1 0 0 0 1.711-.7v-5.178a1.012 1.012 0 0 0-1.01-1.005z"
                     transform="translate(-4910 -16987.998)"
-                    fill="white"
+                    fill="rgba(51, 51, 51, 1)"
                   ></path>
                   <path
                     name="Rectangle 6987"

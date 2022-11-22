@@ -19,7 +19,7 @@
         <g id="Ellipse_462">
         <circle
             id="Oval"
-            fill="rgba(38, 38, 38, 1)"
+            fill="white"
             fillRule="nonzero"
             cx="11.5"
             cy="11.5"
@@ -27,7 +27,7 @@
         ></circle>
         <circle
             id="Oval"
-            stroke="rgba(80, 80, 80, 1)"
+            stroke="white"
             cx="11.5"
             cy="11.5"
             r="11.5"
@@ -44,7 +44,7 @@
         <g
             id="Group_6431"
             transform="translate(0.000000, 0.000000)"
-            fill="rgba(255, 255, 255, 1)"
+            fill="rgba(0, 0, 0, 1)"
             fillRule="nonzero"
         >
             <path

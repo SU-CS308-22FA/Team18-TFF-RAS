@@ -19,7 +19,7 @@
         <g id="Ellipse_462">
         <circle
             id="Oval"
-            fill="rgba(38, 38, 38, 1)"
+            fill="white"
             fillRule="nonzero"
             cx="11.5"
             cy="11.5"
@@ -27,7 +27,7 @@
         ></circle>
         <circle
             id="Oval"
-            stroke="rgba(80, 80, 80, 1)"
+            stroke="white"
             cx="11.5"
             cy="11.5"
             r="11.5"

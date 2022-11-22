@@ -234,7 +234,7 @@ const MatchSubsInfo = ({ data }) => {
             >
               <g
                 id="Group_4486"
-                fill="rgba(52, 52, 52, 1)"
+                fill="rgba(200, 200, 200, 1)"
                 data-name="Group 4486"
                 transform="translate(84.168)"
               >
@@ -248,7 +248,7 @@ const MatchSubsInfo = ({ data }) => {
               </g>
               <path
                 id="Path_2175"
-                fill="rgba(52, 52, 52, 1)"
+                fill="rgba(200, 200, 200, 1)"
                 d="M11.813 150.407h90.813a76.778 76.778 0 0 0 110.748 0h90.813A11.839 11.839 0 0 0 316 138.61V0h-5.906v138.61a5.92 5.92 0 0 1-5.907 5.9H11.813a5.92 5.92 0 0 1-5.907-5.9V0H0v138.61a11.84 11.84 0 0 0 11.813 11.797zm193 0a70.761 70.761 0 0 1-93.619 0z"
                 className="cls-1"
                 data-name="Path 2175"
@@ -266,7 +266,7 @@ const MatchSubsInfo = ({ data }) => {
             >
               <g
                 id="Group_4486"
-                fill="rgba(52, 52, 52, 1)"
+                fill="rgba(200, 200, 200, 1)"
                 data-name="Group 4486"
                 transform="translate(84.168)"
               >
@@ -280,7 +280,7 @@ const MatchSubsInfo = ({ data }) => {
               </g>
               <path
                 id="Path_2175"
-                fill="rgba(52, 52, 52, 1)"
+                fill="rgba(200, 200, 200, 1)"
                 d="M11.813 150.407h90.813a76.778 76.778 0 0 0 110.748 0h90.813A11.839 11.839 0 0 0 316 138.61V0h-5.906v138.61a5.92 5.92 0 0 1-5.907 5.9H11.813a5.92 5.92 0 0 1-5.907-5.9V0H0v138.61a11.84 11.84 0 0 0 11.813 11.797zm193 0a70.761 70.761 0 0 1-93.619 0z"
                 className="cls-1"
                 data-name="Path 2175"
