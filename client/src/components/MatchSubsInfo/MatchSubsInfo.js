@@ -29,15 +29,21 @@ const MatchSubsInfo = ({ data }) => {
           : 0;
         homeStarting11[grid].rating = currentStats.games.rating;
 
-        // check for sub
+        // check for sub and own goals
         homeStarting11[grid].subOut = null;
+        homeStarting11[grid].ownGoals = 0;
         for (let k = 0; k < data.events.length; k++) {
           if (
             data.events[k].type === "subst" &&
             data.events[k].player.id === id
           ) {
             homeStarting11[grid].subOut = data.events[k].time.elapsed;
-            break;
+          } else if (
+            data.events[k].type === "Goal" &&
+            data.events[k].detail === "Own Goal" &&
+            data.events[k].player.id === id
+          ) {
+            homeStarting11[grid].ownGoals++;
           }
         }
 
@@ -68,15 +74,21 @@ const MatchSubsInfo = ({ data }) => {
           : 0;
         awayStarting11[grid].rating = currentStats.games.rating;
 
-        // check for sub
+        // check for sub and own goals
         awayStarting11[grid].subOut = null;
+        awayStarting11[grid].ownGoals = 0;
         for (let k = 0; k < data.events.length; k++) {
           if (
             data.events[k].type === "subst" &&
             data.events[k].player.id === id
           ) {
             awayStarting11[grid].subOut = data.events[k].time.elapsed;
-            break;
+          } else if (
+            data.events[k].type === "Goal" &&
+            data.events[k].detail === "Own Goal" &&
+            data.events[k].player.id === id
+          ) {
+            awayStarting11[grid].ownGoals++;
           }
         }
 
@@ -85,7 +97,100 @@ const MatchSubsInfo = ({ data }) => {
     }
   }
 
-  console.log(awayStarting11);
+  let homeSubs = [];
+  for (let i = 0; i < data.lineups[0].substitutes.length; i++) {
+    const { id, name, number } = data.lineups[0].substitutes[i].player;
+    let subToAdd = { name, number };
+
+    for (let j = 0; j < data.players[0].players.length; j++) {
+      const currentPlayer = data.players[0].players[j].player;
+      if (currentPlayer.id === id) {
+        subToAdd.photo = currentPlayer.photo;
+        const currentStats = data.players[0].players[j].statistics[0];
+        subToAdd.cards = { ...currentStats.cards };
+        subToAdd.goals = currentStats.goals.total
+          ? currentStats.goals.total
+          : 0;
+        subToAdd.assists = currentStats.goals.assists
+          ? currentStats.goals.assists
+          : 0;
+        subToAdd.rating = currentStats.games.rating;
+
+        // check for sub and own goals
+        subToAdd.subIn = 100;
+        subToAdd.ownGoals = 0;
+        for (let k = 0; k < data.events.length; k++) {
+          if (
+            data.events[k].type === "subst" &&
+            data.events[k].assist.id === id
+          ) {
+            subToAdd.subIn = data.events[k].time.elapsed;
+          } else if (
+            data.events[k].type === "Goal" &&
+            data.events[k].detail === "Own Goal" &&
+            data.events[k].player.id === id
+          ) {
+            subToAdd.ownGoals++;
+          }
+        }
+
+        break;
+      }
+    }
+
+    homeSubs.push(subToAdd);
+  }
+  homeSubs.sort(function (x, y) {
+    return x.subIn - y.subIn;
+  });
+
+  let awaySubs = [];
+  for (let i = 0; i < data.lineups[1].substitutes.length; i++) {
+    const { id, name, number } = data.lineups[1].substitutes[i].player;
+    let subToAdd = { name, number };
+
+    for (let j = 0; j < data.players[1].players.length; j++) {
+      const currentPlayer = data.players[1].players[j].player;
+      if (currentPlayer.id === id) {
+        subToAdd.photo = currentPlayer.photo;
+        const currentStats = data.players[1].players[j].statistics[0];
+        subToAdd.cards = { ...currentStats.cards };
+        subToAdd.goals = currentStats.goals.total
+          ? currentStats.goals.total
+          : 0;
+        subToAdd.assists = currentStats.goals.assists
+          ? currentStats.goals.assists
+          : 0;
+        subToAdd.rating = currentStats.games.rating;
+
+        // check for sub and own goals
+        subToAdd.subIn = 100;
+        subToAdd.ownGoals = 0;
+        for (let k = 0; k < data.events.length; k++) {
+          if (
+            data.events[k].type === "subst" &&
+            data.events[k].assist.id === id
+          ) {
+            subToAdd.subIn = data.events[k].time.elapsed;
+          } else if (
+            data.events[k].type === "Goal" &&
+            data.events[k].detail === "Own Goal" &&
+            data.events[k].player.id === id
+          ) {
+            subToAdd.ownGoals++;
+          }
+        }
+
+        break;
+      }
+    }
+
+    awaySubs.push(subToAdd);
+  }
+  awaySubs.sort(function (x, y) {
+    return x.subIn - y.subIn;
+  });
+  console.log(awaySubs);
 
   return (
     <div className="lineup card-css">
@@ -308,7 +413,6 @@ const MatchSubsInfo = ({ data }) => {
                           ":" +
                           pos.toString()
                       ];
-                    console.log(currentPlayer);
 
                     return (
                       <a key={"cell-" + pos}>
@@ -444,503 +548,216 @@ const MatchSubsInfo = ({ data }) => {
           <div>
             <section className="benches-container">
               <ul className="bench-container">
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
+                {homeSubs.map((sub, idx) => {
+                  return (
+                    <li key={idx} className="bench-item">
+                      <div className="left-bench-item-outer">
+                        <a>
+                          <div className="left-bench-item">
+                            <div
+                              className="PlayerIcon sub-icon-css"
+                              width="30"
+                              height="30"
+                            >
+                              <img
+                                alt=""
+                                className="Image SubImage"
+                                width="30"
+                                height="30"
+                                src={sub.photo}
+                              />
+                            </div>
+                            {sub.rating === null ? null : (
+                              <div
+                                className="sub-rating-styled"
+                                style={{
+                                  backgroundColor:
+                                    parseFloat(sub.rating) >= 6.9
+                                      ? "rgb(30, 200, 83)"
+                                      : parseFloat(sub.rating) >= 5.0
+                                      ? "rgb(240, 128, 34)"
+                                      : "rgb(229, 94, 91)",
+                                }}
+                              >
+                                <span>{sub.rating}</span>
+                              </div>
+                            )}
+                            <span>
+                              <span className="sub-shirt">{sub.number}</span>
+                              <span className="sub-name"> {sub.name}</span>
+                            </span>
+                          </div>
+                        </a>
                       </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container">
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerGoal} />
+                      <div className="right-bench-item">
+                        <div className="subs-badges-container">
+                          {[...Array(sub.goals)].map((goalEvent, goalIdx) => (
+                            <div
+                              key={"goal-" + goalIdx}
+                              className="player-badge-container"
+                            >
+                              <img src={LineupPlayerGoal} />
+                            </div>
+                          ))}
+                          {[...Array(sub.assists)].map(
+                            (assistEvent, assistIdx) => (
+                              <div
+                                key={"assist-" + assistIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupPlayerAssist} />
+                              </div>
+                            )
+                          )}
+                          {[...Array(sub.cards.yellow)].map(
+                            (cardEvent, cardIdx) => (
+                              <div
+                                key={"yellow-card-" + cardIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupCardYellow} />
+                              </div>
+                            )
+                          )}
+                          {[...Array(sub.cards.red)].map(
+                            (cardEvent, cardIdx) => (
+                              <div
+                                key={"red-card-" + cardIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupCardYellow} />
+                              </div>
+                            )
+                          )}
+                          {[...Array(sub.ownGoals)].map(
+                            (goalEvent, goalIdx) => (
+                              <div
+                                key={"own-goal-" + goalIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupPlayerGoal} />
+                              </div>
+                            )
+                          )}
+                        </div>
+                        {sub.subIn === 100 ? null : (
+                          <>
+                            <span className="subs-sub-time-text">
+                              {sub.subIn}'
+                            </span>{" "}
+                            <img src={SubIn} />
+                          </>
+                        )}
                       </div>
-                      <div className="player-badge-container">
-                        <img src={LineupPlayerGoal} />
-                      </div>
-                    </div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
+                    </li>
+                  );
+                })}
               </ul>
               <ul className="bench-container">
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
+                {awaySubs.map((sub, idx) => {
+                  return (
+                    <li key={idx} className="bench-item">
+                      <div className="left-bench-item-outer">
+                        <a>
+                          <div className="left-bench-item">
+                            <div
+                              className="PlayerIcon sub-icon-css"
+                              width="30"
+                              height="30"
+                            >
+                              <img
+                                alt=""
+                                className="Image SubImage"
+                                width="30"
+                                height="30"
+                                src={sub.photo}
+                              />
+                            </div>
+                            {sub.rating === null ? null : (
+                              <div
+                                className="sub-rating-styled"
+                                style={{
+                                  backgroundColor:
+                                    parseFloat(sub.rating) >= 6.9
+                                      ? "rgb(30, 200, 83)"
+                                      : parseFloat(sub.rating) >= 5.0
+                                      ? "rgb(240, 128, 34)"
+                                      : "rgb(229, 94, 91)",
+                                }}
+                              >
+                                <span>{sub.rating}</span>
+                              </div>
+                            )}
+                            <span>
+                              <span className="sub-shirt">{sub.number}</span>
+                              <span className="sub-name"> {sub.name}</span>
+                            </span>
+                          </div>
+                        </a>
                       </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
+                      <div className="right-bench-item">
+                        <div className="subs-badges-container">
+                          {[...Array(sub.goals)].map((goalEvent, goalIdx) => (
+                            <div
+                              key={"goal-" + goalIdx}
+                              className="player-badge-container"
+                            >
+                              <img src={LineupPlayerGoal} />
+                            </div>
+                          ))}
+                          {[...Array(sub.assists)].map(
+                            (assistEvent, assistIdx) => (
+                              <div
+                                key={"assist-" + assistIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupPlayerAssist} />
+                              </div>
+                            )
+                          )}
+                          {[...Array(sub.cards.yellow)].map(
+                            (cardEvent, cardIdx) => (
+                              <div
+                                key={"yellow-card-" + cardIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupCardYellow} />
+                              </div>
+                            )
+                          )}
+                          {[...Array(sub.cards.red)].map(
+                            (cardEvent, cardIdx) => (
+                              <div
+                                key={"red-card-" + cardIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupCardYellow} />
+                              </div>
+                            )
+                          )}
+                          {[...Array(sub.ownGoals)].map(
+                            (goalEvent, goalIdx) => (
+                              <div
+                                key={"own-goal-" + goalIdx}
+                                className="player-badge-container"
+                              >
+                                <img src={LineupPlayerGoal} />
+                              </div>
+                            )
+                          )}
                         </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
+                        {sub.subIn === 100 ? null : (
+                          <>
+                            <span className="subs-sub-time-text">
+                              {sub.subIn}'
+                            </span>{" "}
+                            <img src={SubIn} />
+                          </>
+                        )}
                       </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/281085.png"
-                          />
-                        </div>
-                        <div className="sub-rating-styled">
-                          <span>6.9</span>
-                        </div>
-                        <span>
-                          <span className="sub-shirt">10</span>
-                          <span className="sub-name"> Jesé</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                    <span className="subs-sub-time-text">67'</span>{" "}
-                    <img src={SubIn} />
-                  </div>
-                </li>
-                <li className="bench-item">
-                  <div className="left-bench-item-outer">
-                    <a>
-                      <div className="left-bench-item">
-                        <div
-                          className="PlayerIcon sub-icon-css"
-                          width="30"
-                          height="30"
-                        >
-                          <img
-                            alt=""
-                            className="Image SubImage"
-                            width="30"
-                            height="30"
-                            src="https://images.fotmob.com/image_resources/playerimages/848349.png"
-                          />
-                        </div>
-                        <span>
-                          <span className="sub-shirt">88</span>
-                          <span className="sub-name">Firatcan Üzüm</span>
-                        </span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
-                  </div>
-                </li>
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           </div>

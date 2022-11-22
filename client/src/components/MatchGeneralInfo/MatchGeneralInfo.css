@@ -1366,7 +1366,7 @@ img.Image.SubImage {
 }
 
 .sub-shirt {
-    color: rgba(159, 159, 159, 1);
+    color: rgba(159, 159, 159, 1) !important;
     width: 20px;
     display: inline-block;
     margin-right: 10px;
@@ -1387,7 +1387,7 @@ img.Image.SubImage {
 .subs-sub-time-text {
     min-width: 21px;
     margin-right: 10px;
-    color: rgba(97, 223, 110, 1);
+    color: rgba(97, 223, 110, 1) !important;
 }
 
 .right-bench-item > img {
