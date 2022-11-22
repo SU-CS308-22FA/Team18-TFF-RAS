@@ -8,21 +8,44 @@ import axios from "axios";
 
 
 
+
 const Referees = () => {
 
-  const [ref, setRef] = useState(null);
-  const baseURL = "http://localhost:3000/referee-page/api/referee/";
-  const id = "20160";
+  const [ref, setRef] = useState("null");
+  const baseURL = "/api/referee/20160";
+  //const id = "20160";
 
-  useEffect(() => {
-    axios.get(`${baseURL + id}`).then((response) => {
-      setRef(response.data);
-    })
-  }, []);
+  async function getRefereeData() {
+	try {
+		const response = await axios.get(`${baseURL}`);
+    setRef(response.data.id);
+		console.log(response);
+	}
+	catch (error) {
+		console.log(error);
+	}
+}
+
+  // useEffect(() => {
+  //   getRefereeData();
+  // },[])
+
+
+  // useEffect(() => {
+  //   axios.get(`${baseURL}`).then((response) => {
+  //     setRef(response.data);
+  //   }).catch(function(error) {
+  //     console.log("There is an error")
+  //   })
+  // }, []);
 
   return (
     <Wrapper className="full-page">
       <div className="form">
+        <button className="btn" onClick={() => {
+          getRefereeData();
+        }}>
+        click to get referee</button>
         {ref}
       </div>
     </Wrapper>

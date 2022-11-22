@@ -65,7 +65,7 @@ app.get('/api/match/:id', async(req, res)=>{
 
 app.get('/api/referee/:id', async(req, res)=>{
 	let data  = await ref.leech(req.params.id);
-	// console.log(data);
+	console.log(data);
 	res.json(data);
 });
 
