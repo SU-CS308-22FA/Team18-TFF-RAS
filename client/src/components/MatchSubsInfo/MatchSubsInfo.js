@@ -415,10 +415,10 @@ const MatchSubsInfo = ({ data }) => {
                 className="Image CoachImage"
                 width="30"
                 height="30"
-                src="https://images.fotmob.com/image_resources/playerimages/1183784.png"
+                src={data.lineups[0].coach.photo}
               />
             </div>
-            <span>Ömer Erdogan</span>
+            <span>{data.lineups[0].coach.name}</span>
           </a>
           <a className="coach-container-item-container-style-applyMediumHover-right">
             <div className="PlayerIcon  coach-icon-css" width="30" height="30">
@@ -427,10 +427,10 @@ const MatchSubsInfo = ({ data }) => {
                 className="Image CoachImage"
                 width="30"
                 height="30"
-                src="https://images.fotmob.com/image_resources/playerimages/154760.png"
+                src={data.lineups[1].coach.photo}
               />
             </div>
-            <span>Abdullah Avci</span>
+            <span>{data.lineups[1].coach.name}</span>
           </a>
           <h2 className="coaches-container-title">Coach</h2>
         </section>
@@ -472,7 +472,14 @@ const MatchSubsInfo = ({ data }) => {
                     </a>
                   </div>
                   <div className="right-bench-item">
-                    <div className="subs-badges-container"></div>
+                    <div className="subs-badges-container">
+                      <div className="player-badge-container">
+                        <img src={LineupPlayerGoal} />
+                      </div>
+                      <div className="player-badge-container">
+                        <img src={LineupPlayerGoal} />
+                      </div>
+                    </div>
                     <span className="subs-sub-time-text">67'</span>{" "}
                     <img src={SubIn} />
                   </div>

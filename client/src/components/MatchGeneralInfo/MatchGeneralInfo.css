@@ -1064,7 +1064,7 @@ img.Image.PlayerImage {
     border-left-color: ;
     border-left-style: ;
     border-left-width: ;
-    padding-top: 1px;
+    padding: 1px;
     border-top-left-radius: 50%;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
@@ -1200,6 +1200,7 @@ img.Image.CoachImage {
 .coaches-container-title {
     font-size: 18px;
     font-family: GTWalsheim-Md;
+    color: white;
 }
 
 .expand-button-container {
@@ -1566,4 +1567,9 @@ img.Image.stats-team-icon {
     font-family: GTWalsheim-Md;
     letter-spacing: 0.01px;
     white-space: nowrap;
+}
+
+.subs-badges-container {
+    display: flex;
+    margin-right: 20px;
 }
