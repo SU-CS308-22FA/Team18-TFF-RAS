@@ -1,11 +1,6 @@
 import express from "express";
 const app = express();
 
-//scrape requires
-import date from "./web-scraping/tff-bot-date.js";
-import match from "./web-scraping/tff-bot-matchID.js";
-import ref from "./web-scraping/tff-bot-refereeID.js";
-
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -26,6 +21,10 @@ import connectDB from "./db/connect.js";
 // routers
 import authRouter from "./routes/authRoutes.js";
 import jobsRouter from "./routes/jobsRoutes.js";
+import objectionsRouter from "./routes/objectionRoutes.js"
+
+
+import ref from "./web-scraping/tff-bot-refereeID"
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -55,29 +54,26 @@ app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);
-// copy here
-
-app.get('/api/match/:id', async(req, res)=>{
-	let data  = await match.leech(req.params.id);
-	console.log(data);
-	res.json(data);
-});
+app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 
 app.get('/api/referee/:id', async(req, res)=>{
 	let data  = await ref.leech(req.params.id);
+	// console.log(data);
 	console.log(data);
 	res.json(data);
 });
 
-app.get('/api/matchByDate/:date', async(req, res)=>{
-	let data  = await date.leech(req.params.date);
-	// console.log(data);
-	res.json(data);
-});
+
+app.get("/api/v1/objections", (req,res) => {
+  res.send("SUCCES");
+})
+
 // only when ready to deploy
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
+
+
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

@@ -18,7 +18,7 @@ const Referees = () => {
   async function getRefereeData() {
 	try {
 		const response = await axios.get(`${baseURL}`);
-    setRef(response.data.id);
+    setRef(response.data);
 		console.log(response);
 	}
 	catch (error) {
