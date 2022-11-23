@@ -110,7 +110,7 @@ input:is([type="button"], [type="submit"], [type="reset"]), input[type="file"]::
     text-align: center;
 }
 
-input, textarea, select, button {
+.match-page input, .match-page textarea, .match-page select, .match-page button {
     margin-top: 0em;
     font-style: normal;
     font-weight: 400;
