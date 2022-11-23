@@ -10,19 +10,15 @@ const Referees = () => {
   const [games, setGames] = useState([]);
   const [classification, setClassification] = useState("");
   const [region, setRegion] = useState("");
-  const [showButton, setShowButton] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const baseURL = "/api/referee/";
   const id = "20160";
 
   async function getRefereeData() {
 	try {
-    setIsLoading(true);
-    setShowButton(false);
 		const response = await axios.get(`${baseURL + id}`);
     const data = response.data;
-    console.log("data: ", data);
     setRefName(data["name"]);
     setGames(data["matchesRuled"]);
     setClassification(data["classification"]);
@@ -36,35 +32,31 @@ const Referees = () => {
 	}
 }
 
-const handleClick = () => {
-  getRefereeData();;
-}
+useEffect(() => {
+  getRefereeData();
+  }, []
+)
 
 
-const DisplayMatches = () => {
-  return (
-    games.map((game) => {
-        return ( <div>
-          <h1>home: {game["home"]}</h1> 
-          <h2>away: {game["away"]}</h2>
-          <h3>score: {game["score"]}</h3>
-          <p>--------------------------------</p>
-        </div>
-        )
-      }
-    )
-  )
-}
 
   return (
     <Wrapper className="full-page">
       <div className="form">
-        {showButton?<button className="btn" onClick={handleClick}>
-        click to get referee</button>: isLoading?  "Referee information is loading...":
+        {isLoading?  "Referee information is loading...":
         <div> 
-        name: {refName}
-        region: {region}
-        game1: {games.length > 0  ? games[0].home : "not yet"}
+        <h1>Referee Name:</h1> <p>{refName}</p>
+        <h2>Region: </h2> <p>{region} </p>
+        <h3>License: </h3> <p>{license}</p>
+        <h4>Classification: </h4> <p>{classification}</p>
+        <h1>Games: {games.map((game) => {
+          return (
+            <div>
+              <h1>Home: {game["home"]} --- Away: {game["away"]}</h1>
+              <h2>Score: {game["score"]}</h2>
+              <p>----------------------------------------------</p>
+            </div>
+          )
+        })}</h1>
         </div>
         }</div>
     </Wrapper>
