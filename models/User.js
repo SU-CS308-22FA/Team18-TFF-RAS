@@ -38,6 +38,26 @@ const UserSchema = new mongoose.Schema({
     maxlength: 20,
     default: "my city",
   },
+  isAssigner: {
+    type: Boolean,
+    default: "false",
+  },
+  isInvestigator: {
+    type: Boolean,
+    default: "false",
+  },
+  isReferee: {
+    type: Boolean,
+    default: "false",
+  },
+  isObserver: {
+    type: Boolean,
+    default: "false",
+  },
+  isClub: {
+    type: Boolean,
+    default: "false",
+  },
 });
 
 UserSchema.pre("save", async function () {
