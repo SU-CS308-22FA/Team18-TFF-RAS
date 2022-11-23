@@ -6,11 +6,8 @@ import {
   Referees,
   Profile,
   SharedLayout,
-<<<<<<< HEAD
-  Objection
-=======
+  Objection,
   Match,
->>>>>>> develop
 } from "./pages/dashboard";
 
 function App() {
