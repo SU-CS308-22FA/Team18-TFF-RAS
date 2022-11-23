@@ -23,22 +23,35 @@ const Matches = () => {
   return (
     <div className="matches-page-container">
       <Calendar onChange={onDateSelect} value={currentDate} />
-      <div className="matches-container">
-        {matches.map((match, idx) => (
-          <MatchItem
-            key={idx}
-            link={"/matches/" + match.fixture.id}
-            homeTeam={match.teams.home.name}
-            awayTeam={match.teams.away.name}
-            homeTeamImg={match.teams.home.logo}
-            awayTeamImg={match.teams.away.logo}
-            isUpcoming={match.fixture.status.short == "NS"}
-            matchTime={new Date(match.fixture.date).toTimeString().slice(0, 5)}
-            matchScore={match.goals.home + "-" + match.goals.away}
-            isOver={match.fixture.status.short == "FT"}
-            currentTime={73}
-          />
-        ))}
+      <div
+        className="matches-container"
+        style={
+          matches.length > 0
+            ? { height: matches.length * 70 + "px" }
+            : { alignItems: "center", justifyItems: "center" }
+        }
+      >
+        {matches.length > 0 ? (
+          matches.map((match, idx) => (
+            <MatchItem
+              key={idx}
+              link={"/matches/" + match.fixture.id}
+              homeTeam={match.teams.home.name}
+              awayTeam={match.teams.away.name}
+              homeTeamImg={match.teams.home.logo}
+              awayTeamImg={match.teams.away.logo}
+              isUpcoming={match.fixture.status.short == "NS"}
+              matchTime={new Date(match.fixture.date)
+                .toTimeString()
+                .slice(0, 5)}
+              matchScore={match.goals.home + "-" + match.goals.away}
+              isOver={match.fixture.status.short == "FT"}
+              currentTime={73}
+            />
+          ))
+        ) : (
+          <p className="no-matches-container">No matches</p>
+        )}
       </div>
     </div>
   );

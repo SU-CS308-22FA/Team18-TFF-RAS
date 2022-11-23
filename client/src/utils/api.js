@@ -19,22 +19,27 @@ const getMatches = async (date) => {
     return matches;
   } catch (error) {
     console.log("ERROR");
+    return [];
   }
 };
 
 const getMatch = async (matchId) => {
-  const { data } = await axios.get(
-    "https://api-football-v1.p.rapidapi.com/v3/fixtures",
-    {
-      params: { id: matchId },
-      headers: {
-        "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
-        "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
-      },
-    }
-  );
+  try {
+    const { data } = await axios.get(
+      "https://api-football-v1.p.rapidapi.com/v3/fixtures",
+      {
+        params: { id: matchId },
+        headers: {
+          "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
+          "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
+        },
+      }
+    );
 
-  return data.response[0];
+    return data.response[0];
+  } catch (error) {
+    return {};
+  }
 };
 
 export { getMatches, getMatch };
