@@ -37,6 +37,8 @@ const Objection = () => {
       setObjection({ ...objection, showError: true });
     }
   };
+
+  const refs = [{name: "kerim"}, {name: "mehmet"}]
   return (
     <Wrapper className="full-page">
         <form className="form">
