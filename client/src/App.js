@@ -6,7 +6,11 @@ import {
   Referees,
   Profile,
   SharedLayout,
+<<<<<<< HEAD
   Objection
+=======
+  Match,
+>>>>>>> develop
 } from "./pages/dashboard";
 
 function App() {
@@ -23,6 +27,7 @@ function App() {
         >
           <Route index element={<Home />} />
           <Route path="matches" element={<Matches />} />
+          <Route path="matches/:id" element={<Match />} />
           <Route path="referees" element={<Referees />} />
           <Route path="profile" element={<Profile />} />
           <Route path="/objection" element={<Objection />} />
