@@ -40,13 +40,12 @@ const Matches = () => {
               awayTeam={match.teams.away.name}
               homeTeamImg={match.teams.home.logo}
               awayTeamImg={match.teams.away.logo}
-              isUpcoming={match.fixture.status.short == "NS"}
               matchTime={new Date(match.fixture.date)
                 .toTimeString()
                 .slice(0, 5)}
               matchScore={match.goals.home + "-" + match.goals.away}
-              isOver={match.fixture.status.short == "FT"}
               currentTime={73}
+              status={match.fixture.status.short}
             />
           ))
         ) : (

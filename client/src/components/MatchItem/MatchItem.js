@@ -8,11 +8,10 @@ const MatchItem = ({
   awayTeam,
   homeTeamImg,
   awayTeamImg,
-  isUpcoming,
   matchTime,
   matchScore,
-  isOver,
   currentTime,
+  status,
 }) => {
   return (
     <Link to={link} className="match-item">
@@ -24,13 +23,37 @@ const MatchItem = ({
         src={homeTeamImg}
       />
       <div className="match-item-details-container">
-        {isUpcoming ? (
-          <span className="match-item-time">{matchTime}</span>
+        {["TBD"].includes(status) ? (
+          <span className="match-item-score">TBD</span>
+        ) : ["NS", "PST", "CANC", "ABD", "AWD", "WO"].includes(status) ? (
+          <>
+            <span
+              className="match-item-time"
+              style={status != "NS" ? { textDecoration: "line-through" } : {}}
+            >
+              {matchTime}
+            </span>
+            {status === "NS" ? null : (
+              <span className="match-item-ft">{status}</span>
+            )}
+          </>
         ) : (
           <>
             <span className="match-item-score">{matchScore}</span>
-            <span className={isOver ? "match-item-ft" : "match-item-live"}>
-              {isOver ? "FT" : currentTime + "'"}
+            <span
+              className={
+                ["HT", "BT", "P", "SUSP", "INT", "FT", "AET", "PEN"].includes(
+                  status
+                )
+                  ? "match-item-ft"
+                  : "match-item-live"
+              }
+            >
+              {["HT", "BT", "P", "SUSP", "INT", "FT", "AET", "PEN"].includes(
+                status
+              )
+                ? status
+                : currentTime + "'"}
             </span>
           </>
         )}
