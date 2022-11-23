@@ -1,6 +1,7 @@
 import "./MatchGeneralInfo.css";
 import PropTypes from "prop-types";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const MatchGeneralInfo = ({ showHeader, data }) => {
   console.log(data);
@@ -19,7 +20,7 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
         <div className="full-screen-css">
           <div className="grid-container">
             <div className="left-grid-item">
-              <button className="back-button-apply-hover">
+              <Link to="/matches" className="back-button-apply-hover">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="19.002"
@@ -40,7 +41,7 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                   ></path>
                 </svg>
                 <span>matches</span>
-              </button>
+              </Link>
             </div>
             <div className="middle-grid-item">
               <a className="header-league-css">

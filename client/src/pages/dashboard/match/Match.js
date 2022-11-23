@@ -7,8 +7,11 @@ import MatchStatsInfo from "../../../components/MatchStatsInfo/MatchStatsInfo";
 
 import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
 import { getMatch } from "../../../utils/api";
+import { useParams } from "react-router-dom";
 
 const Match = () => {
+  const { id } = useParams();
+
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
 
@@ -30,7 +33,7 @@ const Match = () => {
   }, []);
 
   useEffect(() => {
-    getMatch(123).then((data) => {
+    getMatch(id).then((data) => {
       setMatchData(data);
     });
   }, []);
