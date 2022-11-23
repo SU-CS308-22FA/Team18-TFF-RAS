@@ -21,10 +21,9 @@ import connectDB from "./db/connect.js";
 // routers
 import authRouter from "./routes/authRoutes.js";
 import jobsRouter from "./routes/jobsRoutes.js";
-import objectionsRouter from "./routes/objectionRoutes.js"
 
 
-import ref from "./web-scraping/tff-bot-refereeID"
+import ref from "./web-scraping/tff-bot-refereeID.js"
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -54,10 +53,9 @@ app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);
-app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 
 app.get('/api/referee/:id', async(req, res)=>{
-	let data  = await ref.leech(req.params.id);
+	let data  = await ref(req.params.id);
 	// console.log(data);
 	console.log(data);
 	res.json(data);

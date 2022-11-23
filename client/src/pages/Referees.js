@@ -11,7 +11,11 @@ import axios from "axios";
 
 const Referees = () => {
 
-  const [ref, setRef] = useState("null");
+  const [ref, setRef] = useState({});
+  const [matches, setMatches] = useState([]);
+  const [home, setHome] = useState("");
+  const [showButton, setShowButton] = useState(true);
+
   const baseURL = "/api/referee/20160";
   //const id = "20160";
 
@@ -19,11 +23,15 @@ const Referees = () => {
 	try {
 		const response = await axios.get(`${baseURL}`);
     setRef(response.data);
-		console.log(response);
 	}
 	catch (error) {
 		console.log(error);
 	}
+}
+
+const handleClick = () => {
+  getRefereeData();
+  setShowButton(false)
 }
 
   // useEffect(() => {
@@ -42,12 +50,8 @@ const Referees = () => {
   return (
     <Wrapper className="full-page">
       <div className="form">
-        <button className="btn" onClick={() => {
-          getRefereeData();
-        }}>
-        click to get referee</button>
-        {ref}
-      </div>
+        {showButton?<button className="btn" onClick={handleClick}>
+        click to get referee</button>: ref["name"]}</div>
     </Wrapper>
   )
 };
