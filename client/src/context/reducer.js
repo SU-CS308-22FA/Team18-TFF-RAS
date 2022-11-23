@@ -20,7 +20,10 @@ import {
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
   DELETE_OBJECTION_SUCCES,
-  DELETE_OBJECTION_ERROR
+  DELETE_OBJECTION_ERROR,
+  GET_OBJECTIONS_BEGIN,
+  GET_OBJECTIONS_SUCCESS,
+  GET_OBJECTIONS_ERROR
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -194,6 +197,31 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
+    }
+  }
+  if (action.type === GET_OBJECTIONS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }
+  if (action.type === GET_OBJECTIONS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertText: "Objections are visible",
+      alerttype: "success"
+
+    }
+  }
+  if (action.type === GET_OBJECTIONS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: "Can't get Objections"
     }
   }
 

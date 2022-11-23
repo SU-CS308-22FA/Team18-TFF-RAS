@@ -23,7 +23,10 @@ import {
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
   DELETE_OBJECTION_SUCCES,
-  DELETE_OBJECTION_ERROR
+  DELETE_OBJECTION_ERROR,
+  GET_OBJECTIONS_BEGIN,
+  GET_OBJECTIONS_SUCCESS,
+  GET_OBJECTIONS_ERROR
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -86,10 +89,29 @@ const AppProvider = ({ children }) => {
   {/* CHECK */}
   {/* CHECK */}
   {/* CHECK */}
+  const getObjections = async (currentObjection) => {
+    dispatch({type: GET_OBJECTIONS_BEGIN});
+    try {
+      const response = await authFetch.post("/objections/",currentObjection)
+      const {objections} = response.data;
+      dispatch({
+        type: GET_OBJECTIONS_SUCCESS,
+        payload: {objections}
+      });
+    }
+    catch(err) {
+      dispatch({
+        type: GET_OBJECTIONS_ERROR,
+        payload: {msg: err.response.data.msg},
+      })
+    }
+  }
+
+
   const createObjection = async (currentObjection) => {
     dispatch({ type: CREATE_OBJECTION_BEGIN });
     try {
-      const response = await axios.post("/api/v1/objections/objection", currentObjection);
+      const response = await authFetch.post("/objections/", currentObjection);
       const {objection} = response.data;
       dispatch({
         type: CREATE_OBJECTION_SUCCES,
@@ -108,7 +130,7 @@ const AppProvider = ({ children }) => {
   const deleteObjection = async (currentObjection) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
     try {
-      await authFetch.delete("/objections/objection", currentObjection);
+      await authFetch.delete("/objections/", currentObjection);
       dispatch({
         type: DELETE_OBJECTION_SUCCES,
       });
@@ -264,6 +286,7 @@ const AppProvider = ({ children }) => {
         deleteUser,
         createObjection,
         deleteObjection,
+        getObjections,
       }}
     >
       {children}

@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import Wrapper from "../../assets/wrappers/LandingPage";
 import { Logo, FormRow } from "../../components"
-// JS
-// const input = document.getElementById('myText');
-// const inputValue = input.value
-// React
-// value, onChange
+import { useAppContext } from "../../context/appContext";
 
 const Objection = () => {
   const [objection, setObjection] = useState({
     showError: false,
     referee: "",
-    objectionText: "",
-    ID: "",
+    refereeId: "356",
+    anObjection: "",
+    isInProcess: false,
+    clubId: "136",
+    isResolved: false,
     //new mongoose.Types.ObjectId()
   });
+
+  const { createObjection } = useAppContext();
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -22,15 +23,16 @@ const Objection = () => {
     const newObjection = { ...objection, [name]: value };
 
     if (newObjection.referee &&
-        newObjection.objectionText) {
+        newObjection.anObjection) {
            newObjection.showError = false;
         }
     setObjection(newObjection);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (objection.referee && objection.objectionText) {
-      setObjection({ referee: "", objectionText: "", showError:false });
+    if (objection.referee && objection.anObjection) {
+      createObjection(objection);
+      setObjection({ ...objection, referee: "", anObjection: "", showError:false });
     } else {
       setObjection({ ...objection, showError: true });
     }
@@ -50,8 +52,8 @@ const Objection = () => {
           />
           <FormRow
             type="text"
-            name="objectionText"
-            value={objection.objectionText}
+            name="anObjection"
+            value={objection.anObjection}
             handleChange={handleChange}
             labelText="Objection"
           />
@@ -61,7 +63,7 @@ const Objection = () => {
         {objection.showError ? (
           <h4 className="form-error">
             {(objection.referee &&
-              objection.objectionText) ? null:
+              objection.anObjection) ? null:
               "ERROR!!! Please fill all the blanks."}
           </h4>
         ) : null}

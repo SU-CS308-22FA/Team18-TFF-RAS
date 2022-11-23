@@ -4,14 +4,12 @@ const objectionSchema = new mongoose.Schema({
   clubId: {
     type: String,
     required: [true, "No club ID!"],
-    unique: true,
   },
   refereeId: {
     type: String,
     required: [true, "No referee ID!!!"],
-    unique: true,
   },
-  objection: {
+  anObjection: {
     type: String,
     required: [true, "Objection is not entered!!!"]
   },

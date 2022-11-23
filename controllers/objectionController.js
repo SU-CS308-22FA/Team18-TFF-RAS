@@ -3,14 +3,17 @@ import { StatusCodes } from "http-status-codes";
 import { BadRequestError } from "../errors/index.js";
 
 const createObjection = async (req, res) => {
-  const { clubId, refereeId, obejction, isInProcess, isResolved } = req.body;
+  const { clubId, refereeId, anObjection, isInProcess, isResolved } = req.body;
+  console.log(req.body);
 
-  if (!clubId || !refereeId || !obejction) {
+  if (!clubId || !refereeId || !anObjection) {
+    console.log("WHYYYYY")
     throw new BadRequestError("please provide all values");
   }
 
-
-  const objection = await Objection.create({ clubId, refereeId, obejction, isInProcess, isResolved });
+  console.log("hi")
+  const objection = await Objection.create({ clubId, refereeId, anObjection, isInProcess, isResolved });
+  console.log("bye")
 
   res.status(StatusCodes.CREATED).json({
     objection: {
