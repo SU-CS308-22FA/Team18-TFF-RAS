@@ -19,7 +19,7 @@ const createObjection = async (req, res) => {
     objection: {
       clubId: objection.clubId,
       refereeId: objection.refereeId,
-      objection: objection.objection,
+      objection: objection.anObjection,
       isInProcess: objection.isInProcess,
       isResolved: objection.isResolved,
     }
