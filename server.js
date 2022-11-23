@@ -52,6 +52,9 @@ app.use(mongoSanitize());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
+app.get("/api/v1/objections", function(req,res) {
+  res.send("HELLOO");
+})
 // only when ready to deploy
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));

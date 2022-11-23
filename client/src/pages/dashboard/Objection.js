@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Wrapper from "../assets/wrappers/LandingPage";
-import { Logo, FormRow } from "../components";
+import Wrapper from "../../assets/wrappers/LandingPage";
+import { Logo, FormRow } from "../../components"
 // JS
 // const input = document.getElementById('myText');
 // const inputValue = input.value
