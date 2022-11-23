@@ -1,3 +1,3 @@
 # Team18-TFF-RAS
 
-https://tff-ras.herokuapp.com
+https://tff-ras.up.railway.app/
