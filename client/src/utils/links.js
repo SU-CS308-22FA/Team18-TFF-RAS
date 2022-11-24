@@ -2,6 +2,7 @@ import { IoBarChartSharp } from "react-icons/io5";
 import { MdQueryStats } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
+import {AiFillExclamationCircle} from "react-icons/ai"
 
 const links = [
   {
@@ -28,6 +29,12 @@ const links = [
     path: "profile",
     icon: <ImProfile />,
   },
+  {
+    id: 5,
+    text: "objection",
+    path: "objection",
+    icon: <AiFillExclamationCircle />
+  }
 ];
 
 export default links;
