@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 
 export default async (email, subject, text) => {
   try {
+    console.log("transporter is being created");
     const transporter = nodemailer.createTransport({
       host: "mail.smtp2go.com",
       port: 2525,
