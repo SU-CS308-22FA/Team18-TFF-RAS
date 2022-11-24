@@ -1,3 +1,2 @@
 # Team18-TFF-RAS
-
-https://tff-ras.up.railway.app/
+https://team18-tff-ras-production.up.railway.app/

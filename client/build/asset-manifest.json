@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.772eda0c.css",
-    "main.js": "/static/js/main.f0dc1671.js",
+    "main.css": "/static/css/main.28f31146.css",
+    "main.js": "/static/js/main.29e69b94.js",
     "static/media/tffLogo.png": "/static/media/tffLogo.30357abfff30f0998400.png",
     "static/media/not-found.svg": "/static/media/not-found.5cbf8af137fc62087832342c8129ab4b.svg",
     "static/media/main.svg": "/static/media/main.99cdc9a0a4c5fbb553142f5d1e19f5ff.svg",
@@ -22,11 +22,11 @@
     "index.html": "/index.html",
     "static/media/penalty-missed.svg": "/static/media/penalty-missed.e1c345535a31dfde430d6421dd4e4729.svg",
     "static/media/lineup-card-yellow.svg": "/static/media/lineup-card-yellow.ed52e54e9b945d49547efaf4bf556aeb.svg",
-    "main.772eda0c.css.map": "/static/css/main.772eda0c.css.map",
-    "main.f0dc1671.js.map": "/static/js/main.f0dc1671.js.map"
+    "main.28f31146.css.map": "/static/css/main.28f31146.css.map",
+    "main.29e69b94.js.map": "/static/js/main.29e69b94.js.map"
   },
   "entrypoints": [
-    "static/css/main.772eda0c.css",
-    "static/js/main.f0dc1671.js"
+    "static/css/main.28f31146.css",
+    "static/js/main.29e69b94.js"
   ]
 }
