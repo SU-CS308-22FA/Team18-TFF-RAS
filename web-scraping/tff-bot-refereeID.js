@@ -14,7 +14,7 @@ async function initializePage() {
     logger.debug("browser init started");
 
     const browser = await chromium.launch({
-        headless: process.env.NODE_ENV === "production",
+        headless: process.env.NODE_ENV === "postbuild",
         args: ["--disable-gpu"]
     });
     const context = await browser.newContext({
