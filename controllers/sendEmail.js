@@ -11,7 +11,7 @@ export default async (email, subject, text) => {
         pass: process.env.SMTP_PASSWORD,
       },
     });
-
+    console.log(transporter);
     await transporter.sendMail({
       from: "TFF RAS <victorotaiwo@gmail.com>",
       to: email,
