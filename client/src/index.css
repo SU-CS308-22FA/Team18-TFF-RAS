@@ -163,6 +163,19 @@ ul {
   text-transform: capitalize;
   display: inline-block;
 }
+.btn-ref{
+  cursor: pointer;
+  color: var(--white);
+  background: var(--primary-400);
+  border: transparent;
+  border-radius: var(--borderRadius);
+  letter-spacing: var(--letterSpacing);
+  padding: 0.375rem 0.75rem;
+  box-shadow: var(--shadow-2);
+  transition: var(--transition);
+  text-transform: capitalize;
+  display: flex;
+}
 .btn:hover {
   background: var(--primary-700);
   box-shadow: var(--shadow-3);
@@ -219,6 +232,18 @@ ul {
   padding: 2rem 2.5rem;
   margin: 3rem auto;
   transition: var(--transition);
+}
+.form-ref {
+  width: 90vw;
+  max-width: var(--fixed-width);
+  background: var(--white);
+  border-radius: var(--borderRadius);
+  box-shadow: var(--shadow-2);
+  padding: 2rem 2.5rem;
+  margin: 3rem auto;
+  margin-right: 3rem;
+  transition: var(--transition);
+  display: inline-block;
 }
 .form:hover {
   box-shadow: var(--shadow-4);
@@ -316,6 +341,11 @@ ul {
 }
 
 .container {
+  width: var(--fluid-width);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+.container-ref {
   width: var(--fluid-width);
   max-width: var(--max-width);
   margin: 0 auto;
