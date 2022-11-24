@@ -18,6 +18,9 @@ import {
   DELETE_USER_BEGIN,
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
+  VERIFY_USER_BEGIN,
+  VERIFY_USER_SUCCESS,
+  VERIFY_USER_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -27,6 +30,7 @@ const userLocation = localStorage.getItem("location");
 const initialState = {
   isLoading: false,
   isDeleting: false,
+  isVerifying: false,
   showAlert: false,
   alertText: "",
   alertType: "",
@@ -172,6 +176,29 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const verifyUser = async (currentUser) => {
+    dispatch({ type: VERIFY_USER_BEGIN });
+    try {
+      const { data } = await authFetch.post("/verify/", currentUser);
+
+      // no token
+      const { message } = data;
+
+      dispatch({
+        type: VERIFY_USER_SUCCESS,
+        payload: { message },
+      });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: VERIFY_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
   const deleteUser = async (currentUser) => {
     dispatch({ type: DELETE_USER_BEGIN });
     try {
@@ -203,6 +230,7 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         deleteUser,
+        verifyUser,
       }}
     >
       {children}
