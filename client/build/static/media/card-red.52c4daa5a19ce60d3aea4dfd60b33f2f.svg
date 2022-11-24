@@ -1,0 +1,57 @@
+<svg
+    width="25px"
+    height="25px"
+    viewBox="0 0 25 25"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <g
+    id="Page-1"
+    stroke="none"
+    strokeWidth="1"
+    fill="none"
+    fillRule="evenodd"
+    >
+    <g
+        id="ic-goal-lineup"
+        transform="translate(1.000000, 1.000000)"
+    >
+        <g id="Ellipse_462">
+        <circle
+            id="Oval"
+            fill="white"
+            fillRule="nonzero"
+            cx="11.5"
+            cy="11.5"
+            r="11"
+        ></circle>
+        <circle
+            id="Oval"
+            stroke="white"
+            cx="11.5"
+            cy="11.5"
+            r="11.5"
+        ></circle>
+        </g>
+        <g
+        id="ic-yellow-card-lineup"
+        transform="translate(3.250000, 3.250000)"
+        >
+        <rect
+            id="Rectangle_2316"
+            fill="rgba(229, 94, 91, 1)"
+            fillRule="nonzero"
+            x="2.312"
+            y="0.337"
+            width="11.852"
+            height="15.802"
+            rx="2"
+        ></rect>
+        <polygon
+            id="Rectangle_2688"
+            points="0 0 16.5 0 16.5 16.5 0 16.5"
+        ></polygon>
+        </g>
+    </g>
+    </g>
+</svg>
