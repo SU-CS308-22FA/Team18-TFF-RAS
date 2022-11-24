@@ -25,7 +25,12 @@ const verify = async (req, res) => {
       ? `${process.env.BASE_URL}`
       : "https://tff-ras.up.railway.app/";
   const url = `${Base}/api/v1/verify/${emailToken.code}`;
-  await sendEmail(user.email, "Account verification", url);
+  try {
+    await sendEmail(user.email, "Account verification", url);
+  } catch (error) {
+    console.log(error);
+  }
+
   res.status(201).json({ message: "An email has been sent to your inbox" });
 };
 
