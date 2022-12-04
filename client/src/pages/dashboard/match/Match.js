@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
 import MatchEventsInfo from "../../../components/MatchEventsInfo/MatchEventsInfo";
 import MatchSubsInfo from "../../../components/MatchSubsInfo/MatchSubsInfo";
@@ -8,6 +9,7 @@ import MatchStatsInfo from "../../../components/MatchStatsInfo/MatchStatsInfo";
 import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
 import { getMatch } from "../../../utils/api";
 import { useParams } from "react-router-dom";
+import { Rating } from "react-simple-star-rating";
 
 const Match = () => {
   const { id } = useParams();
@@ -43,12 +45,47 @@ const Match = () => {
   }
 
   return (
-    <div className="match-page">
-      <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
-      <MatchEventsInfo data={matchData} />
-      <MatchSubsInfo data={matchData} />
-      <MatchStatsInfo data={matchData.statistics} />
-    </div>
+    <MatchPageWrapper>
+      <main id="match-facts-wrapper">
+        <div className="full-screen-match-content">
+          <div className="match-page">
+            <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
+            <MatchEventsInfo data={matchData} />
+            <MatchSubsInfo data={matchData} />
+            <MatchStatsInfo data={matchData.statistics} />
+          </div>
+          <div className="RightColumn">
+            <div className="rating-container card-css">
+              <section className="rating-section">
+                <header className="rating-title-container">
+                  <h2 className="rating-title">Rate referee performance</h2>
+                </header>
+                <div className="rating-body-container">
+                  <div className="rating-body-referee-container">
+                    <img
+                      alt=""
+                      className="Image TeamIcon "
+                      width="30"
+                      height="30"
+                      src="https://images.fotmob.com/image_resources/logo/teamlogo/1933.png"
+                    />
+                  </div>
+                  <div className="rating-body-rating-container">
+                    <Rating
+                    // onClick={handleRating}
+                    // onPointerEnter={onPointerEnter}
+                    // onPointerLeave={onPointerLeave}
+                    // onPointerMove={onPointerMove}
+                    /* Available Props */
+                    />
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </main>
+    </MatchPageWrapper>
   );
 };
 

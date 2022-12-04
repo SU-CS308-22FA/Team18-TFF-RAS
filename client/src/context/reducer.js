@@ -23,7 +23,7 @@ import {
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
-  GET_OBJECTIONS_ERROR
+  GET_OBJECTIONS_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -155,8 +155,9 @@ const reducer = (state, action) => {
   }
   if (action.type === CREATE_OBJECTION_BEGIN) {
     return {
-      ...state, isLoading: true
-    }
+      ...state,
+      isLoading: true,
+    };
   }
   if (action.type === CREATE_OBJECTION_SUCCES) {
     return {
@@ -166,8 +167,7 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "success",
       alertText: "Objection created! Redirecting...",
-
-    }
+    };
   }
   if (action.type === CREATE_OBJECTION_ERROR) {
     return {
@@ -176,10 +176,10 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
-    }
+    };
   }
   if (action.type === DELETE_OBJECTION_BEGIN) {
-      return { ...state, isDeleting: true };
+    return { ...state, isDeleting: true };
   }
   if (action.type === DELETE_OBJECTION_SUCCES) {
     return {
@@ -188,7 +188,7 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "success",
       alertText: "Objection Deleted!",
-    }
+    };
   }
   if (action.type === DELETE_OBJECTION_ERROR) {
     return {
@@ -197,13 +197,13 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
-    }
+    };
   }
   if (action.type === GET_OBJECTIONS_BEGIN) {
     return {
       ...state,
       isLoading: true,
-    }
+    };
   }
   if (action.type === GET_OBJECTIONS_SUCCESS) {
     return {
@@ -211,9 +211,8 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertText: "Objections are visible",
-      alerttype: "success"
-
-    }
+      alerttype: "success",
+    };
   }
   if (action.type === GET_OBJECTIONS_ERROR) {
     return {
@@ -221,8 +220,8 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "danger",
-      alertText: "Can't get Objections"
-    }
+      alertText: "Can't get Objections",
+    };
   }
 
   throw new Error(`no such action : ${action.type}`);

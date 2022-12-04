@@ -26,7 +26,7 @@ import {
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
-  GET_OBJECTIONS_ERROR
+  GET_OBJECTIONS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -73,7 +73,10 @@ const AppProvider = ({ children }) => {
   };
 
   const addObjectionToLocalStroge = ({ newObjection }) => {
-    localStorage.setItem("objections", JSON.stringify([...objections, newObjection ]));
+    localStorage.setItem(
+      "objections",
+      JSON.stringify([...objections, newObjection])
+    );
   };
 
   const removeObjectionFromLocalStorage = () => {
@@ -86,46 +89,49 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("location");
   };
 
-  {/* CHECK */}
-  {/* CHECK */}
-  {/* CHECK */}
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
   const getObjections = async (currentObjection) => {
-    dispatch({type: GET_OBJECTIONS_BEGIN});
+    dispatch({ type: GET_OBJECTIONS_BEGIN });
     try {
-      const response = await authFetch.post("/objections/",currentObjection)
-      const {objections} = response.data;
+      const response = await authFetch.post("/objections/", currentObjection);
+      const { objections } = response.data;
       dispatch({
         type: GET_OBJECTIONS_SUCCESS,
-        payload: {objections}
+        payload: { objections },
       });
-    }
-    catch(err) {
+    } catch (err) {
       dispatch({
         type: GET_OBJECTIONS_ERROR,
-        payload: {msg: err.response.data.msg},
-      })
+        payload: { msg: err.response.data.msg },
+      });
     }
-  }
-
+  };
 
   const createObjection = async (currentObjection) => {
     dispatch({ type: CREATE_OBJECTION_BEGIN });
     try {
       const response = await authFetch.post("/objections/", currentObjection);
-      const {objection} = response.data;
+      const { objection } = response.data;
       dispatch({
         type: CREATE_OBJECTION_SUCCES,
         payload: { objection },
       });
       addObjectionToLocalStroge({ objection });
-    }
-    catch (err) {
-        dispatch({
+    } catch (err) {
+      dispatch({
         type: CREATE_OBJECTION_ERROR,
         payload: { msg: err.response.data.msg },
       });
     }
-  }
+  };
 
   const deleteObjection = async (currentObjection) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
@@ -144,10 +150,16 @@ const AppProvider = ({ children }) => {
       }
     }
     clearAlert();
+  };
+  {
+    /* CHECK */
   }
-  {/* CHECK */}
-  {/* CHECK */}
-  {/* CHECK */}
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
