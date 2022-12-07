@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 
 import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
@@ -20,6 +22,7 @@ const Match = () => {
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
   const [rating, setRating] = useState(0);
+  const [isChoosingEvent, setIsChoosingEvent] = useState(false);
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -87,6 +90,13 @@ const Match = () => {
                       variant="filled"
                       color="primary"
                     />
+                    <Button
+                      className="add-event-review-button"
+                      variant="outlined"
+                      startIcon={<AddIcon />}
+                    >
+                      Add Event Review
+                    </Button>
                   </div>
                 </div>
               </section>

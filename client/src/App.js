@@ -38,7 +38,6 @@ function App() {
           >
             <Route index element={<Home />} />
             <Route path="matches" element={<Matches />} />
-            <Route path="matches/:id" element={<Match />} />
             <Route path="referees" element={<Referees />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/objection" element={<Objection />} />
@@ -46,6 +45,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/referee-page" element={<Referees />} />
+          <Route path="/matches/:id" element={<Match />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </BrowserRouter>

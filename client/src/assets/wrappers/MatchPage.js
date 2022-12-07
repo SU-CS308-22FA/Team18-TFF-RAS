@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Wrapper = styled.main`
+  padding-top: 20px;
   min-height: 100vh;
   margin: 0 auto;
   max-width: 1280px;
@@ -83,6 +84,11 @@ const Wrapper = styled.main`
 
   .referee-comment {
     margin: 15px 0;
+    width: 80%;
+  }
+
+  .add-event-review-button {
+    margin-bottom: 15px;
     width: 80%;
   }
 `;
