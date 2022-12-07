@@ -187,8 +187,8 @@ img.Image {
 }
 
 .drop-down-header {
-    /* width: 1280px; */
-    width: 74.45%;
+    width: 1280px;
+    /* width: 100%; */
     position: fixed;
     z-index: 19;
     /* background-color: rgb(39, 39, 39); */
