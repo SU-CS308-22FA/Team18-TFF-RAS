@@ -46,7 +46,7 @@ const Wrapper = styled.main`
 
   .rating-title {
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
   }
 
   h2 {
