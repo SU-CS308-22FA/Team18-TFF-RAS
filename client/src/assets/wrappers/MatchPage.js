@@ -74,9 +74,16 @@ const Wrapper = styled.main`
   }
 
   .rating-body-rating-container {
+    padding: 0;
     padding-top: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+  }
+
+  .referee-comment {
+    padding: 5px;
+    border-radius: 5px;
   }
 `;
 
