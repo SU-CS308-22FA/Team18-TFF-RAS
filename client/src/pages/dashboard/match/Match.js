@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import GoalEventIcon from "../../../assets/images/goal-event-icon.svg";
+
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -62,6 +64,24 @@ const Match = () => {
 
   return (
     <MatchPageWrapper>
+      {/* <div style={{ width: "100%", height: 100, position: "relative" }}>
+        <iframe
+          src="https://www.scorebat.com/embed/v/63900a02a0901/?utm_source=api&utm_medium=video&utm_campaign=dflt"
+          frameBorder="0"
+          width="100%"
+          height="100%"
+          allowfullscreen
+          allow="autoplay; fullscreen"
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            overflow: "hidden",
+          }}
+        ></iframe>
+      </div> */}
       <div
         className="overlay"
         style={{ display: isChoosingEvent ? "block" : "none" }}
@@ -108,6 +128,66 @@ const Match = () => {
                       variant="filled"
                       color="primary"
                     />
+                    {reviewEvents.length > 0 ? (
+                      <div className="reviews-divider" />
+                    ) : null}
+                    <div className="events-reviews-container">
+                      {reviewEvents.map((reviewEvent, idx) => (
+                        <div key={idx} className="event-review-container">
+                          <div className="event-review-details-container">
+                            <div className="event-review-time">
+                              <span>88’ Goal!</span>
+                            </div>
+                            {/* <h5 className="event-review-title">Goal!</h5> */}
+                          </div>
+                          <a>
+                            <div className="event-review-player-card-container">
+                              <div className="event-review-player-title-details">
+                                <div
+                                  className="player-icon-css"
+                                  width="40"
+                                  height="40"
+                                >
+                                  <img
+                                    alt=""
+                                    className="Image PlayerImage"
+                                    width="40"
+                                    height="40"
+                                    src="https://images.fotmob.com/image_resources/playerimages/291399.png"
+                                  />
+                                  <img
+                                    alt=""
+                                    className="Image review-team-icon"
+                                    width="16"
+                                    height="16"
+                                    src="https://images.fotmob.com/image_resources/logo/teamlogo/8637_xsmall.png"
+                                  />
+                                </div>
+                                <div className="event-review-player-name-container">
+                                  <span className="event-review-player-first-name">
+                                    Abdülkerim
+                                  </span>
+                                  <span className="event-review-player-last-name">
+                                    Bardakci
+                                  </span>
+                                </div>
+                              </div>
+                              <img src={GoalEventIcon} />
+                            </div>
+                          </a>
+                          <TextField
+                            className="review-event-comment"
+                            label="Event Review"
+                            multiline
+                            rows={3}
+                            defaultValue=""
+                            placeholder="Describe the referee's performance in this event"
+                            variant="filled"
+                            color="secondary"
+                          />
+                        </div>
+                      ))}
+                    </div>
                     <Button
                       onClick={() => setIsChoosingEvent(!isChoosingEvent)}
                       className="add-event-review-button"
