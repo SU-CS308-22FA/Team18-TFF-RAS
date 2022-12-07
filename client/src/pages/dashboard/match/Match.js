@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Form from "react-bootstrap/Form";
+import TextField from "@mui/material/TextField";
 
 import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
@@ -77,11 +77,12 @@ const Match = () => {
                   </div>
                   <div className="rating-body-rating-container">
                     <Rating allowHover={false} onClick={setRating} />
-                    <Form.Control
-                      className="referee-comment"
-                      as="textarea"
-                      placeholder="Describe the referee's performance in more detail"
-                      style={{ height: "100px", width: "80%" }}
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Multiline"
+                      multiline
+                      rows={4}
+                      defaultValue="Default Value"
                     />
                   </div>
                 </div>
