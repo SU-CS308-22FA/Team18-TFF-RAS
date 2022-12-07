@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Close";
 
 import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
@@ -23,6 +24,14 @@ const Match = () => {
   const [matchData, setMatchData] = useState(null);
   const [rating, setRating] = useState(0);
   const [isChoosingEvent, setIsChoosingEvent] = useState(false);
+  const [reviewEvents, setReviewEvents] = useState([]);
+
+  console.log(isChoosingEvent);
+
+  const addEventToReview = (idx) => {
+    setReviewEvents([...reviewEvents, idx]);
+    setIsChoosingEvent(false);
+  };
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -53,11 +62,20 @@ const Match = () => {
 
   return (
     <MatchPageWrapper>
+      <div
+        className="overlay"
+        style={{ display: isChoosingEvent ? "block" : "none" }}
+      />
       <main id="match-facts-wrapper">
         <div className="full-screen-match-content">
           <div className="match-page">
             <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
-            <MatchEventsInfo data={matchData} />
+            <MatchEventsInfo
+              data={matchData}
+              isChoosingEvent={isChoosingEvent}
+              chosenEvents={reviewEvents}
+              addEventToReview={addEventToReview}
+            />
             <MatchSubsInfo data={matchData} />
             <MatchStatsInfo data={matchData.statistics} />
           </div>
@@ -91,11 +109,19 @@ const Match = () => {
                       color="primary"
                     />
                     <Button
+                      onClick={() => setIsChoosingEvent(!isChoosingEvent)}
                       className="add-event-review-button"
-                      variant="outlined"
-                      startIcon={<AddIcon />}
+                      variant={isChoosingEvent ? "contained" : "outlined"}
+                      startIcon={isChoosingEvent ? <CancelIcon /> : <AddIcon />}
                     >
-                      Add Event Review
+                      {isChoosingEvent ? "Cancel" : "Add Event Review"}
+                    </Button>
+                    <Button
+                      className="add-review-button"
+                      variant="contained"
+                      disabled={rating === 0 ? true : false}
+                    >
+                      Add Review
                     </Button>
                   </div>
                 </div>

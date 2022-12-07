@@ -470,12 +470,24 @@ li {
 }
 
 .event-item-container {
-    height: 48px;
+    height: 80px;
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
     column-gap: 13px;
     -webkit-box-align: center;
     align-items: center;
+    border-radius: 7px;
+    /* padding: 10px; */
+}
+
+.choosing-event:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.choosing-event-chosen {
+    background-color: rgba(255, 0, 0, 0.2);
+    cursor: not-allowed;
 }
 
 .event-list li:not(:last-child) {
@@ -536,6 +548,11 @@ li {
     grid-column-end: auto;
 }
 
+.events {
+    position: relative;
+    z-index: 10;
+}
+
 .events img {
     width: 25px;
     height: 25px;
@@ -562,7 +579,7 @@ li {
 .pause-container span {
     position: absolute;
     left: 50%;
-    top: 15px;
+    top: 31px;
     transform: translate(-50%);
     font-size: 15px;
     font-weight: 500;

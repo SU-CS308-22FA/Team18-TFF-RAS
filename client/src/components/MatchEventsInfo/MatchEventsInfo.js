@@ -31,7 +31,12 @@ const FullTime = () => (
   </li>
 );
 
-const MatchEventsInfo = ({ data }) => {
+const MatchEventsInfo = ({
+  data,
+  isChoosingEvent,
+  chosenEvents,
+  addEventToReview,
+}) => {
   let home = 0;
   let away = 0;
 
@@ -83,7 +88,22 @@ const MatchEventsInfo = ({ data }) => {
                   if (event?.assist?.name) {
                     // if home goal with assist
                     return (
-                      <li key={idx} className="event-item-container">
+                      <li
+                        key={idx}
+                        onClick={
+                          isChoosingEvent && !chosenEvents.includes(idx)
+                            ? () => addEventToReview(idx)
+                            : null
+                        }
+                        className={
+                          "event-item-container" +
+                          (isChoosingEvent
+                            ? chosenEvents.includes(idx)
+                              ? " choosing-event-chosen"
+                              : " choosing-event"
+                            : "")
+                        }
+                      >
                         <div className="event-meat-applyHover-left">
                           <div className="goal-container-player-layout-common">
                             <div className="scorer">
@@ -112,7 +132,22 @@ const MatchEventsInfo = ({ data }) => {
                   } else {
                     // if home goal without assist
                     return (
-                      <li key={idx} className="event-item-container">
+                      <li
+                        key={idx}
+                        onClick={
+                          isChoosingEvent && !chosenEvents.includes(idx)
+                            ? () => addEventToReview(idx)
+                            : null
+                        }
+                        className={
+                          "event-item-container" +
+                          (isChoosingEvent
+                            ? chosenEvents.includes(idx)
+                              ? " choosing-event-chosen"
+                              : " choosing-event"
+                            : "")
+                        }
+                      >
                         <div className="event-meat-applyHover-left">
                           <div className="goal-container-player-layout-common">
                             <span>
@@ -137,7 +172,22 @@ const MatchEventsInfo = ({ data }) => {
                 } else if (event.detail === "Penalty") {
                   // if home penalty goal
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-left">
                         <div className="goal-container-player-layout-common">
                           <div className="scorer">
@@ -164,7 +214,22 @@ const MatchEventsInfo = ({ data }) => {
                 } else if (event.detail === "Own Goal") {
                   // if away own goal
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-left">
                         <div className="goal-container-player-layout-common">
                           <div className="scorer">
@@ -194,7 +259,22 @@ const MatchEventsInfo = ({ data }) => {
                   homeCards.push(event.player.name);
                   // if home player got yellow card
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-left">
                         <a>{event.player.name}</a>
                         <img src={CardYellow} />
@@ -207,7 +287,22 @@ const MatchEventsInfo = ({ data }) => {
                 } else {
                   // if home player got red card
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-left">
                         <a>{event.player.name}</a>
                         <img
@@ -227,7 +322,22 @@ const MatchEventsInfo = ({ data }) => {
               } else if (event.type === "subst") {
                 // if home sub
                 return (
-                  <li key={idx} className="event-item-container">
+                  <li
+                    key={idx}
+                    onClick={
+                      isChoosingEvent && !chosenEvents.includes(idx)
+                        ? () => addEventToReview(idx)
+                        : null
+                    }
+                    className={
+                      "event-item-container" +
+                      (isChoosingEvent
+                        ? chosenEvents.includes(idx)
+                          ? " choosing-event-chosen"
+                          : " choosing-event"
+                        : "")
+                    }
+                  >
                     <div className="event-meat-applyHover-left">
                       <div className="substitution-container-player-layout-common-left">
                         <a>{event.assist.name}</a>
@@ -245,7 +355,22 @@ const MatchEventsInfo = ({ data }) => {
               } else if (event.type === "Var") {
                 // if home var
                 return (
-                  <li key={idx} className="event-item-container">
+                  <li
+                    key={idx}
+                    onClick={
+                      isChoosingEvent && !chosenEvents.includes(idx)
+                        ? () => addEventToReview(idx)
+                        : null
+                    }
+                    className={
+                      "event-item-container" +
+                      (isChoosingEvent
+                        ? chosenEvents.includes(idx)
+                          ? " choosing-event-chosen"
+                          : " choosing-event"
+                        : "")
+                    }
+                  >
                     <div className="event-meat-applyHover-left">
                       <div className="goal-container-player-layout-common">
                         <div className="scorer">
@@ -270,7 +395,22 @@ const MatchEventsInfo = ({ data }) => {
                   if (event?.assist?.name) {
                     // if away goal with assist
                     return (
-                      <li key={idx} className="event-item-container">
+                      <li
+                        key={idx}
+                        onClick={
+                          isChoosingEvent && !chosenEvents.includes(idx)
+                            ? () => addEventToReview(idx)
+                            : null
+                        }
+                        className={
+                          "event-item-container" +
+                          (isChoosingEvent
+                            ? chosenEvents.includes(idx)
+                              ? " choosing-event-chosen"
+                              : " choosing-event"
+                            : "")
+                        }
+                      >
                         <div className="event-meat-applyHover-right">
                           <img src={GoalEventIcon} />
                           <div className="goal-container-player-layout-common">
@@ -299,7 +439,22 @@ const MatchEventsInfo = ({ data }) => {
                   } else {
                     // if away goal without assist
                     return (
-                      <li key={idx} className="event-item-container">
+                      <li
+                        key={idx}
+                        onClick={
+                          isChoosingEvent && !chosenEvents.includes(idx)
+                            ? () => addEventToReview(idx)
+                            : null
+                        }
+                        className={
+                          "event-item-container" +
+                          (isChoosingEvent
+                            ? chosenEvents.includes(idx)
+                              ? " choosing-event-chosen"
+                              : " choosing-event"
+                            : "")
+                        }
+                      >
                         <div className="event-meat-applyHover-right">
                           <img src={GoalEventIcon} />
                           <div className="goal-container-player-layout-common">
@@ -324,7 +479,22 @@ const MatchEventsInfo = ({ data }) => {
                 } else if (event.detail === "Penalty") {
                   // if away penalty goal
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-right">
                         <img src={GoalEventIcon} />
                         <div className="goal-container-player-layout-common">
@@ -351,7 +521,22 @@ const MatchEventsInfo = ({ data }) => {
                 } else if (event.detail === "Own Goal") {
                   // if home own goal
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-right">
                         <img src={OwnGoalEventIcon} />
                         <div className="goal-container-player-layout-common">
@@ -381,7 +566,22 @@ const MatchEventsInfo = ({ data }) => {
                   awayCards.push(event.player.name);
                   // if away player got yellow card
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-right">
                         <img src={CardYellow} />
                         <a>{event.player.name}</a>
@@ -394,7 +594,22 @@ const MatchEventsInfo = ({ data }) => {
                 } else {
                   // if away player got red card
                   return (
-                    <li key={idx} className="event-item-container">
+                    <li
+                      key={idx}
+                      onClick={
+                        isChoosingEvent && !chosenEvents.includes(idx)
+                          ? () => addEventToReview(idx)
+                          : null
+                      }
+                      className={
+                        "event-item-container" +
+                        (isChoosingEvent
+                          ? chosenEvents.includes(idx)
+                            ? " choosing-event-chosen"
+                            : " choosing-event"
+                          : "")
+                      }
+                    >
                       <div className="event-meat-applyHover-right">
                         <img
                           src={
@@ -414,7 +629,22 @@ const MatchEventsInfo = ({ data }) => {
               } else if (event.type === "subst") {
                 // if away sub
                 return (
-                  <li key={idx} className="event-item-container">
+                  <li
+                    key={idx}
+                    onClick={
+                      isChoosingEvent && !chosenEvents.includes(idx)
+                        ? () => addEventToReview(idx)
+                        : null
+                    }
+                    className={
+                      "event-item-container" +
+                      (isChoosingEvent
+                        ? chosenEvents.includes(idx)
+                          ? " choosing-event-chosen"
+                          : " choosing-event"
+                        : "")
+                    }
+                  >
                     <div className="event-meat-applyHover-right">
                       <img src={SubstitutionEventIcon} />
                       <div className="substitution-container-player-layout-common-right">
@@ -432,7 +662,22 @@ const MatchEventsInfo = ({ data }) => {
               } else if (event.type === "Var") {
                 // if away var
                 return (
-                  <li key={idx} className="event-item-container">
+                  <li
+                    key={idx}
+                    onClick={
+                      isChoosingEvent && !chosenEvents.includes(idx)
+                        ? () => addEventToReview(idx)
+                        : null
+                    }
+                    className={
+                      "event-item-container" +
+                      (isChoosingEvent
+                        ? chosenEvents.includes(idx)
+                          ? " choosing-event-chosen"
+                          : " choosing-event"
+                        : "")
+                    }
+                  >
                     <div className="event-meat-applyHover-right">
                       <img src={VarIcon} />
                       <div className="goal-container-player-layout-common">
@@ -460,10 +705,16 @@ const MatchEventsInfo = ({ data }) => {
 
 MatchEventsInfo.propTypes = {
   data: PropTypes.any,
+  isChoosingEvent: PropTypes.bool,
+  chosenEvents: PropTypes.array,
+  addEventToReview: PropTypes.func,
 };
 
 MatchEventsInfo.defaultProps = {
   data: {},
+  isChoosingEvent: false,
+  chosenEvents: [],
+  addEventToReview: null,
 };
 
 export default MatchEventsInfo;
