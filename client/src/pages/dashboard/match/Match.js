@@ -78,11 +78,14 @@ const Match = () => {
                   <div className="rating-body-rating-container">
                     <Rating allowHover={false} onClick={setRating} />
                     <TextField
-                      id="outlined-multiline-static"
-                      label="Multiline"
+                      className="referee-comment"
+                      label="Review"
                       multiline
                       rows={4}
-                      defaultValue="Default Value"
+                      defaultValue=""
+                      placeholder="Describe the referee's performance"
+                      variant="filled"
+                      color="primary"
                     />
                   </div>
                 </div>

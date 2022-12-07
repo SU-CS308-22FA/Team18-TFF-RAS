@@ -82,8 +82,8 @@ const Wrapper = styled.main`
   }
 
   .referee-comment {
-    padding: 5px;
-    border-radius: 5px;
+    margin: 15px 0;
+    width: 80%;
   }
 `;
 
