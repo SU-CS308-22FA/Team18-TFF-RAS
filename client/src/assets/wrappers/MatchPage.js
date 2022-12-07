@@ -57,6 +57,27 @@ const Wrapper = styled.main`
     margin-inline-end: 0px;
     font-weight: bold;
   }
+
+  .rating-body-container {
+    /* background-color: yellow; */
+  }
+
+  .rating-body-referee-container {
+    align-items: center;
+    justify-content: space-evenly;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .referee-image {
+    border-radius: 50%;
+  }
+
+  .rating-body-rating-container {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export default Wrapper;

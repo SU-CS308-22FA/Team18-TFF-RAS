@@ -10,12 +10,14 @@ import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
 import { getMatch } from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
+import { referees } from "../../../utils/constants";
 
 const Match = () => {
   const { id } = useParams();
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
+  const [rating, setRating] = useState(0);
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -64,20 +66,15 @@ const Match = () => {
                   <div className="rating-body-referee-container">
                     <img
                       alt=""
-                      className="Image TeamIcon "
+                      className="Image team-icon referee-image"
                       width="30"
                       height="30"
-                      src="https://images.fotmob.com/image_resources/logo/teamlogo/1933.png"
+                      src={referees[referees.length - 1].image}
                     />
+                    <span>{referees[referees.length - 1].apiName}</span>
                   </div>
                   <div className="rating-body-rating-container">
-                    <Rating
-                    // onClick={handleRating}
-                    // onPointerEnter={onPointerEnter}
-                    // onPointerLeave={onPointerLeave}
-                    // onPointerMove={onPointerMove}
-                    /* Available Props */
-                    />
+                    <Rating allowHover={false} onClick={setRating} />
                   </div>
                 </div>
               </section>

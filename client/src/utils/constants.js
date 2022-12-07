@@ -41,6 +41,7 @@ const referees = [
   },
   {
     name: "Mert Güzenge",
+    apiName: "Mert Guzenge",
     Id: "1140611",
   },
   {
@@ -90,6 +91,8 @@ const referees = [
   {
     name: "Abdulkadir Bitigen",
     Id: "20372",
+    apiName: "Abdulkadir Bitigen",
+    image: "http://ankahaber.net/public/upload/Haber/11025/11025_12638.Jpeg",
   },
 ];
 
