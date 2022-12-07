@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 import GoalEventIcon from "../../../assets/images/goal-event-icon.svg";
+import OwnGoalEventIcon from "../../../assets/images/own-goal-event-icon.svg";
+import CardYellow from "../../../assets/images/card-yellow.svg";
+import CardRed from "../../../assets/images/card-red.svg";
+import CardDoubleYellow from "../../../assets/images/card-double-yellow.svg";
+import VarIcon from "../../../assets/images/var-icon.svg";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -18,6 +23,7 @@ import { getMatch } from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { referees } from "../../../utils/constants";
+import { getReviewEventTimeString } from "../../../utils/helper";
 
 const Match = () => {
   const { id } = useParams();
@@ -28,7 +34,33 @@ const Match = () => {
   const [isChoosingEvent, setIsChoosingEvent] = useState(false);
   const [reviewEvents, setReviewEvents] = useState([]);
 
-  console.log(isChoosingEvent);
+  // sort and filter events
+  const newData = [];
+  if (matchData != null) {
+    const currentEvents = [...matchData.events]
+      .filter((e) => e.time.elapsed >= 0)
+      .map((e) => {
+        if (e.time.extra === null) {
+          e.time.extra = 0;
+        }
+        return e;
+      });
+    currentEvents.sort(function (x, y) {
+      return x.time.elapsed - y.time.elapsed || x.time.extra - y.time.extra;
+    });
+
+    for (let i = 0; i < currentEvents.length; i++) {
+      const currentEvent = currentEvents[i];
+      if (
+        currentEvent.time.elapsed > 45 &&
+        (i === 0 || currentEvents[i - 1].time.elapsed <= 45)
+      ) {
+        newData.push({ type: "half-time" });
+      }
+      newData.push(currentEvent);
+    }
+    newData.push({ type: "full-time" });
+  }
 
   const addEventToReview = (idx) => {
     setReviewEvents([...reviewEvents, idx]);
@@ -92,6 +124,7 @@ const Match = () => {
             <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
             <MatchEventsInfo
               data={matchData}
+              newData={newData}
               isChoosingEvent={isChoosingEvent}
               chosenEvents={reviewEvents}
               addEventToReview={addEventToReview}
@@ -132,61 +165,108 @@ const Match = () => {
                       <div className="reviews-divider" />
                     ) : null}
                     <div className="events-reviews-container">
-                      {reviewEvents.map((reviewEvent, idx) => (
-                        <div key={idx} className="event-review-container">
-                          <div className="event-review-details-container">
-                            <div className="event-review-time">
-                              <span>88’ Goal!</span>
+                      {reviewEvents.map((reviewEventIdx, idx) => {
+                        const currentPlayer = matchData.players[0].players
+                          .concat(matchData.players[1].players)
+                          .find(
+                            (player) =>
+                              player.player.id ===
+                              newData[reviewEventIdx].player.id
+                          ).player;
+                        return (
+                          <div key={idx} className="event-review-container">
+                            <div className="event-review-details-container">
+                              <div className="event-review-time">
+                                <span>
+                                  {getReviewEventTimeString(
+                                    newData[reviewEventIdx]
+                                  )}{" "}
+                                  {newData[reviewEventIdx].type === "Goal"
+                                    ? "Goal"
+                                    : newData[reviewEventIdx].detail}
+                                </span>
+                              </div>
+                              {/* <h5 className="event-review-title">Goal!</h5> */}
                             </div>
-                            {/* <h5 className="event-review-title">Goal!</h5> */}
-                          </div>
-                          <a>
-                            <div className="event-review-player-card-container">
-                              <div className="event-review-player-title-details">
-                                <div
-                                  className="player-icon-css"
-                                  width="40"
-                                  height="40"
-                                >
-                                  <img
-                                    alt=""
-                                    className="Image PlayerImage"
+                            <a>
+                              <div className="event-review-player-card-container">
+                                <div className="event-review-player-title-details">
+                                  <div
+                                    className="player-icon-css"
                                     width="40"
                                     height="40"
-                                    src="https://images.fotmob.com/image_resources/playerimages/291399.png"
-                                  />
-                                  <img
-                                    alt=""
-                                    className="Image review-team-icon"
-                                    width="16"
-                                    height="16"
-                                    src="https://images.fotmob.com/image_resources/logo/teamlogo/8637_xsmall.png"
-                                  />
+                                  >
+                                    <img
+                                      alt=""
+                                      className="Image PlayerImage"
+                                      width="40"
+                                      height="40"
+                                      src={currentPlayer.photo}
+                                    />
+                                    <img
+                                      alt=""
+                                      className="Image review-team-icon"
+                                      width="16"
+                                      height="16"
+                                      src={
+                                        matchData.players[0].players
+                                          .concat(matchData.players[1].players)
+                                          .findIndex(
+                                            (player) =>
+                                              player.player.id ===
+                                              newData[reviewEventIdx].player.id
+                                          ) <
+                                        matchData.players[0].players.length
+                                          ? matchData.teams.home.logo
+                                          : matchData.teams.away.logo
+                                      }
+                                    />
+                                  </div>
+                                  <div className="event-review-player-name-container">
+                                    <span className="event-review-player-first-name">
+                                      {currentPlayer.name.slice(
+                                        0,
+                                        currentPlayer.name.indexOf(" ")
+                                      )}
+                                    </span>
+                                    <span className="event-review-player-last-name">
+                                      {currentPlayer.name.slice(
+                                        currentPlayer.name.indexOf(" ") + 1,
+                                        currentPlayer.name.length
+                                      )}
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="event-review-player-name-container">
-                                  <span className="event-review-player-first-name">
-                                    Abdülkerim
-                                  </span>
-                                  <span className="event-review-player-last-name">
-                                    Bardakci
-                                  </span>
-                                </div>
+                                <img
+                                  src={
+                                    newData[reviewEventIdx].type === "Goal"
+                                      ? newData[reviewEventIdx].detail ===
+                                        "Own Goal"
+                                        ? OwnGoalEventIcon
+                                        : GoalEventIcon
+                                      : newData[reviewEventIdx].type === "Card"
+                                      ? newData[reviewEventIdx].detail ===
+                                        "Yellow Card"
+                                        ? CardYellow
+                                        : CardRed
+                                      : VarIcon
+                                  }
+                                />
                               </div>
-                              <img src={GoalEventIcon} />
-                            </div>
-                          </a>
-                          <TextField
-                            className="review-event-comment"
-                            label="Event Review"
-                            multiline
-                            rows={3}
-                            defaultValue=""
-                            placeholder="Describe the referee's performance in this event"
-                            variant="filled"
-                            color="secondary"
-                          />
-                        </div>
-                      ))}
+                            </a>
+                            <TextField
+                              className="review-event-comment"
+                              label="Event Review"
+                              multiline
+                              rows={3}
+                              defaultValue=""
+                              placeholder="Describe the referee's performance in this event"
+                              variant="filled"
+                              color="secondary"
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                     <Button
                       onClick={() => setIsChoosingEvent(!isChoosingEvent)}

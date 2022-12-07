@@ -33,6 +33,7 @@ const FullTime = () => (
 
 const MatchEventsInfo = ({
   data,
+  newData,
   isChoosingEvent,
   chosenEvents,
   addEventToReview,
@@ -43,37 +44,11 @@ const MatchEventsInfo = ({
   let homeCards = [];
   let awayCards = [];
 
-  const currentEvents = [...data.events]
-    .filter((e) => e.time.elapsed >= 0)
-    .map((e) => {
-      if (e.time.extra === null) {
-        e.time.extra = 0;
-      }
-      return e;
-    });
-  currentEvents.sort(function (x, y) {
-    return x.time.elapsed - y.time.elapsed || x.time.extra - y.time.extra;
-  });
-
-  const newData = [];
-  for (let i = 0; i < currentEvents.length; i++) {
-    const currentEvent = currentEvents[i];
-    if (
-      currentEvent.time.elapsed > 45 &&
-      (i === 0 || currentEvents[i - 1].time.elapsed <= 45)
-    ) {
-      newData.push({ type: "half-time" });
-    }
-    newData.push(currentEvent);
-  }
-  newData.push({ type: "full-time" });
-
   return (
     <div className="events card-css">
       <section className="events-container">
         <ul className="event-list">
           {newData.map((event, idx, arr) => {
-            console.log(event.detail + " " + event.type);
             if (event.type === "half-time") {
               return <HalfTime key={idx} />;
             }
@@ -324,19 +299,12 @@ const MatchEventsInfo = ({
                 return (
                   <li
                     key={idx}
-                    onClick={
-                      isChoosingEvent && !chosenEvents.includes(idx)
-                        ? () => addEventToReview(idx)
-                        : null
-                    }
-                    className={
-                      "event-item-container" +
-                      (isChoosingEvent
-                        ? chosenEvents.includes(idx)
-                          ? " choosing-event-chosen"
-                          : " choosing-event"
-                        : "")
-                    }
+                    // onClick={
+                    //   isChoosingEvent && !chosenEvents.includes(idx)
+                    //     ? () => addEventToReview(idx)
+                    //     : null
+                    // }
+                    className="event-item-container"
                   >
                     <div className="event-meat-applyHover-left">
                       <div className="substitution-container-player-layout-common-left">
@@ -631,19 +599,12 @@ const MatchEventsInfo = ({
                 return (
                   <li
                     key={idx}
-                    onClick={
-                      isChoosingEvent && !chosenEvents.includes(idx)
-                        ? () => addEventToReview(idx)
-                        : null
-                    }
-                    className={
-                      "event-item-container" +
-                      (isChoosingEvent
-                        ? chosenEvents.includes(idx)
-                          ? " choosing-event-chosen"
-                          : " choosing-event"
-                        : "")
-                    }
+                    // onClick={
+                    //   isChoosingEvent && !chosenEvents.includes(idx)
+                    //     ? () => addEventToReview(idx)
+                    //     : null
+                    // }
+                    className="event-item-container"
                   >
                     <div className="event-meat-applyHover-right">
                       <img src={SubstitutionEventIcon} />
@@ -705,6 +666,7 @@ const MatchEventsInfo = ({
 
 MatchEventsInfo.propTypes = {
   data: PropTypes.any,
+  newData: PropTypes.any,
   isChoosingEvent: PropTypes.bool,
   chosenEvents: PropTypes.array,
   addEventToReview: PropTypes.func,
@@ -712,6 +674,7 @@ MatchEventsInfo.propTypes = {
 
 MatchEventsInfo.defaultProps = {
   data: {},
+  newData: [],
   isChoosingEvent: false,
   chosenEvents: [],
   addEventToReview: null,
