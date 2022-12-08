@@ -1,6 +1,0 @@
-for match id leech: the match id must be a string and it starts from match code 101
-corresponding to match id 234706 and increases one by one for every code i.e.(1002 => 234707 etc.)
-
-for date leech: date must be i the format of dd.mm.yyyy "." are iportant it can be taken in any way from client but the function ust enter with "."
-
-for referee leech: the referee id in the database is enough

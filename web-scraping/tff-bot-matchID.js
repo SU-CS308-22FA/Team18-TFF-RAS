@@ -1,17 +1,12 @@
-import dotenv from "dotenv";
-dotenv.config();
-import {chromium} from "playwright";
-import { readFileSync } from 'fs';
-import Log from "./Log.js";
+require('dotenv').config();
+const fs = require('fs');
+const Log = require("./Log");
 let logger = new Log();
 logger.setLevel();
 
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-
 async function initializePage() {
     logger.debug("browser init started");
+    const {chromium} = require('playwright');
 
     const browser = await chromium.launch({
         headless: process.env.NODE_ENV === "production",
@@ -26,10 +21,16 @@ async function initializePage() {
             height: 800
         }
     });
+    /*
+    const handle = await page.evaluateHandle(() => ({window, document}));
+const properties = await handle.getProperties();
+const windowHandle = properties.get('window');
+const documentHandle = properties.get('document');
+     */
+
 
     const page = await context.newPage();
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    const preloadFile = readFileSync(__dirname + '/headless-spoof.js', 'utf8');
+    const preloadFile = fs.readFileSync(__dirname + '/headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
@@ -41,11 +42,36 @@ async function initializePage() {
     return [browser, page];
 }
 
+async function parseGoalInfo(str) {
+    let goal = {Player : "", Time: "", How : ""};
+    let mini="";
+    for (let i = 0; i < str.length; i++) {
+        if (str[i]===",") {
+            goal.Player=(mini);
+            mini="";
+            i++;
+        }
+        if (str[i]===".") {
+            goal.Time=(mini);
+            mini="";
+            i+=5;
+        }
+        if (str[i]===")") {
+            goal.How=(mini);
+            mini=="";
+        }
+        mini+=str[i];
+    }
+    return goal;
+}
+
 async function collectData(browser, page, leechUrl) {
     let refereeResults = [];
     let observerResults = [];
-    // let homeCards = [];
-    // let awayCards = [];
+    let homeCards = [];
+    let awayCards = [];
+    let homeGoals = [];
+    let awayGoals = [];
     let teamsInfo = {home: "", away: "", homeScore: "", awayScore:""};
     let timeInfo = {date : "", hour: ""};
     try {
@@ -165,33 +191,45 @@ async function collectData(browser, page, leechUrl) {
                 refereeResults.push(ref);
             }
             // //cards
-            // //home
-            // let homeCardPlayers = await page.locator("//td[not(@class)]/a[contains(@id,'grdTakim1_rptKartlar')]").elementHandles(); //select all the anchor elements that has grdTakim1_rptKartlar in their id attribute and inside a td that does not have class attribute
-            // let homeCardPlayerTime = await page.locator("//td[not(@class)]/span[contains(@id,'grdTakim1_rptKartlar')]").elementHandles(); //select all the span elements that has grdTakim1_rptKartlar in their id attribute and inside a td that does not have class attribute
-            // let homeCardPlayerCardImg = await page.locator("//td[not(@class)]/img[contains(@id,'grdTakim1_rptKartlar')]").elementHandles(); //select all the span elements that has grdTakim1_rptKartlar in their id attribute and inside a td that does not have class attribute
+            //home
+            let homeCardPlayers = await page.locator("//td[not(@class)]/a[contains(@id,'grdTakim1_rptKartlar')]").elementHandles(); //select all the anchor elements that has grdTakim1_rptKartlar in their id attribute and inside a td that does not have class attribute
+            let homeCardPlayerTime = await page.locator("//td[not(@class)]/span[contains(@id,'grdTakim1_rptKartlar')]").elementHandles(); //select all the span elements that has grdTakim1_rptKartlar in their id attribute and inside a td that does not have class attribute
+            let homeCardPlayerCardImg = await page.locator("//td[not(@class)]/img[contains(@id,'grdTakim1_rptKartlar')]").elementHandles(); //select all the span elements that has grdTakim1_rptKartlar in their id attribute and inside a td that does not have class attribute
 
-            // for(let i=0;i<homeCardPlayers.length;i++) {
-            //     homeCards.push({
-            //         name : await homeCardPlayers[i].innerText(),
-            //         playerUrl : await homeCardPlayers[i].getAttribute("href"),
-            //         time : await homeCardPlayerTime[i].innerText(),
-            //         cardType : (await homeCardPlayerCardImg[i].getAttribute("src")).indexOf("sarikart") !== -1 ? "yellow" : "red" //might be wrong as there can be 2 yellow then red
-            //     });
-            // }
+            for(let i=0;i<homeCardPlayers.length;i++) {
+                homeCards.push({
+                    name : await homeCardPlayers[i].innerText(),
+                    playerUrl : await homeCardPlayers[i].getAttribute("href"),
+                    time : await homeCardPlayerTime[i].innerText(),
+                    cardType : (await homeCardPlayerCardImg[i].getAttribute("src")).indexOf("sarikart") !== -1 ? "yellow" : "red" //might be wrong as there can be 2 yellow then red
+                });
+            }
 
-            // //away
-            // let awayCardPlayers = await page.locator("//td[not(@class)]/a[contains(@id,'grdTakim2_rptKartlar')]").elementHandles(); 
-            // let awayCardPlayerTime = await page.locator("//td[not(@class)]/span[contains(@id,'grdTakim2_rptKartlar')]").elementHandles();
-            // let awayCardPlayerCardImg = await page.locator("//td[not(@class)]/img[contains(@id,'grdTakim2_rptKartlar')]").elementHandles();
+            //away
+            let awayCardPlayers = await page.locator("//td[not(@class)]/a[contains(@id,'grdTakim2_rptKartlar')]").elementHandles(); 
+            let awayCardPlayerTime = await page.locator("//td[not(@class)]/span[contains(@id,'grdTakim2_rptKartlar')]").elementHandles();
+            let awayCardPlayerCardImg = await page.locator("//td[not(@class)]/img[contains(@id,'grdTakim2_rptKartlar')]").elementHandles();
 
-            // for(let i=0;i<awayCardPlayers.length;i++) {
-            //     awayCards.push({
-            //         name : await awayCardPlayers[i].innerText(),
-            //         playerUrl : await awayCardPlayers[i].getAttribute("href"),
-            //         time : await awayCardPlayerTime[i].innerText(),
-            //         cardType : (await awayCardPlayerCardImg[i].getAttribute("src")).indexOf("sarikart") !== -1 ? "yellow" : "red" //might be wrong as there can be 2 yellow then red
-            //     });
-            // }
+            for(let i=0;i<awayCardPlayers.length;i++) {
+                awayCards.push({
+                    name : await awayCardPlayers[i].innerText(),
+                    playerUrl : await awayCardPlayers[i].getAttribute("href"),
+                    time : await awayCardPlayerTime[i].innerText(),
+                    cardType : (await awayCardPlayerCardImg[i].getAttribute("src")).indexOf("sarikart") !== -1 ? "yellow" : "red" //might be wrong as there can be 2 yellow then red
+                });
+            }
+
+            //goals
+            //home 
+            let homeGoalsInfo = await page.locator("//td[not(@class)]/a[contains(@id,'grdTakim1_rptGoller')]").elementHandles();
+            let awayGoalsInfo = await page.locator("//td[not(@class)]/a[contains(@id,'grdTakim2_rptGoller')]").elementHandles();
+            for (let i = 0; i < homeGoalsInfo.length; i++) {
+                homeGoals.push(await parseGoalInfo(await homeGoalsInfo[i].innerText()));
+            }
+            for (let i = 0; i < awayGoalsInfo.length; i++) {
+                awayGoals.push(await parseGoalInfo(await awayGoalsInfo[i].innerText()));
+            }
+
         } catch (err) {
             logger.error("Exception in referee scrape : ", err.toString());
         }
@@ -200,12 +238,11 @@ async function collectData(browser, page, leechUrl) {
     } catch (e) {
         logger.error("Exception in collect data : ", e.toString());
     }
-    let data = {refs : refereeResults, teams: teamsInfo, observers : observerResults, time: timeInfo};
+    let data = {Refs : refereeResults, Teams: teamsInfo, Observers : observerResults, Time: timeInfo, HomeCards: homeCards, AwayCards: awayCards, HomeGoalsDetails:homeGoals, AwayGoalsDetails:awayGoals};
     return data;
 }
 
-
-async function leech(matchid) {
+async function leechWithMatchID(matchid) {
     let page, browser, data;
     try {
         [browser, page] = await initializePage();
@@ -222,4 +259,21 @@ async function leech(matchid) {
     return data;
 }
 
-export default leech
+async function leechWithHref(hrefStr) {
+    let page, browser, data;
+    try {
+        [browser, page] = await initializePage();
+        let leechUrl = 'https://www.tff.org/'+hrefStr;
+        data = await collectData(browser, page, leechUrl);
+
+    } catch (e) {
+        logger.error("Exception in leech : ", e);
+    }
+    logger.debug("will close the browser", browser.close());
+    if (browser && browser.close()) await browser.close();
+
+    
+    return data;
+}
+
+module.exports = {leechWithMatchID,leechWithHref};
