@@ -205,11 +205,9 @@ const Wrapper = styled.main`
     padding: 0;
   }
 
-  .event-review-player-card-container:hover {
-    background-color: rgba(200, 200, 200, 0.2);
-  }
-
   .event-review-player-card-container {
+    position: relative;
+    overflow: hidden;
     display: flex;
     -webkit-box-pack: justify;
     justify-content: space-between;
@@ -295,6 +293,51 @@ const Wrapper = styled.main`
     background-color: rgba(200, 200, 200, 0.8);
     margin-bottom: 10px;
     margin-top: 5px;
+  }
+
+  .event-review-delete-overlay {
+    position: absolute;
+    width: 480px;
+    height: 70px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    margin: 0;
+
+    transition: transform 250ms;
+    z-index: 4;
+  }
+
+  .event-review-delete-overlay:hover {
+    transform: translateX(-240px);
+  }
+
+  .event-review-delete-overlay-empty {
+    width: 240px;
+    height: 70px;
+  }
+
+  .event-review-delete-content {
+    width: 240px;
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #d22b2b;
+  }
+
+  .delete-icon {
+    color: white;
+  }
+
+  .event-review-delete-content span {
+    margin-left: 7px;
+    font-size: 16px;
+    color: white;
   }
 `;
 

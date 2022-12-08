@@ -9,8 +9,15 @@ import VarIcon from "../../../assets/images/var-icon.svg";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
@@ -33,6 +40,7 @@ const Match = () => {
   const [rating, setRating] = useState(0);
   const [isChoosingEvent, setIsChoosingEvent] = useState(false);
   const [reviewEvents, setReviewEvents] = useState([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // sort and filter events
   const newData = [];
@@ -160,6 +168,7 @@ const Match = () => {
                       placeholder="Describe the referee's performance"
                       variant="filled"
                       color="primary"
+                      disabled={rating === 0}
                     />
                     {reviewEvents.length > 0 ? (
                       <div className="reviews-divider" />
@@ -189,7 +198,44 @@ const Match = () => {
                               {/* <h5 className="event-review-title">Goal!</h5> */}
                             </div>
                             <a>
+                              <Dialog
+                                open={isDeleteModalOpen}
+                                onClose={() => setIsDeleteModalOpen(false)}
+                              >
+                                <DialogTitle>
+                                  {"Delete this event review?"}
+                                </DialogTitle>
+                                <DialogContent>
+                                  <DialogContentText>
+                                    You won't be able to retrieve your review
+                                    for this event after deleting it.
+                                  </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                  <Button
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                    autoFocus
+                                  >
+                                    Delete
+                                  </Button>
+                                </DialogActions>
+                              </Dialog>
                               <div className="event-review-player-card-container">
+                                <div className="event-review-delete-overlay">
+                                  <div className="event-review-delete-overlay-empty" />
+                                  <div
+                                    className="event-review-delete-content"
+                                    onClick={() => setIsDeleteModalOpen(true)}
+                                  >
+                                    <DeleteIcon className="delete-icon" />
+                                    <span>Delete event review</span>
+                                  </div>
+                                </div>
                                 <div className="event-review-player-title-details">
                                   <div
                                     className="player-icon-css"
@@ -273,6 +319,7 @@ const Match = () => {
                       className="add-event-review-button"
                       variant={isChoosingEvent ? "contained" : "outlined"}
                       startIcon={isChoosingEvent ? <CancelIcon /> : <AddIcon />}
+                      disabled={rating === 0 ? true : false}
                     >
                       {isChoosingEvent ? "Cancel" : "Add Event Review"}
                     </Button>
