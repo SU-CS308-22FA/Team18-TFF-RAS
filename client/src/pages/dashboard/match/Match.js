@@ -218,7 +218,14 @@ const Match = () => {
                                     Cancel
                                   </Button>
                                   <Button
-                                    onClick={() => setIsDeleteModalOpen(false)}
+                                    onClick={() => {
+                                      setReviewEvents(
+                                        reviewEvents.filter(
+                                          (rE) => rE != reviewEventIdx
+                                        )
+                                      );
+                                      setIsDeleteModalOpen(false);
+                                    }}
                                     autoFocus
                                   >
                                     Delete
