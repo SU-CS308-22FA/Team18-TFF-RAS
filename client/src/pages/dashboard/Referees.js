@@ -97,18 +97,21 @@ import axios from "axios";
 
 ]
 const Referees = () => {
-
+//------------------------- ref info
   const [refName, setRefName] = useState("");
   const [license, setLicense] = useState("");
   const [games, setGames] = useState([]);
   const [classification, setClassification] = useState("");
   const [region, setRegion] = useState("");
+//------------------------- ref info
+//------------------------- page info
   const [showAll, setShowAll] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+//------------------------- page info
 
   const baseURL = "/api/referee/";
 
-  async function getRefereeData(id) {
+  async function getRefereeData(id) { // uses the API of alperen and sets the data // doesnt use DB
 	try {
 		const response = await axios.get(`${baseURL + id}`);
     const data = response.data;
