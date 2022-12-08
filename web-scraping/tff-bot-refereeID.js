@@ -1,17 +1,14 @@
-import dotenv from "dotenv";
-dotenv.config();
-import {chromium} from "playwright";
-import { readFileSync } from 'fs';
-import Log from "./Log.js";
+require('dotenv').config();
+const fs = require('fs');
+const Log = require("./Log");
+const Referee = require("./refShcema.js")
 let logger = new Log();
+const match = require('./tff-bot-matchID');
 logger.setLevel();
-
-
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 
 async function initializePage() {
     logger.debug("browser init started");
+    const {chromium} = require('playwright');
 
     const browser = await chromium.launch({
         headless: process.env.NODE_ENV === "production",
@@ -28,8 +25,7 @@ async function initializePage() {
     });
 
     const page = await context.newPage();
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    const preloadFile = readFileSync(__dirname + '/headless-spoof.js', 'utf8');
+    const preloadFile = fs.readFileSync(__dirname + '/headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
@@ -41,8 +37,10 @@ async function initializePage() {
     return [browser, page];
 }
 
+
+//scrape for the first time for referees to put to database
 async function collectData(browser, page, leechUrl) {
-    let referee = {name: "", licenceNumber: "", classification: "", region: "", matchesRuled: []};
+    let referee = {name: "", licenceNumber: "", classification: "", region: "", matchesRuled: [],RefID: ""};
     try {
         //open up the page
         await page.goto(leechUrl, {waitUntil: 'networkidle'});
@@ -66,33 +64,33 @@ async function collectData(browser, page, leechUrl) {
                 timeout: 2000,
                 state: "visible"
             });
-            let rows = await page.locator("table.MasterTable_TFF_Contents tbody td").elementHandles();
-            console.log(rows.length);
-
 
             while (true) {
                 await page.waitForSelector("table.MasterTable_TFF_Contents", { //find the cell that holds the details for the game and wait until it is visible
                 timeout: 2000,
                 state: "visible"
                 });
-                // let matches = await page.locator("table.MasterTable_TFF_Contents >tbody tr td").allTextContents();
-                // //*[@id="ctl00_MPane_m_531_2816_ctnr_m_531_2816_grdSonuc_ctl01"]/tbody/tr
+                
 
             let tbody = await page.$("table.MasterTable_TFF_Contents tbody");
             let matchRows = await tbody.$$("tr"); //https://playwright.dev/docs/api/class-page#page-query-selector-all
             for(let i=0;i<matchRows.length;i++) {
                 let cells = await matchRows[i].$$("td");
+                let anc = await cells[1].$('a');
+                let mUrl = await anc.getAttribute("href");
                 referee.matchesRuled.push({
                     home : await cells[0].innerText(),
                     away : await cells[2].innerText(),
                     score : await cells[1].innerText(),
                     date : await cells[3].innerText(),
                     task : await cells[4].innerText(),
-                    organisation : await cells[5].innerText()
+                    organisation : await cells[5].innerText(),
+                    matchDetail: await match.leechWithHref(mUrl),
+                    MatchUrl: mUrl
                 });
+                    
             }
 
-                // allMatches=allMatches.concat(matches);
                 let check = await page.locator("//tfoot/tr/td/a[last()]").allTextContents();
                 console.log(check);
                 if (isNaN(check[0])) {
@@ -103,28 +101,11 @@ async function collectData(browser, page, leechUrl) {
                     break;
                 }
             }
-            
-
-            
-            //tfoot/tr/td/a[last()] .
-
-            
-            
-            // for (let i = 0; i < allMatches.length; i+=6) {
-            //     let match = {home: allMatches[i],score: allMatches[i+1],away:allMatches[i+2], date: allMatches[i+3], task: allMatches[i+4], organisation: allMatches[i+5]};
-            //     referee.matchesRuled.push(match);
-            // }
-
-            
 
 
         } catch (err) {
             logger.error("Exception in referee scrape : ", err.toString());
         }
-        // let matches = await page.locator("table.MasterTable_TFF_Contents >tbody tr td a").allTextContents();
-        // // let date = await page.locator("//tbody/tr/td[4]").allTextContents();
-        // // matches = matches.concat(date);
-        // allMatches=allMatches.concat(matches);
 
     } catch (e) {
         logger.error("Exception in collect data : ", e.toString());
@@ -133,8 +114,7 @@ async function collectData(browser, page, leechUrl) {
     return referee;
 }
 
-//pass the parameter as string
-async function leech(refid) {
+async function leechWithRefID(refid) {
     let page, browser, data;
     try {
         [browser, page] = await initializePage();
@@ -147,8 +127,140 @@ async function leech(refid) {
     logger.debug("will close the browser", browser.close);
     if (browser && browser.close) await browser.close();
 
-    
+    // console.log(data);
+    data.RefID=refid;
     return data;
 }
 
-export default leech
+//scraping for weekly refreshes
+
+//retreive the last match unique url for stopping when the match is reached
+async function getLastUrl(refid){
+    let arr = await Referee.find({refID: refid}).select('matchesRuled -_id');
+	return arr[0].matchesRuled[0].MatchUrl;
+}
+
+async function collectDataForRefresh(browser, page, leechUrl,refid) {
+    newMatches=[];
+    try {
+        //open up the page
+        await page.goto(leechUrl, {waitUntil: 'networkidle'});
+
+        try {
+
+            await page.waitForSelector("table.MasterTable_TFF_Contents", { //find the cell that holds the details for the game and wait until it is visible
+                timeout: 2000,
+                state: "visible"
+            });
+            // let rows = await page.locator("table.MasterTable_TFF_Contents tbody td").elementHandles();
+            // console.log(rows.length);
+
+
+            await page.waitForSelector("table.MasterTable_TFF_Contents", { //find the cell that holds the details for the game and wait until it is visible
+            timeout: 2000,
+            state: "visible"
+            });
+                
+
+            let tbody = await page.$("table.MasterTable_TFF_Contents tbody");
+            let matchRows = await tbody.$$("tr");
+            for(let i=0;i<matchRows.length;i++) {
+                let cells = await matchRows[i].$$("td");
+                let anc = await cells[1].$('a');
+                let mUrl = await anc.getAttribute("href");
+                
+                //need to get the first matchUrl in db with referee refID matches ruled 0th index
+                let checkUrl = await getLastUrl(refid)
+                if (mUrl == checkUrl) {
+                    break;
+                }
+                newMatches.push({
+                    home : await cells[0].innerText(),
+                    away : await cells[2].innerText(),
+                    score : await cells[1].innerText(),
+                    date : await cells[3].innerText(),
+                    task : await cells[4].innerText(),
+                    organisation : await cells[5].innerText(),
+                    matchDetail: await match.leechWithHref(mUrl),
+                    MatchUrl: mUrl
+                });
+                    
+            }
+            
+        } catch (err) {
+            logger.error("Exception in collectDataForRefresh scrape : ", err.toString());
+        }
+
+    } catch (e) {
+        logger.error("Exception in collect data : ", e.toString());
+    }
+
+    return newMatches;
+}
+async function leechForRefresh(refid) {
+    let page, browser, data;
+    try {
+        [browser, page] = await initializePage();
+        let leechUrl = "https://www.tff.org/Default.aspx?pageID=531&hakemID="+refid;
+        data = await collectDataForRefresh(browser, page, leechUrl, refid);
+
+    } catch (e) {
+        logger.error("Exception in leech : ", e);
+    }
+    logger.debug("will close the browser", browser.close);
+    if (browser && browser.close) await browser.close();
+    return data;
+}
+
+//refıds=["20372","20160","1141865","1152086","1064324","1140355","1090884","21019","1144690","21156","19493","20668","1140611","18972","1091628","1092081","19445","1091799","1091989","20204","1144469","20554","1385054"]
+
+//fill the database with this function by only invoking it one time no other invokation is needed
+async function fillRefs() {
+    refIDs=["20372"];
+    for (let i = 0; i < refIDs.length; i++) {
+        
+        console.log(refIDs[i]);
+        //scrape it again
+        let ref = await leechWithRefID(refIDs[i]);
+        await Referee.deleteOne({ refID: refIDs[i]}).then(function(){
+            console.log("Data deleted"); // Success
+        }).catch(function(error){
+            console.log(error); // Failure
+        });
+        const t = await Referee.create({
+            name: ref.name,
+            lisenceNumber: ref.licenceNumber,
+            classification: ref.classification,
+            region: ref.region,
+            matchesRuled: ref.matchesRuled,
+            refID:refIDs[i]
+        });
+        await t.save().then(function(){
+            console.log("Data re-entered"); // Success
+        }).catch(function(error){
+            console.log(error); // Failure
+        });
+    }
+    return true;
+}
+//this will be scheduled weekly for refreshing the matches that is made in that week
+async function refreshRefs() {
+    refIDs=["959285","2100056","1621805"];
+    for (let i = 0; i < refIDs.length; i++) {
+        console.log(refIDs[i]);
+        let newMatches =await leechForRefresh(refIDs[i]);
+        //updating the matches ruled array newmatches need to be concatenated to the beginning
+        if (newMatches.length!=0) {
+            let arr = await Referee.find({refID: refIDs[i]}).select('matchesRuled -_id');
+            let pastMatches = arr[0].matchesRuled;
+            let allMatches = newMatches.concat(pastMatches);
+
+            Referee.updateOne({refID: refIDs[i]}, { matchesRuled: allMatches },function (err) {
+            if (err) throw err;
+            else console.log("updated");
+        });
+        }
+    }
+}
+
+module.exports={fillRefs,leechWithRefID,refreshRefs}

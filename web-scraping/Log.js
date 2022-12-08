@@ -1,11 +1,9 @@
-import dotenv from "dotenv";
-dotenv.config();
-import winston from "winston"
-import DailyRotateFile from 'winston-daily-rotate-file'
-import {format} from "logform"
-import date from 'date-and-time';
-
+require('dotenv').config();
+let date = require('date-and-time');
 if (process.env.LOGGER === 'winston') {
+    const winston = require('winston');
+    const DailyRotateFile = require('winston-daily-rotate-file');
+    const { format } = require('logform');
 
     const alignedWithColorsAndTime = format.combine(
         format.colorize(),
@@ -47,53 +45,46 @@ if (process.env.LOGGER === 'winston') {
 }
 
 
-class Log {
-    constructor() {
-        let that = this;
-        let level = 0;
-        const levels = {
-            off: 99,
-            debug: 0,
-            info: 1,
-            warn: 2,
-            error: 3,
-            fatal: 4
-        };
+function Log() {
+    let that = this;
+    let level = 0;
+    const levels = {
+        off : 99,
+        debug : 0,
+        info : 1,
+        warn : 2,
+        error : 3,
+        fatal : 4
+    };
 
-        this.setLevel = function (l) {
-            if (process.env.LOGGER === 'winston') {
-                winston.transports['rotateLog'].level = l;
-                winston.transports['consoleLog'].level = l;
-            }
-            level = (l && levels[l]) ? levels[l] : (levels[process.env.LOG_LEVEL] || 0);
-        };
+    this.setLevel = function (l) {
+        if (process.env.LOGGER === 'winston') {
+            winston.transports['rotateLog'].level = l;
+            winston.transports['consoleLog'].level = l;
+        }
+        level = (l && levels[l]) ? levels[l] : (levels[process.env.LOG_LEVEL] || 0);
+    };
 
-        this.debug = function (...args) {
-            if (level > levels.debug)
-                return;
-            process.env.LOGGER === 'winston' ? logger.debug(args) : console.debug(date.format(new Date(), "YYYY-MM-DD HH:mm:ss") + " : ", ...args);
-        };
-        this.warn = function (...args) {
-            if (level > levels.warn)
-                return;
-            process.env.LOGGER === 'winston' ? logger.warn(args) : console.warn(date.format(new Date(), "YYYY-MM-DD HH:mm:ss") + " : ", ...args);
-        };
-        this.info = function (...args) {
-            if (level > levels.info)
-                return;
-            process.env.LOGGER === 'winston' ? logger.info(args) : console.info(date.format(new Date(), "YYYY-MM-DD HH:mm:ss") + " : ", ...args);
-        };
-        this.error = function (...args) {
-            if (level > levels.error)
-                return;
-            process.env.LOGGER === 'winston' ? logger.error(args) : console.error(date.format(new Date(), "YYYY-MM-DD HH:mm:ss") + " : ", ...args);
-        };
-        this.fatal = function (...args) {
-            if (level > levels.fatal)
-                return;
-            process.env.LOGGER === 'winston' ? logger.emerg(args) : console.exception(date.format(new Date(), "YYYY-MM-DD HH:mm:ss") + " : ", ...args);
-        };
-    }
+    this.debug = function (...args) {
+        if (level > levels.debug) return;
+        process.env.LOGGER === 'winston' ? logger.debug(args) : console.debug(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.warn = function (...args) {
+        if (level > levels.warn) return;
+        process.env.LOGGER === 'winston' ? logger.warn(args) : console.warn(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.info = function (...args) {
+        if (level > levels.info) return;
+        process.env.LOGGER === 'winston' ? logger.info(args) : console.info(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.error = function (...args) {
+        if (level > levels.error) return;
+        process.env.LOGGER === 'winston' ? logger.error(args) : console.error(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.fatal = function (...args) {
+        if (level > levels.fatal) return;
+        process.env.LOGGER === 'winston' ? logger.emerg(args) : console.exception(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
 }
 
-export default Log;
+module.exports = Log;
