@@ -26,10 +26,10 @@ const RatingSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Please provide user"],
     },
-    referee: {
+    match: {
       type: mongoose.Types.ObjectId,
-      ref: "Referee",
-      required: [true, "Please provide referee"],
+      ref: "Match",
+      required: [true, "Please provide match"],
     },
   },
   { timestamps: true }

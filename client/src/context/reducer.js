@@ -24,6 +24,9 @@ import {
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
+  CREATE_RATING_BEGIN,
+  CREATE_RATING_SUCCESS,
+  CREATE_RATING_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -221,6 +224,30 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: "Can't get Objections",
+    };
+  }
+  if (action.type === CREATE_RATING_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === CREATE_RATING_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "success",
+      ratingGiven: true,
+    };
+  }
+  if (action.type === CREATE_RATING_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
     };
   }
 

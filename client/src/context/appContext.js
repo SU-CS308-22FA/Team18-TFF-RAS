@@ -27,6 +27,10 @@ import {
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
+  HANDLE_CHANGE,
+  CREATE_RATING_BEGIN,
+  CREATE_RATING_SUCCESS,
+  CREATE_RATING_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -46,6 +50,13 @@ const initialState = {
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
   showSidebar: false,
+  ratingGiven: false,
+  showModal: false,
+  modalType: "",
+  modalText: "",
+  rating: "",
+  review: "",
+  eventReviews: [],
 };
 
 const AppContext = React.createContext();
@@ -87,6 +98,10 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("location");
+  };
+
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
   };
 
   {
@@ -238,6 +253,23 @@ const AppProvider = ({ children }) => {
       return Promise.reject(error);
     }
   );
+
+  // ratings
+  const createRating = async (ratingDetails) => {
+    dispatch({ type: CREATE_RATING_BEGIN });
+    try {
+      await authFetch.post("/ratings", ratingDetails);
+      dispatch({ type: CREATE_RATING_SUCCESS });
+      // dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: CREATE_RATING_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
 
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
