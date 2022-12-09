@@ -20,8 +20,9 @@ import connectDB from "./db/connect.js";
 
 // routers
 import authRouter from "./routes/authRoutes.js";
-import ratingsRouter from "./routes/ratingsRoutes";
+import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
+import refereesRouter from "./routes/refereeRoutes.js";
 
 import ref from "./web-scraping/tff-bot-refereeID.js";
 
@@ -54,6 +55,7 @@ app.use(mongoSanitize());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
+app.use("/api/v1/referees", authenticateUser, refereesRouter);
 
 app.get("/api/referee/:id", async (req, res) => {
   let data = await ref(req.params.id);

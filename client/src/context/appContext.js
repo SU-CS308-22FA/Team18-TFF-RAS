@@ -31,6 +31,14 @@ import {
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
   CREATE_RATING_ERROR,
+  GET_RATING_BEGIN,
+  GET_RATING_SUCCESS,
+  GET_RATING_ERROR,
+  GET_REFEREES_BEGIN,
+  GET_REFEREES_SUCCESS,
+  GET_REFEREE_BEGIN,
+  GET_REFEREE_SUCCESS,
+  GET_REFEREE_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -57,6 +65,7 @@ const initialState = {
   rating: "",
   review: "",
   eventReviews: [],
+  referees: [],
 };
 
 const AppContext = React.createContext();
@@ -271,6 +280,54 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const getRating = async (matchId) => {
+    dispatch({ type: GET_RATING_BEGIN });
+    try {
+      await authFetch.get("/ratings/" + matchId);
+      dispatch({ type: GET_RATING_SUCCESS });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: GET_RATING_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+  };
+
+  // referees
+  const getReferees = async () => {
+    dispatch({ type: GET_REFEREES_BEGIN });
+    try {
+      const { data } = await authFetch("/referees");
+      const { referees } = data;
+      dispatch({
+        type: GET_REFEREES_SUCCESS,
+        payload: {
+          referees,
+        },
+      });
+    } catch (error) {
+      logoutUser();
+    }
+    clearAlert();
+  };
+
+  const getReferee = async (refID) => {
+    dispatch({ type: GET_REFEREE_BEGIN });
+    try {
+      const { data } = await authFetch.get("/referees/" + refID);
+      const { referee } = data;
+      dispatch({ type: GET_REFEREE_SUCCESS, payload: { referee } });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREE_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -331,6 +388,10 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
+        createRating,
+        getRating,
+        getReferees,
+        getReferee,
       }}
     >
       {children}

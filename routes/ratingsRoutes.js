@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { createRating, getRating } from "../controllers/ratingsController";
+import { createRating, getRating } from "../controllers/ratingsController.js";
 
 // import testUser from "../middleware/testUser.js";
 

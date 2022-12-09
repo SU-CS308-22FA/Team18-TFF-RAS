@@ -1,4 +1,4 @@
-import Rating from "../models/Rating";
+import Rating from "../models/Rating.js";
 import { StatusCodes } from "http-status-codes";
 import {
   BadRequestError,
@@ -10,7 +10,7 @@ import {
 // import moment from "moment";
 
 const createRating = async (req, res) => {
-  const { rating: ratingValue } = req.body;
+  const { rating: ratingValue, matchId } = req.body;
   if (!ratingValue) {
     throw new BadRequestError("Please provide all values");
   }

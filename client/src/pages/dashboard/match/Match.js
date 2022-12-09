@@ -10,9 +10,14 @@ import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
 import { getMatch } from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import MatchRefRatingColumn from "../../../components/MatchRefRatingColumn/MatchRefRatingColumn";
+import { referees } from "../../../utils/constants";
+import { useAppContext } from "../../../context/appContext";
 
 const Match = () => {
   const { id } = useParams();
+
+  const { referees: storedReferees, getReferee } = useAppContext();
+  console.log(JSON.stringify(storedReferees));
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
@@ -23,6 +28,7 @@ const Match = () => {
   const [reviewEventsComments, setReviewEventsComments] = useState({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [eventToBeDeleted, setEventToBeDeleted] = useState(-1);
+  const [referee, setReferee] = useState(null);
 
   // sort and filter events
   const newData = [];
@@ -88,6 +94,12 @@ const Match = () => {
   useEffect(() => {
     getMatch(id).then((data) => {
       setMatchData(data);
+      const currentReferee = referees.find(
+        (refereeObject) =>
+          refereeObject?.apiName ===
+          data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
+      );
+      getReferee(currentReferee.id);
     });
   }, []);
 

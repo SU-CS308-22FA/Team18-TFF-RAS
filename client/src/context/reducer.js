@@ -27,6 +27,11 @@ import {
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
   CREATE_RATING_ERROR,
+  GET_REFEREES_BEGIN,
+  GET_REFEREES_SUCCESS,
+  GET_REFEREE_BEGIN,
+  GET_REFEREE_SUCCESS,
+  GET_REFEREE_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -242,6 +247,48 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === CREATE_RATING_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_REFEREES_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      referees: action.payload.referees,
+    };
+  }
+  if (action.type === GET_REFEREE_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREE_SUCCESS) {
+    const referees = [...state.referees];
+    const refereeToAdd = action.payload.referee;
+
+    const idx = referees.findIndex(
+      (refereeObject) => refereeObject.refID === refereeToAdd.refID
+    );
+
+    if (idx != -1) {
+      referees[idx] = refereeToAdd;
+    } else {
+      referees.push(refereeToAdd);
+    }
+
+    return {
+      ...state,
+      isLoading: false,
+      referees,
+    };
+  }
+  if (action.type === GET_REFEREE_ERROR) {
     return {
       ...state,
       isLoading: false,
