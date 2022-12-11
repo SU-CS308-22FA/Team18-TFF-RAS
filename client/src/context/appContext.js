@@ -66,6 +66,7 @@ const initialState = {
   review: "",
   eventReviews: [],
   referees: [],
+  referee: null,
 };
 
 const AppContext = React.createContext();
@@ -283,8 +284,10 @@ const AppProvider = ({ children }) => {
   const getRating = async (matchId) => {
     dispatch({ type: GET_RATING_BEGIN });
     try {
-      await authFetch.get("/ratings/" + matchId);
-      dispatch({ type: GET_RATING_SUCCESS });
+      const { data } = await authFetch.get("/ratings/" + matchId);
+      const { rating } = data;
+      console.log(JSON.stringify("Rating: " + JSON.stringify(rating)));
+      // dispatch({ type: GET_RATING_SUCCESS });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({

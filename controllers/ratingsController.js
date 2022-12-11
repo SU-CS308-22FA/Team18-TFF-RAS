@@ -24,10 +24,10 @@ const createRating = async (req, res) => {
 };
 
 const getRating = async (req, res) => {
-  const matchId = req.params.id;
+  const match = req.params.id;
   const createdBy = req.user.userId;
 
-  const query = { matchId, createdBy };
+  const query = { match, createdBy };
   const rating = await Rating.findOne(query);
 
   res.status(StatusCodes.OK).json({ rating });

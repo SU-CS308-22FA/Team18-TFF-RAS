@@ -16,8 +16,7 @@ import { useAppContext } from "../../../context/appContext";
 const Match = () => {
   const { id } = useParams();
 
-  const { referees: storedReferees, getReferee } = useAppContext();
-  console.log(JSON.stringify(storedReferees));
+  const { referee: storedReferee, getReferee, getRating } = useAppContext();
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
@@ -102,6 +101,12 @@ const Match = () => {
       getReferee(currentReferee.id);
     });
   }, []);
+
+  useEffect(() => {
+    if (storedReferee != null && matchData != null) {
+      getRating(matchData.fixture.id);
+    }
+  }, [storedReferee, matchData]);
 
   if (matchData == null) {
     return null;

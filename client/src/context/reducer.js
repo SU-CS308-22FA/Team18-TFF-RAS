@@ -32,6 +32,8 @@ import {
   GET_REFEREE_BEGIN,
   GET_REFEREE_SUCCESS,
   GET_REFEREE_ERROR,
+  GET_RATING_BEGIN,
+  GET_RATING_SUCCESS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -286,8 +288,29 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       referees,
+      referee: refereeToAdd,
     };
   }
+  if (action.type === GET_REFEREE_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_RATING_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  // if (action.type === GET_RATING_SUCCESS) {
+  //   const
+  //   return {
+  //     ...state,
+  //     isLoading: false,
+  //     referees,
+  //   };
+  // }
   if (action.type === GET_REFEREE_ERROR) {
     return {
       ...state,
