@@ -268,8 +268,9 @@ const AppProvider = ({ children }) => {
   const createRating = async (ratingDetails) => {
     dispatch({ type: CREATE_RATING_BEGIN });
     try {
-      await authFetch.post("/ratings", ratingDetails);
-      dispatch({ type: CREATE_RATING_SUCCESS });
+      const { data } = await authFetch.post("/ratings", ratingDetails);
+      const { rating } = data;
+      dispatch({ type: CREATE_RATING_SUCCESS, payload: { rating } });
       // dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
@@ -286,8 +287,7 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.get("/ratings/" + matchId);
       const { rating } = data;
-      console.log(JSON.stringify("Rating: " + JSON.stringify(rating)));
-      // dispatch({ type: GET_RATING_SUCCESS });
+      dispatch({ type: GET_RATING_SUCCESS, payload: { rating } });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({

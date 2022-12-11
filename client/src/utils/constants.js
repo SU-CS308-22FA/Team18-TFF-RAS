@@ -1,7 +1,8 @@
 const referees = [
   {
     name: "Zorbay Küçük",
-    apiName: "Zorbay Kucuk",
+    // apiName: "Zorbay Kucuk",
+    apiName: "Z. Küçü",
     id: "1385054",
   },
   {

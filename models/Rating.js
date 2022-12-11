@@ -12,8 +12,8 @@ const RatingSchema = new mongoose.Schema(
       //   maxlength: 100,
     },
     eventReviews: {
-      type: Array,
-      default: [],
+      type: Object,
+      default: {},
     },
     ratingType: {
       type: String,
@@ -27,13 +27,15 @@ const RatingSchema = new mongoose.Schema(
       required: [true, "Please provide user"],
     },
     match: {
-      type: mongoose.Types.ObjectId,
-      ref: "Match",
+      type: Number,
+      // type: mongoose.Types.ObjectId,
+      // ref: "Match",
       required: [true, "Please provide match"],
     },
     referee: {
-      type: mongoose.Types.ObjectId,
-      ref: "Referee",
+      type: String,
+      // type: mongoose.Types.ObjectId,
+      // ref: "Referee",
       required: [true, "Please provide referee"],
     },
   },

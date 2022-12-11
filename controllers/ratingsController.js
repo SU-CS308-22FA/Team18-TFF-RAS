@@ -1,4 +1,5 @@
 import Rating from "../models/Rating.js";
+import Match from "../models/Match.js";
 import { StatusCodes } from "http-status-codes";
 import {
   BadRequestError,
@@ -10,8 +11,8 @@ import {
 // import moment from "moment";
 
 const createRating = async (req, res) => {
-  const { rating: ratingValue, matchId } = req.body;
-  if (!ratingValue) {
+  const { rating: ratingValue, match, referee } = req.body;
+  if (!ratingValue || !match || !referee) {
     throw new BadRequestError("Please provide all values");
   }
 

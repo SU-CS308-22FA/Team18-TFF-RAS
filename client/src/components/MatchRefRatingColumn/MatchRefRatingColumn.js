@@ -62,10 +62,13 @@ const MatchRefRatingColumn = ({
               setReviewEvents(
                 reviewEvents.filter((rE) => rE != eventToBeDeleted)
               );
-              setReviewEventsComments({
-                ...reviewEventsComments,
-                [eventToBeDeleted.toString()]: "",
-              });
+              // setReviewEventsComments({
+              //   ...reviewEventsComments,
+              //   [eventToBeDeleted.toString()]: "",
+              // });
+              let temp = { ...reviewEventsComments };
+              delete temp[eventToBeDeleted.toString()];
+              setReviewEventsComments(temp);
               setIsDeleteModalOpen(false);
             }}
             autoFocus

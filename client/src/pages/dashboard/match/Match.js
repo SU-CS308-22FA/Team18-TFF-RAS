@@ -16,7 +16,12 @@ import { useAppContext } from "../../../context/appContext";
 const Match = () => {
   const { id } = useParams();
 
-  const { referee: storedReferee, getReferee, getRating } = useAppContext();
+  const {
+    referee: storedReferee,
+    getReferee,
+    getRating,
+    createRating,
+  } = useAppContext();
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
@@ -28,6 +33,7 @@ const Match = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [eventToBeDeleted, setEventToBeDeleted] = useState(-1);
   const [referee, setReferee] = useState(null);
+  const [refID, setRefID] = useState(null);
 
   // sort and filter events
   const newData = [];
@@ -73,13 +79,24 @@ const Match = () => {
   };
 
   const onReviewSubmit = () => {
-    console.log(
-      JSON.stringify({
-        rating,
-        review: generalReview,
-        eventReviews: reviewEventsComments,
-      })
-    );
+    let submitObject = {
+      rating,
+      match: matchData.fixture.id,
+      referee: refID,
+    };
+
+    // check for review
+    if (generalReview !== "") {
+      submitObject.review = generalReview;
+    }
+
+    // check for eventReviews
+    if (Object.keys(reviewEventsComments).length !== 0) {
+      submitObject.eventReviews = reviewEventsComments;
+    }
+
+    // console.log(submitObject);
+    createRating(submitObject);
   };
 
   useEffect(() => {
@@ -98,15 +115,16 @@ const Match = () => {
           refereeObject?.apiName ===
           data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
       );
-      getReferee(currentReferee.id);
+      // getReferee(currentReferee.id);
+      setRefID(currentReferee.id);
     });
   }, []);
 
   useEffect(() => {
-    if (storedReferee != null && matchData != null) {
+    if (matchData != null) {
       getRating(matchData.fixture.id);
     }
-  }, [storedReferee, matchData]);
+  }, [matchData]);
 
   if (matchData == null) {
     return null;
