@@ -24,12 +24,15 @@ import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
 
-import ref from "./web-scraping/tff-bot-refereeID.js";
+//web-scrape stuff
+import searchMatch from "./controllers/matchController.js";
+import { refreshRefs } from "./controllers/refereesController.js";
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
+import { serialize } from "v8";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -58,8 +61,11 @@ app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
 
 app.get("/api/referee/:id", async (req, res) => {
-  let data = await ref(req.params.id);
-  // console.log(data);
+});
+
+
+app.get("/api/searchBySubstr/:substr", async (req, res) => {
+  let data = await searchMatch.searchBySubstr(req.params.substr);
   console.log(data);
   res.json(data);
 });
@@ -81,7 +87,7 @@ app.use(errorHandlerMiddleware);
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URL);
-    app.listen(process.env.PORT || 5000, () => {
+    app.listen(process.env.PORT || 4000, () => {
       console.log(`Server is listening...`);
     });
   } catch (error) {
