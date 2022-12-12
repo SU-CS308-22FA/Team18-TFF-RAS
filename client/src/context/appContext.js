@@ -86,13 +86,11 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("location");
   };
 
-  {/* CHECK */}
-  {/* CHECK */}
-  {/* CHECK */}
+
   const getObjections = async (currentObjection) => {
     dispatch({type: GET_OBJECTIONS_BEGIN});
     try {
-      const response = await authFetch.post("/objections/",currentObjection)
+      const response = await authFetch.get("/objections/",currentObjection)
       const {objections} = response.data;
       dispatch({
         type: GET_OBJECTIONS_SUCCESS,
@@ -145,9 +143,7 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   }
-  {/* CHECK */}
-  {/* CHECK */}
-  {/* CHECK */}
+  
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {

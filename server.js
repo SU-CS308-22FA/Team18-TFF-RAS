@@ -30,6 +30,7 @@ import ref from "./web-scraping/tff-bot-refereeID.js"
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
+import { getObjection } from "./controllers/objectionController.js";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -63,6 +64,13 @@ app.get('/api/referee/:id', async(req, res)=>{
 	res.json(data);
 });
 
+
+app.get('/api/objection/:id', async(req, res)=>{
+	let data  = await getObjection(req.params.id);
+	// console.log(data);
+	console.log(data);
+	res.json(data);
+});
 
 app.get("/api/v1/objections", (req,res) => {
   res.send("SUCCES");
