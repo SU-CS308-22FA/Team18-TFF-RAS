@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.10.16",
+    "@mui/lab": "^5.0.0-alpha.111",
+    "@mui/material": "^5.10.17",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -17,6 +23,7 @@
     "react-icons": "^4.6.0",
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
+    "react-simple-star-rating": "^5.1.7",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
   },
@@ -26,7 +33,6 @@
     "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --fix --ext .js,.jsx ."
-    
   },
   "eslintConfig": {
     "extends": [
@@ -54,10 +60,10 @@
     "prettier": "^2.7.1"
   },
   "proxy": "http://localhost:5000",
-    "prettier/prettier": [
-        "error",
-        {
-            "endOfLine" : "auto"
-        }
-    ]
+  "prettier/prettier": [
+    "error",
+    {
+      "endOfLine": "auto"
+    }
+  ]
 }

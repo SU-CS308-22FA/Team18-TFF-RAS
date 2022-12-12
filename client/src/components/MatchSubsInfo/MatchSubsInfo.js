@@ -190,7 +190,6 @@ const MatchSubsInfo = ({ data }) => {
   awaySubs.sort(function (x, y) {
     return x.subIn - y.subIn;
   });
-  console.log(awaySubs);
 
   return (
     <div className="lineup card-css">

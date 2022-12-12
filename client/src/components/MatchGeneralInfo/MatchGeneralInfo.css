@@ -115,7 +115,7 @@ input:is([type="button"], [type="submit"], [type="reset"]), input[type="file"]::
     font-style: normal;
     font-weight: 400;
     font-size: 11px;
-    font-family: system-ui;
+    /* font-family: system-ui; */
     font-variant-caps: normal;
     color: initial;
     letter-spacing: normal;
@@ -187,8 +187,8 @@ img.Image {
 }
 
 .drop-down-header {
-    /* width: 1280px; */
-    width: 74.45%;
+    width: 1280px;
+    /* width: 100%; */
     position: fixed;
     z-index: 19;
     /* background-color: rgb(39, 39, 39); */
@@ -470,12 +470,24 @@ li {
 }
 
 .event-item-container {
-    height: 48px;
+    height: 80px;
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
     column-gap: 13px;
     -webkit-box-align: center;
     align-items: center;
+    border-radius: 7px;
+    /* padding: 10px; */
+}
+
+.choosing-event:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.choosing-event-chosen {
+    background-color: rgba(255, 0, 0, 0.2);
+    cursor: not-allowed;
 }
 
 .event-list li:not(:last-child) {
@@ -536,6 +548,11 @@ li {
     grid-column-end: auto;
 }
 
+.events {
+    position: relative;
+    z-index: 10;
+}
+
 .events img {
     width: 25px;
     height: 25px;
@@ -562,7 +579,7 @@ li {
 .pause-container span {
     position: absolute;
     left: 50%;
-    top: 15px;
+    top: 31px;
     transform: translate(-50%);
     font-size: 15px;
     font-weight: 500;
@@ -691,7 +708,7 @@ li {
 }
 
 .lineup-text {
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     background-color: rgba(200, 200, 200, 1);
     padding-top: 8px;
     padding-bottom: 8px;
@@ -752,7 +769,7 @@ h2 {
 
 .lineup-title {
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     /* color: white; */
     color: black;
 }
@@ -982,7 +999,7 @@ img.Image.PlayerImage {
 .player-rating-styled-left span {
     white-space: nowrap;
     letter-spacing: 0px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     font-size: 13px;
     color: white;
     /* color: black; */
@@ -1218,7 +1235,7 @@ img.Image.CoachImage {
 
 .coaches-container-title {
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     /* color: white; */
     color: black;
 }
@@ -1239,7 +1256,7 @@ img.Image.CoachImage {
     -webkit-box-align: center;
     align-items: center;
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
 }
 
 .expand-button-container a, .expand-button-container button {
@@ -1383,7 +1400,7 @@ img.Image.SubImage {
 .sub-rating-styled span {
     white-space: nowrap;
     letter-spacing: 0px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     color: white;
     /* color: black; */
 }
@@ -1429,7 +1446,7 @@ img.Image.SubImage {
 
 .stats-title {
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     /* color: white; */
     color: black;
 }
@@ -1510,7 +1527,7 @@ img.Image.stats-team-icon {
 
 .stats-percentage-value {
     font-size: 30px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     /* color: rgb(255, 255, 255); */
     color: black;
 }
@@ -1561,7 +1578,7 @@ img.Image.stats-team-icon {
     background-color: rgba(200, 200, 200, 0.5);;
     justify-self: center;
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     letter-spacing: 0.01px;
     /* color: rgb(255, 255, 255); */
     color: black;
@@ -1576,7 +1593,7 @@ img.Image.stats-team-icon {
 }
 
 .stat-value-title {
-    font-family: GTWalsheim-Rg;
+    /* font-family: GTWalsheim-Rg; */
     /* font-size: 14px;
     line-height: 1.57; */
     letter-spacing: 0px;
@@ -1593,7 +1610,7 @@ img.Image.stats-team-icon {
     padding-left: 12px;
     justify-self: center;
     font-size: 18px;
-    font-family: GTWalsheim-Md;
+    /* font-family: GTWalsheim-Md; */
     letter-spacing: 0.01px;
     white-space: nowrap;
 }

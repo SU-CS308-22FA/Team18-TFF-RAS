@@ -23,7 +23,19 @@ import {
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
-  GET_OBJECTIONS_ERROR
+  GET_OBJECTIONS_ERROR,
+  CREATE_RATING_BEGIN,
+  CREATE_RATING_SUCCESS,
+  CREATE_RATING_ERROR,
+  GET_REFEREES_BEGIN,
+  GET_REFEREES_SUCCESS,
+  GET_REFEREE_BEGIN,
+  GET_REFEREE_SUCCESS,
+  GET_REFEREE_ERROR,
+  GET_RATING_BEGIN,
+  GET_RATING_SUCCESS,
+  GET_RATING_ERROR,
+  CLEAR_MODAL,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -43,6 +55,14 @@ const reducer = (state, action) => {
       showAlert: false,
       alertType: "",
       alertText: "",
+    };
+  }
+  if (action.type === CLEAR_MODAL) {
+    return {
+      ...state,
+      showModal: false,
+      modalType: "",
+      modalText: "",
     };
   }
   if (action.type === REGISTER_USER_BEGIN) {
@@ -155,8 +175,9 @@ const reducer = (state, action) => {
   }
   if (action.type === CREATE_OBJECTION_BEGIN) {
     return {
-      ...state, isLoading: true
-    }
+      ...state,
+      isLoading: true,
+    };
   }
   if (action.type === CREATE_OBJECTION_SUCCES) {
     return {
@@ -166,8 +187,7 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "success",
       alertText: "Objection created! Redirecting...",
-
-    }
+    };
   }
   if (action.type === CREATE_OBJECTION_ERROR) {
     return {
@@ -176,10 +196,10 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
-    }
+    };
   }
   if (action.type === DELETE_OBJECTION_BEGIN) {
-      return { ...state, isDeleting: true };
+    return { ...state, isDeleting: true };
   }
   if (action.type === DELETE_OBJECTION_SUCCES) {
     return {
@@ -188,7 +208,7 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "success",
       alertText: "Objection Deleted!",
-    }
+    };
   }
   if (action.type === DELETE_OBJECTION_ERROR) {
     return {
@@ -197,13 +217,13 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
-    }
+    };
   }
   if (action.type === GET_OBJECTIONS_BEGIN) {
     return {
       ...state,
       isLoading: true,
-    }
+    };
   }
   if (action.type === GET_OBJECTIONS_SUCCESS) {
     return {
@@ -211,9 +231,8 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertText: "Objections are visible",
-      alerttype: "success"
-
-    }
+      alerttype: "success",
+    };
   }
   if (action.type === GET_OBJECTIONS_ERROR) {
     return {
@@ -221,8 +240,113 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "danger",
-      alertText: "Can't get Objections"
+      alertText: "Can't get Objections",
+    };
+  }
+  if (action.type === CREATE_RATING_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === CREATE_RATING_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "success",
+      modalText: "Rating added successfully.",
+      ratingGiven: true,
+      rating: action.payload.rating.rating,
+      review: action.payload.rating.review,
+      eventReviews: action.payload.rating.eventReviews,
+    };
+  }
+  if (action.type === CREATE_RATING_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_REFEREES_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      referees: action.payload.referees,
+    };
+  }
+  if (action.type === GET_REFEREE_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREE_SUCCESS) {
+    const referees = [...state.referees];
+    const refereeToAdd = action.payload.referee;
+
+    const idx = referees.findIndex(
+      (refereeObject) => refereeObject.refID === refereeToAdd.refID
+    );
+
+    if (idx != -1) {
+      referees[idx] = refereeToAdd;
+    } else {
+      referees.push(refereeToAdd);
     }
+
+    return {
+      ...state,
+      isLoading: false,
+      referees,
+      referee: refereeToAdd,
+    };
+  }
+  if (action.type === GET_REFEREE_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_RATING_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_RATING_SUCCESS) {
+    const { rating } = action.payload;
+    let result = {};
+    if (rating === null) {
+      result.ratingGiven = false;
+      result.rating = "";
+      result.review = "";
+      result.eventReviews = {};
+    } else {
+      result = {
+        ratingGiven: true,
+        rating: rating.rating,
+        review: rating.review,
+        eventReviews: rating.eventReviews,
+      };
+    }
+    return {
+      ...state,
+      isLoading: false,
+      ...result,
+    };
+  }
+  if (action.type === GET_RATING_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
   }
 
   throw new Error(`no such action : ${action.type}`);
