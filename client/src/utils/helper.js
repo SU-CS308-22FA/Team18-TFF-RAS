@@ -1,3 +1,5 @@
+import { ratingLabels } from "./constants";
+
 const getEventTimeString = (e) => {
   let result = e.time.elapsed;
   if (e.time.extra != 0 && e.time.extra != null) {
@@ -16,4 +18,8 @@ const getReviewEventTimeString = (e) => {
   return result;
 };
 
-export { getEventTimeString, getReviewEventTimeString };
+const getRatingLabelText = (value) => {
+  return `${value} Star${value !== 1 ? "s" : ""}, ${ratingLabels[value]}`;
+};
+
+export { getEventTimeString, getReviewEventTimeString, getRatingLabelText };

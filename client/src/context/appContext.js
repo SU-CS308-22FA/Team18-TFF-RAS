@@ -39,6 +39,7 @@ import {
   GET_REFEREE_BEGIN,
   GET_REFEREE_SUCCESS,
   GET_REFEREE_ERROR,
+  CLEAR_MODAL,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -85,6 +86,10 @@ const AppProvider = ({ children }) => {
     setTimeout(() => {
       dispatch({ type: CLEAR_ALERT });
     }, 3000);
+  };
+
+  const clearModal = () => {
+    dispatch({ type: CLEAR_MODAL });
   };
 
   const addUserToLocalStorage = ({ user, token, location }) => {
@@ -395,6 +400,7 @@ const AppProvider = ({ children }) => {
         getRating,
         getReferees,
         getReferee,
+        clearModal,
       }}
     >
       {children}

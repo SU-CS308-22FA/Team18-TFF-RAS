@@ -8,6 +8,7 @@ import VarIcon from "../../assets/images/var-icon.svg";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -18,9 +19,12 @@ import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { Rating } from "react-simple-star-rating";
-import { referees } from "../../utils/constants";
-import { getReviewEventTimeString } from "../../utils/helper";
+import Rating from "@mui/material/Rating";
+import StarIcon from "@mui/icons-material/Star";
+import {
+  getRatingLabelText,
+  getReviewEventTimeString,
+} from "../../utils/helper";
 
 const MatchRefRatingColumn = ({
   setRating,
@@ -40,7 +44,18 @@ const MatchRefRatingColumn = ({
   onReviewSubmit,
   eventToBeDeleted,
   setEventToBeDeleted,
+  showError,
+  ratingGiven,
+  storedRating,
+  storedReview,
+  storedEventReviews,
+  refereeName,
+  refereeImage,
+  loading,
 }) => {
+  const eventReviewsToShow = ratingGiven
+    ? Object.keys(storedEventReviews)
+    : reviewEvents;
   console.log(reviewEvents);
   return (
     <div className="RightColumn">
@@ -80,7 +95,9 @@ const MatchRefRatingColumn = ({
       <div className="rating-container card-css">
         <section className="rating-section">
           <header className="rating-title-container">
-            <h2 className="rating-title">Rate referee performance</h2>
+            <h2 className="rating-title">
+              {ratingGiven ? "Your review" : "Rate referee performance"}
+            </h2>
           </header>
           <div className="rating-body-container">
             <div className="rating-body-referee-container">
@@ -89,30 +106,52 @@ const MatchRefRatingColumn = ({
                 className="Image team-icon referee-image"
                 width="30"
                 height="30"
-                src={referees[referees.length - 1].image}
+                src={refereeImage}
               />
-              <span>{referees[referees.length - 1].apiName}</span>
+              <span>{refereeName}</span>
             </div>
             <div className="rating-body-rating-container">
-              <Rating allowHover={false} onClick={setRating} />
-              <TextField
-                value={generalReview}
-                onChange={(event) => setGeneralReview(event.target.value)}
-                className="referee-comment"
-                label="Review"
-                multiline
-                rows={4}
-                defaultValue=""
-                placeholder="Describe the referee's performance"
-                variant="filled"
-                color="primary"
-                disabled={rating === 0}
+              {/* <Rating
+                allowHover={false}
+                onClick={ratingGiven ? setRating : null}
+                initialValue={ratingGiven ? storedRating : 0}
+              /> */}
+              <Rating
+                name="hover-feedback"
+                value={ratingGiven ? storedRating : rating}
+                precision={0.5}
+                getLabelText={getRatingLabelText}
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                }}
+                emptyIcon={
+                  <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+                }
+                readOnly={ratingGiven}
               />
-              {reviewEvents.length > 0 ? (
+              {ratingGiven && storedReview === "" ? null : (
+                <TextField
+                  value={ratingGiven ? storedReview : generalReview}
+                  onChange={(event) => setGeneralReview(event.target.value)}
+                  className="referee-comment"
+                  label="Review"
+                  multiline
+                  rows={4}
+                  placeholder="Describe the referee's performance"
+                  variant={ratingGiven ? "outlined" : "filled"}
+                  color="primary"
+                  disabled={rating === 0 || ratingGiven}
+                />
+              )}
+              {(
+                ratingGiven
+                  ? Object.keys(storedEventReviews).length > 0
+                  : reviewEvents.length > 0
+              ) ? (
                 <div className="reviews-divider" />
               ) : null}
               <div className="events-reviews-container">
-                {reviewEvents.map((reviewEventIdx, idx) => {
+                {eventReviewsToShow.map((reviewEventIdx, idx) => {
                   const currentPlayer = matchData.players[0].players
                     .concat(matchData.players[1].players)
                     .find(
@@ -134,7 +173,12 @@ const MatchRefRatingColumn = ({
                       </div>
                       <a>
                         <div className="event-review-player-card-container">
-                          <div className="event-review-delete-overlay">
+                          <div
+                            className={
+                              "event-review-delete-overlay" +
+                              (ratingGiven ? " noHover" : "")
+                            }
+                          >
                             <div className="event-review-delete-overlay-empty" />
                             <div
                               className="event-review-delete-content"
@@ -210,7 +254,11 @@ const MatchRefRatingColumn = ({
                         </div>
                       </a>
                       <TextField
-                        value={reviewEventsComments[reviewEventIdx.toString()]}
+                        value={
+                          ratingGiven
+                            ? storedEventReviews[reviewEventIdx]
+                            : reviewEventsComments[reviewEventIdx.toString()]
+                        }
                         onChange={(event) => {
                           setReviewEventsComments({
                             ...reviewEventsComments,
@@ -221,32 +269,47 @@ const MatchRefRatingColumn = ({
                         label="Event Review"
                         multiline
                         rows={3}
-                        defaultValue=""
                         placeholder="Describe the referee's performance in this event"
-                        variant="filled"
+                        variant={ratingGiven ? "outlined" : "filled"}
                         color="secondary"
+                        helperText={
+                          showError &&
+                          reviewEventsComments[reviewEventIdx.toString()] ===
+                            "" &&
+                          "This field is required."
+                        }
+                        error={
+                          showError &&
+                          reviewEventsComments[reviewEventIdx.toString()] === ""
+                        }
+                        disabled={ratingGiven}
                       />
                     </div>
                   );
                 })}
               </div>
-              <Button
-                onClick={() => setIsChoosingEvent(!isChoosingEvent)}
-                className="add-event-review-button"
-                variant={isChoosingEvent ? "contained" : "outlined"}
-                startIcon={isChoosingEvent ? <CancelIcon /> : <AddIcon />}
-                disabled={rating === 0 ? true : false}
-              >
-                {isChoosingEvent ? "Cancel" : "Add Event Review"}
-              </Button>
-              <Button
-                className="add-review-button"
-                variant="contained"
-                disabled={rating === 0 ? true : false}
-                onClick={onReviewSubmit}
-              >
-                Add Review
-              </Button>
+              {ratingGiven ? null : (
+                <>
+                  <Button
+                    onClick={() => setIsChoosingEvent(!isChoosingEvent)}
+                    className="add-event-review-button"
+                    variant={isChoosingEvent ? "contained" : "outlined"}
+                    startIcon={isChoosingEvent ? <CancelIcon /> : <AddIcon />}
+                    disabled={rating === 0 ? true : false}
+                  >
+                    {isChoosingEvent ? "Cancel" : "Add Event Review"}
+                  </Button>
+                  <LoadingButton
+                    className="add-review-button"
+                    variant="contained"
+                    disabled={rating === 0 || loading ? true : false}
+                    onClick={onReviewSubmit}
+                    loading={loading}
+                  >
+                    Add Review
+                  </LoadingButton>
+                </>
+              )}
             </div>
           </div>
         </section>

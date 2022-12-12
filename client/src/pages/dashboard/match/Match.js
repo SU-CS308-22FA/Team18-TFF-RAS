@@ -6,6 +6,15 @@ import MatchEventsInfo from "../../../components/MatchEventsInfo/MatchEventsInfo
 import MatchSubsInfo from "../../../components/MatchSubsInfo/MatchSubsInfo";
 import MatchStatsInfo from "../../../components/MatchStatsInfo/MatchStatsInfo";
 
+import DefaultReferee from "../../../assets/images/default_referee.jpeg";
+
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
 import { getMatch } from "../../../utils/api";
 import { useParams } from "react-router-dom";
@@ -17,11 +26,22 @@ const Match = () => {
   const { id } = useParams();
 
   const {
-    referee: storedReferee,
-    getReferee,
     getRating,
     createRating,
+    clearModal,
+    showModal,
+    modalType,
+    modalText,
+    ratingGiven,
+    rating: storedRating,
+    review: storedReview,
+    eventReviews: storedEventReviews,
+    loading,
   } = useAppContext();
+  console.log(storedRating);
+  console.log(storedReview);
+  console.log(storedEventReviews);
+  console.log("ENDD");
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
@@ -32,8 +52,10 @@ const Match = () => {
   const [reviewEventsComments, setReviewEventsComments] = useState({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [eventToBeDeleted, setEventToBeDeleted] = useState(-1);
-  const [referee, setReferee] = useState(null);
   const [refID, setRefID] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [refereeName, setRefereeName] = useState("");
+  const [refereeImage, setRefereeImage] = useState(DefaultReferee);
 
   // sort and filter events
   const newData = [];
@@ -79,6 +101,14 @@ const Match = () => {
   };
 
   const onReviewSubmit = () => {
+    for (let i = 0; i < reviewEvents.length; i++) {
+      if (reviewEventsComments[reviewEvents[i].toString()] === "") {
+        setShowError(true);
+        return;
+      }
+    }
+    setShowError(false);
+
     let submitObject = {
       rating,
       match: matchData.fixture.id,
@@ -117,6 +147,10 @@ const Match = () => {
       );
       // getReferee(currentReferee.id);
       setRefID(currentReferee.id);
+      setRefereeName(currentReferee.name);
+      if (currentReferee?.image) {
+        setRefereeImage(currentReferee?.image);
+      }
     });
   }, []);
 
@@ -132,6 +166,22 @@ const Match = () => {
 
   return (
     <MatchPageWrapper>
+      <Dialog open={showModal} onClose={clearModal}>
+        {/* <DialogTitle>{"Delete this event review?"}</DialogTitle> */}
+        <DialogContent>
+          <DialogContentText>{modalText}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              clearModal();
+            }}
+            autoFocus
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* <div style={{ width: "100%", height: 100, position: "relative" }}>
         <iframe
           src="https://www.scorebat.com/embed/v/63900a02a0901/?utm_source=api&utm_medium=video&utm_campaign=dflt"
@@ -186,6 +236,14 @@ const Match = () => {
             onReviewSubmit={onReviewSubmit}
             eventToBeDeleted={eventToBeDeleted}
             setEventToBeDeleted={setEventToBeDeleted}
+            showError={showError}
+            ratingGiven={ratingGiven}
+            storedRating={storedRating}
+            storedReview={storedReview}
+            storedEventReviews={storedEventReviews}
+            refereeName={refereeName}
+            refereeImage={refereeImage}
+            loading={loading}
           />
         </div>
       </main>

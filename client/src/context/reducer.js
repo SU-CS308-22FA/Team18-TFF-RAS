@@ -35,6 +35,7 @@ import {
   GET_RATING_BEGIN,
   GET_RATING_SUCCESS,
   GET_RATING_ERROR,
+  CLEAR_MODAL,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -54,6 +55,14 @@ const reducer = (state, action) => {
       showAlert: false,
       alertType: "",
       alertText: "",
+    };
+  }
+  if (action.type === CLEAR_MODAL) {
+    return {
+      ...state,
+      showModal: false,
+      modalType: "",
+      modalText: "",
     };
   }
   if (action.type === REGISTER_USER_BEGIN) {
@@ -246,6 +255,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showModal: true,
       modalType: "success",
+      modalText: "Rating added successfully.",
       ratingGiven: true,
       rating: action.payload.rating.rating,
       review: action.payload.rating.review,

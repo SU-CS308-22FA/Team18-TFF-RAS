@@ -39,7 +39,7 @@ const RatingSchema = new mongoose.Schema(
       required: [true, "Please provide referee"],
     },
   },
-  { timestamps: true }
+  { timestamps: true, minimize: false }
 );
 
 export default mongoose.model("Rating", RatingSchema);

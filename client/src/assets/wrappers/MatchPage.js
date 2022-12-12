@@ -47,6 +47,7 @@ const Wrapper = styled.main`
 
   .rating-section {
     text-align: center;
+    padding-bottom: 20px;
   }
 
   .rating-title-container {
@@ -313,6 +314,11 @@ const Wrapper = styled.main`
 
   .event-review-delete-overlay:hover {
     transform: translateX(-240px);
+  }
+
+  .noHover {
+    pointer-events: none;
+    cursor: not-allowed !important;
   }
 
   .event-review-delete-overlay-empty {
