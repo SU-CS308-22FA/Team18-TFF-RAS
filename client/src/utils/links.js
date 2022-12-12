@@ -1,5 +1,5 @@
 import { IoBarChartSharp } from "react-icons/io5";
-import { MdQueryStats } from "react-icons/md";
+import { MdQueryStats, MdPersonAddAlt1 } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 import {AiFillExclamationCircle} from "react-icons/ai"
@@ -34,6 +34,12 @@ const links = [
     text: "objection",
     path: "objection",
     icon: <AiFillExclamationCircle />
+  },
+  {
+    id: 6,
+    text: "assignment",
+    path: "referee-assignment",
+    icon: <MdPersonAddAlt1/> 
   }
 ];
 

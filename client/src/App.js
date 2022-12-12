@@ -7,6 +7,7 @@ import {
   SharedLayout,
   Objection,
   Match,
+  RefereeAssignment
 } from "./pages/dashboard";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="referees" element={<Referees />} />
           <Route path="profile" element={<Profile />} />
           <Route path="/objection" element={<Objection />} />
+          <Route path="/referee-assignment" element={<RefereeAssignment />} />
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
