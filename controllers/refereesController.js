@@ -386,4 +386,19 @@ async function refreshRefs() {
 // module.exports={fillRefs,leechWithRefID,refreshRefs}
 
 
-export { getReferees, getReferee, fillRefs, refreshRefs};
+/**
+ *Created for finding the input substring in document's name field
+ * @param {string} search - The substr to look for
+ * @since 11.12.2022
+ * @return {Object} refs - Referees that contain match details that has a field containing the substring parameter
+ * @example searchbySubstr("ali")
+ */
+ async function searchBySubstr(search) {
+    search = search.trim();
+    console.log(search);
+    let refs = await Referee.find({'name' : new RegExp(search ,'i')}).select('name refID -_id');
+    console.log(refs);
+    return refs;
+}
+
+export default { getReferees, getReferee, fillRefs, refreshRefs, searchBySubstr};

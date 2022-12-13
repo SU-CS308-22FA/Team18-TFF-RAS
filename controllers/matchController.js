@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 
 // const Match = require("./matchShcema")
-import Fixture from '../models/FixtureSchema.js';
+import Fixture from '../models/Fixture.js';
 
 import date from 'date-and-time';
 if (process.env.LOGGER === 'winston') {
@@ -472,17 +472,18 @@ async function leechDate(date) {
  * @param {string} search - The substr to look for
  * @since 11.12.2022
  * @return {Object} Matches - Matches that contain match details that has a field containing the substring parameter
- * @example searchFor("galata")
+ * @example searchBuSubstr("galata")
  */
 async function searchBySubstr(search) {
     search = search.trim();
+    console.log(search);
+    
     let Matches = await Fixture.find({$or : [{'Teams.home' : new RegExp(search ,'i')}, {'Teams.away' : new RegExp(search ,'i')}]});
     console.log(Matches.length);
+    console.log(mongoose.connection.readyState);
     return Matches;
 }
 
 
-// matchesToDB();
 
-
-export default {leechWithMatchID,leechWithHref, leechDate, searchBySubstr};
+export default {leechWithMatchID,leechWithHref, leechDate, searchBySubstr, matchesToDB};

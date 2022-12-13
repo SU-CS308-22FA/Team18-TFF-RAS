@@ -25,14 +25,18 @@ import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
 
 //web-scrape stuff
-import searchMatch from "./controllers/matchController.js";
-import { refreshRefs } from "./controllers/refereesController.js";
+import FixtureFunc from "./controllers/matchController.js";
+import Referee from "./models/refSchema.js";
+import RefereeFunc from "./controllers/refereesController.js";
+import Fixture from "./models/Fixture.js";
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
 import { serialize } from "v8";
+import mongoose from "mongoose";
+
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -60,12 +64,22 @@ app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
 
+
+//get referee from d with specified id
 app.get("/api/referee/:id", async (req, res) => {
+  let data = await Referee.findOne({refID : req.params.id});
+  res.json(data);
 });
 
-
-app.get("/api/searchBySubstr/:substr", async (req, res) => {
-  let data = await searchMatch.searchBySubstr(req.params.substr);
+//every detail is taken from db
+app.get("/api/v1/matchBySubstr/:substr", async (req, res) => {
+  let data = await FixtureFunc.searchBySubstr(req.params.substr);
+  console.log(data);
+  res.json(data);
+});
+//only name and id refid is taken from db and name will de shown in client
+app.get("/api/v1/refereeBySubstr/:substr", async (req, res) => {
+  let data = await RefereeFunc.searchBySubstr(req.params.substr);
   console.log(data);
   res.json(data);
 });

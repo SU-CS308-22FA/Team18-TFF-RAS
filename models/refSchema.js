@@ -5,10 +5,11 @@ import mongoose from 'mongoose';
 
 const refSchema = new mongoose.Schema({
     name: "",
-    licenceNumber: "",
+    lisenceNumber: "",
     classification: "",
     region: "",
     matchesRuled: [],
-    refID:""}
+    refID:"",
+}
 );
 export default mongoose.model("Referee", refSchema);

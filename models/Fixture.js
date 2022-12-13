@@ -1,4 +1,3 @@
-// const mongoose = require('mongoose');
 import mongoose from 'mongoose';
 
 let teamsInfo = {home: "", away: "", homeScore: "", awayScore:""}
@@ -12,6 +11,4 @@ const fixtureSchema = new mongoose.Schema({
     },
     { collation: { locale: 'en_US', strength: 1 }}
 );
-// module.exports = mongoose.model("Match", matchSchema);
 export default mongoose.model("Fixture", fixtureSchema);
-// export default mongoose.model("Objection", objectionSchema);
