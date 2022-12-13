@@ -23,7 +23,7 @@ const Referees = () => {
       setGames(data["matchesRuled"]);
       setClassification(data["classification"]);
       setRegion(data["region"]);
-      setLicense(data["licenceNumber"]);
+      setLicense(data["lisenceNumber"]);
       setIsLoading(false);
     } catch (error) {
       console.log(error);

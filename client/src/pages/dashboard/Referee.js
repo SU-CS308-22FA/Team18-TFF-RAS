@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import RefereePageWrapper from "../../assets/wrappers/RefereePage";
+import RefereeInfoContainer from "../../components/RefereeInfoContainer";
+import RefereeTitleContainer from "../../components/RefereeTitleContainer";
 import { useAppContext } from "../../context/appContext";
 
 const Referee = () => {
@@ -16,7 +18,14 @@ const Referee = () => {
   return (
     <RefereePageWrapper>
       <article className="referee-page-content">
-        <div className="referee-page-card-css"></div>
+        <RefereeTitleContainer
+          name={referee?.name}
+          classification={referee?.classification}
+        />
+        <RefereeInfoContainer
+          region={referee?.region}
+          licenseNumber={referee?.lisenceNumber}
+        />
       </article>
     </RefereePageWrapper>
   );
