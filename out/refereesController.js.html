@@ -1,4 +1,32 @@
-// import Referees from "../models/Referee.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: refereesController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: refereesController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// import Referees from "../models/Referee.js";
 import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
 dotenv.config();
@@ -70,7 +98,7 @@ function Log() {
             winston.transports['rotateLog'].level = l;
             winston.transports['consoleLog'].level = l;
         }
-        level = (l && levels[l]) ? levels[l] : (levels[process.env.LOG_LEVEL] || 0);
+        level = (l &amp;&amp; levels[l]) ? levels[l] : (levels[process.env.LOG_LEVEL] || 0);
     };
 
     this.debug = function (...args) {
@@ -194,7 +222,7 @@ async function collectData(browser, page, leechUrl) {
 
             let tbody = await page.$("table.MasterTable_TFF_Contents tbody");
             let matchRows = await tbody.$$("tr"); //https://playwright.dev/docs/api/class-page#page-query-selector-all
-            for(let i=0;i<matchRows.length;i++) {
+            for(let i=0;i&lt;matchRows.length;i++) {
                 let cells = await matchRows[i].$$("td");
                 let anc = await cells[1].$('a');
                 let mUrl = await anc.getAttribute("href");
@@ -238,14 +266,14 @@ async function leechWithRefID(refid) {
     let page, browser, data;
     try {
         [browser, page] = await initializePage();
-        let leechUrl = "https://www.tff.org/Default.aspx?pageID=531&hakemID="+refid;
+        let leechUrl = "https://www.tff.org/Default.aspx?pageID=531&amp;hakemID="+refid;
         data = await collectData(browser, page, leechUrl);
 
     } catch (e) {
         logger.error("Exception in leech : ", e);
     }
     logger.debug("will close the browser", browser.close);
-    if (browser && browser.close) await browser.close();
+    if (browser &amp;&amp; browser.close) await browser.close();
 
     // console.log(data);
     data.RefID=refid;
@@ -284,7 +312,7 @@ async function collectDataForRefresh(browser, page, leechUrl,refid) {
 
             let tbody = await page.$("table.MasterTable_TFF_Contents tbody");
             let matchRows = await tbody.$$("tr");
-            for(let i=0;i<matchRows.length;i++) {
+            for(let i=0;i&lt;matchRows.length;i++) {
                 let cells = await matchRows[i].$$("td");
                 let anc = await cells[1].$('a');
                 let mUrl = await anc.getAttribute("href");
@@ -329,14 +357,14 @@ async function leechForRefresh(refid) {
     let page, browser, data;
     try {
         [browser, page] = await initializePage();
-        let leechUrl = "https://www.tff.org/Default.aspx?pageID=531&hakemID="+refid;
+        let leechUrl = "https://www.tff.org/Default.aspx?pageID=531&amp;hakemID="+refid;
         data = await collectDataForRefresh(browser, page, leechUrl, refid);
 
     } catch (e) {
         logger.error("Exception in leech : ", e);
     }
     logger.debug("will close the browser", browser.close);
-    if (browser && browser.close) await browser.close();
+    if (browser &amp;&amp; browser.close) await browser.close();
     return data;
 }
 
@@ -345,7 +373,7 @@ async function leechForRefresh(refid) {
 //fill the database with this function by only invoking it one time no other invokation is needed
 async function fillRefs() {
     refIDs=["1140611"]; //,"21019","1144690","1140611","20554"
-    for (let i = 0; i < refIDs.length; i++) {
+    for (let i = 0; i &lt; refIDs.length; i++) {
         
         console.log(refIDs[i]);
         //scrape it again
@@ -380,7 +408,7 @@ async function fillRefs() {
  */
 async function refreshRefs() {
     refIDs=["959285","2100056","1621805"];
-    for (let i = 0; i < refIDs.length; i++) {
+    for (let i = 0; i &lt; refIDs.length; i++) {
         console.log(refIDs[i]);
         let newMatches =await leechForRefresh(refIDs[i]);
         //updating the matches ruled array newmatches need to be concatenated to the beginning
@@ -416,3 +444,26 @@ async function refreshRefs() {
 }
 
 export default { getReferees, getReferee, fillRefs, refreshRefs, searchBySubstr};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#leechForRefresh">leechForRefresh</a></li><li><a href="global.html#refreshRefs">refreshRefs</a></li><li><a href="global.html#searchBySubstr">searchBySubstr</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Tue Dec 13 2022 21:52:14 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

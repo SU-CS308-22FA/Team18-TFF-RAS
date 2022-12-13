@@ -10,6 +10,14 @@ import {
 // import mongoose from "mongoose";
 // import moment from "moment";
 
+
+/**
+ *Created for finding the input substring in document's name field
+ * @param {string} search - The substr to look for
+ * @since 11.12.2022
+ * @return {Object} refs - Referees that contain match details that has a field containing the substring parameter
+ * @example searchbySubstr("ali")
+ */
 const createRating = async (req, res) => {
   const { rating: ratingValue, match, referee } = req.body;
   if (!ratingValue || !match || !referee) {
@@ -23,7 +31,13 @@ const createRating = async (req, res) => {
 
   res.status(StatusCodes.CREATED).json({ rating });
 };
-
+/**
+ *Created for finding the input substring in document's name field
+ * @param {string} search - The substr to look for
+ * @since 11.12.2022
+ * @return {Object} refs - Referees that contain match details that has a field containing the substring parameter
+ * @example searchbySubstr("ali")
+ */
 const getRating = async (req, res) => {
   const match = req.params.id;
   const createdBy = req.user.userId;
