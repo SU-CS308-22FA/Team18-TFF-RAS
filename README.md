@@ -50,3 +50,57 @@ Please be sure to check Known Bugs section before reporting bugs.
 
 ### Known Bugs
 
+1- In search bar there are 2 bugs one related with backend one with frontend, backend problem does not reponds as it should if the imput has Turkish character in it. Please try to not use Turkish characters or otherwise you will not get the search you want. The front end bug is about pressing delete where it is unnecessary, after a word entered and deleted if delete is pressed again the page vanishes and refresh is needed to continue using the webpage.
+
+## Obtaining the Source Code
+
+### Cloneing the repository
+To obtain the source code for the whole project you can
+```bash
+git clone <repo> <directory>
+```
+Such that all the files will be ready to de editted or observed. Do not forget that the frontend source codes are in client folder inside of the root folder. To navigate in there use
+
+```bash
+cd client
+```
+
+### Folder Structure
+
+1. In the root file there are mainly backend source codes. server.js is the main file which will run the server on your localhost.
+2. Controllers folder contains the variaty of controller files which include the functions that are used in api s and routes. 
+3. Models folder cntains the MongoDB model schemas.
+4. Routers folders contain the routes which are used in api and routing purposes.
+5. db folder contains the definition of connection function to database.
+6. errors folder contains the possible error file which can be seen or encountered during the development of this project.
+7. middleware folder contains the middleware used durng the project.
+8. client folder contains many folders in itself and it is for Front-End source codes.
+ 8.1. continue like this
+ 8.2. 
+
+### How to Build the project
+
+After cloneing the project with
+```bash
+git clone <repo> <directory>
+```
+go to the directory
+
+```bash
+cd <directory>
+```
+and run
+```bash
+npm install
+```
+this will load the packages used in backend. After the load ing is complete go to client folder
+```bash
+cd client
+```
+and run
+```bash
+npm install
+```
+This will load the packages used for frontend of the project.
+
+### Deploying the project to a remote server
