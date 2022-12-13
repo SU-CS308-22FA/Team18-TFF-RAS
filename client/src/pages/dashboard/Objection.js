@@ -132,7 +132,7 @@ const handleInvestigationChange = (e) => {
               handleChange={handleInvestigationChange}
               labelText="Referee Id:"
               />
-            <button type="submit" className="btn" onClick={handleInvestigationSubmit}>
+            <button type="submit" className="btn" onClick={(e) => handleInvestigationSubmit(e)}>
               See Referee
             </button>
           </form>
