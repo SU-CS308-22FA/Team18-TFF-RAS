@@ -16,6 +16,26 @@ const Objection = () => {
   });
 
   const { createObjection } = useAppContext();
+/**
+ * Created so that the user can see all the objections that are made for that referee
+ * @param {String} id - The id of the referee that we want to see the objections
+ * @since 14.12.2022
+ * @return {Object} objection - refereeId, anObjection, isInProcess, isResolved are returned after posting
+ * @example getRefereeObjections("20160")
+ */
+async function getRefereeObjections(id) { // API
+      try {
+        const response = await axios.get(`${baseURL + id}`);
+        const data = response.data;
+        setRefObjections(data);
+        setIsLoading(false);
+      }
+      catch (error) {
+        console.log(error)
+        setIsLoading(false);
+        setError(true);
+      }
+    }
 
   const handleChange = (e) => {
     const name = e.target.name;

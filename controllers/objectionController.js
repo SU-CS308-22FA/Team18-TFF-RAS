@@ -33,6 +33,7 @@ const getAllObjections = async (req, res) => {
     }));
 }
 
+ 
 const getObjection = async (req, res) => {
   const objection = await Objection.findOne({ _id: req.objection.objectionId });
   res.status(StatusCodes.OK).json({ objection });
