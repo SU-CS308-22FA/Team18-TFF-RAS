@@ -14,11 +14,12 @@ const Objection = () => {
     isInProcess: false,
     clubId: "123",
     isResolved: false,
+    comment: "",
     //new mongoose.Types.ObjectId()
   });
 
 
-  const {createObjection} = useAppContext();
+  const {createObjection, deleteObjection ,updateObjection} = useAppContext();
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -81,12 +82,27 @@ const handleInvestigationChange = (e) => {
       }
     }
 
+    const handleClose = async (obj) => {
+      // const response = await axios.delete("/api/objections/" + obj._id);
+      // console.lolg(response.data);
+      deleteObjection(obj)
+    }
+
+    const handleComment = (e) => {
+    setObjection({...objection, [e.target.name]: e.target.value});
+    }
+
+    const handleCommentClick = (obj) => {
+      if (obj.comment) {
+      updateObjection(obj);
+      } 
+    }
   
   // ----------------------------------------->>> for investigators
 
 
   // const [isInvestigator, setIsInvetigator] = useState(true);
-  const isInvestigator = false;
+  const isInvestigator = true;
 if(isInvestigator)
 {
   return (
@@ -112,8 +128,21 @@ if(isInvestigator)
           isLoading? <div>Loading...</div> : <div> <h1>Objections: </h1> {refObjections.map((obj) => {
             return (
               <div key={obj._id} className="form">
-                <h4>Referee ID: {obj.refereeId}</h4>
-                <h4>Referee ID: {obj.anObjection}</h4>
+                <h4>Referee ID:</h4> <h5>{obj.refereeId}</h5>
+                <h4>Objection:</h4> <h5> {obj.anObjection}</h5>
+            <FormRow
+              type="text"
+              name="comment"
+              value={objection.comment}
+              handleChange={handleComment}
+              labelText="Comment:"
+              />
+            <button type="submit" className="btn" onClick={() => handleCommentClick()}>
+              Add Comment
+            </button>
+            <button type="submit" className="btn" onClick={() => handleClose(obj)}>
+              Close Objection
+            </button>
               </div>
             )
           })}</div>

@@ -20,21 +20,12 @@ const objectionSchema = new mongoose.Schema({
   isResolved: {
     type: Boolean,
     default: false,
+  },
+  comment: {
+    type: String,
+    default: "No comment",
   }
 }); 
-
-// const t = await Fixture.create({
-//             clubId: match.Refs,
-//             Teams: match.Teams,
-//             Observers: match.Observers,
-//             Time: match.Time,
-//             MatchID:match.MatchID
-//         });
-//         await t.save().then(function(){
-//             console.log("Data re-entered"); // Success
-//         }).catch(function(error){
-//             console.log(error); // Failure
-//         });
 
 
 

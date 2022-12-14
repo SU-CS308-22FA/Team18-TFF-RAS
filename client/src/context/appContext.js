@@ -22,11 +22,14 @@ import {
   CREATE_OBJECTION_SUCCES,
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
-  DELETE_OBJECTION_SUCCES,
+  DELETE_OBJECTION_SUCCESS,
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
-  GET_OBJECTIONS_ERROR
+  GET_OBJECTIONS_ERROR,
+  UPDATE_OBJECTION_BEGIN,
+  UPDATE_OBJECTION_SUCCESS,
+  UPDATE_OBJECTION_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -127,14 +130,16 @@ const AppProvider = ({ children }) => {
     }
   }
 
-  const deleteObjection = async (currentObjection) => {
+  const deleteObjection = async (id) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
     try {
-      await authFetch.delete("/objections/", currentObjection);
+       const response = await authFetch.delete("/objections/", id);
+       const {objection} = response.data;
       dispatch({
-        type: DELETE_OBJECTION_SUCCES,
+        type: DELETE_OBJECTION_SUCCESS,
       });
       setTimeout(logoutUser, 3000);
+      removeObjectionFromLocalStorage({objection});
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -145,7 +150,24 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   }
-  
+const updateObjection = async (obj) => {
+    dispatch({ type: UPDATE_OBJECTION_BEGIN });
+    try {
+      await authFetch.post("/objections/", obj);
+      dispatch({
+        type: UPDATE_OBJECTION_SUCCESS
+      });
+      setTimeout(logoutUser, 3000);
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_OBJECTION_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  }  
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
@@ -285,6 +307,7 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
+        updateObjection
       }}
     >
       {children}
