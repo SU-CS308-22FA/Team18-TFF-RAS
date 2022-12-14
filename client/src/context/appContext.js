@@ -130,16 +130,15 @@ const AppProvider = ({ children }) => {
     }
   }
 
-  const deleteObjection = async (id) => {
+  const deleteObjection = async (objection) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
     try {
-       const response = await authFetch.delete("/objections/", id);
-       const {objection} = response.data;
+       const response = await authFetch.delete("/objections/"+ objection._id);
+       const {msg} = response.data;
       dispatch({
         type: DELETE_OBJECTION_SUCCESS,
+        payload: { objection }
       });
-      setTimeout(logoutUser, 3000);
-      removeObjectionFromLocalStorage({objection});
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({

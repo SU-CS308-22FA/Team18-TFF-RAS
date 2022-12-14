@@ -86,6 +86,7 @@ const handleInvestigationChange = (e) => {
       // const response = await axios.delete("/api/objections/" + obj._id);
       // console.lolg(response.data);
       deleteObjection(obj)
+      setRefObjections(refObjections.filter((o) => o._id !== obj._id))
     }
 
     const handleComment = (e) => {
@@ -137,7 +138,7 @@ if(isInvestigator)
               handleChange={handleComment}
               labelText="Comment:"
               />
-            <button type="submit" className="btn" onClick={() => handleCommentClick()}>
+            <button type="submit" className="btn" onClick={() => handleCommentClick(obj)}>
               Add Comment
             </button>
             <button type="submit" className="btn" onClick={() => handleClose(obj)}>

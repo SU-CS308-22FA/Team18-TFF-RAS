@@ -24,11 +24,14 @@ const getObjection = async (id) => {
   return objection;
 }
 
+const deleteObjection = async (req, res) => {
+  const { id } = req.params;
+  // await Objection.deleteOne({ _id: id });  
+  const obj = await Objection.findOne({ _id: id });
 
+  await obj.remove();
 
-
-const deleteObjection = async (id) => {
-  await Objection.deleteOne({ _id: id });  
+   res.status(StatusCodes.OK).json({ msg: "Success! Objection removed" });
 };
 
 const updateObjection = async (req, res) => {

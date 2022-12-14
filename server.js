@@ -74,10 +74,7 @@ app.get('/api/objection/:id', async(req, res)=>{
 	res.json(data);
 });
 
-app.delete('/api/objection/:id', async (req,res) => {
-  let data = await deleteObjection(req.params.id);
-  res.json("hello");
-})
+
 
 // only when ready to deploy
 app.get("*", (req, res) => {
