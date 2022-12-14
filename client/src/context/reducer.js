@@ -36,6 +36,7 @@ import {
   GET_RATING_SUCCESS,
   GET_RATING_ERROR,
   CLEAR_MODAL,
+  HANDLE_CHANGE,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -346,6 +347,13 @@ const reducer = (state, action) => {
       showModal: true,
       modalType: "danger",
       modalText: action.payload.msg,
+    };
+  }
+  if (action.type === HANDLE_CHANGE) {
+    console.log({ [action.payload.name]: action.payload.value });
+    return {
+      ...state,
+      [action.payload.name]: action.payload.value,
     };
   }
 
