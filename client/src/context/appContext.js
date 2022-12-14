@@ -12,22 +12,71 @@ import {
   LOGIN_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
+  DELETE_USER_BEGIN,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
+  CREATE_OBJECTION_BEGIN,
+  CREATE_OBJECTION_SUCCES,
+  CREATE_OBJECTION_ERROR,
+  DELETE_OBJECTION_BEGIN,
+  DELETE_OBJECTION_SUCCES,
+  DELETE_OBJECTION_ERROR,
+  GET_OBJECTIONS_BEGIN,
+  GET_OBJECTIONS_SUCCESS,
+  GET_OBJECTIONS_ERROR,
+  HANDLE_CHANGE,
+  CREATE_RATING_BEGIN,
+  CREATE_RATING_SUCCESS,
+  CREATE_RATING_ERROR,
+  GET_RATING_BEGIN,
+  GET_RATING_SUCCESS,
+  GET_RATING_ERROR,
+  GET_REFEREES_BEGIN,
+  GET_REFEREES_SUCCESS,
+  GET_REFEREE_BEGIN,
+  GET_REFEREE_SUCCESS,
+  GET_REFEREE_ERROR,
+  CLEAR_MODAL,
+  GET_REFEREE_RATINGS_BEGIN,
+  GET_REFEREE_RATINGS_SUCCESS,
+  GET_REFEREE_RATINGS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
+const objections = localStorage.getItem("objections");
 const userLocation = localStorage.getItem("location");
 
 const initialState = {
   isLoading: false,
+  isDeleting: false,
   showAlert: false,
   alertText: "",
   alertType: "",
   user: user ? JSON.parse(user) : null,
+  objections: objections ? JSON.parse(objections) : null,
   token: token,
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
   showSidebar: false,
+  ratingGiven: false,
+  showModal: false,
+  modalType: "",
+  modalText: "",
+  rating: "",
+  review: "",
+  eventReviews: [],
+  referees: [],
+  referee: null,
+  overallRating: "-",
+  fanRating: "-",
+  expertRating: "-",
+  overallSentiment: "-",
+  fanSentiment: "-",
+  expertSentiment: "-",
 };
 
 const AppContext = React.createContext();
@@ -35,6 +84,7 @@ const AppContext = React.createContext();
 // eslint-disable-next-line react/prop-types
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  // axios.defaults.headers["Authorization"] = `Bearer ${state.token}`;
 
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
@@ -47,10 +97,25 @@ const AppProvider = ({ children }) => {
     }, 3000);
   };
 
+  const clearModal = () => {
+    dispatch({ type: CLEAR_MODAL });
+  };
+
   const addUserToLocalStorage = ({ user, token, location }) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
     localStorage.setItem("location", location);
+  };
+
+  const addObjectionToLocalStroge = ({ newObjection }) => {
+    localStorage.setItem(
+      "objections",
+      JSON.stringify([...objections, newObjection])
+    );
+  };
+
+  const removeObjectionFromLocalStorage = () => {
+    localStorage.removeItem("objections");
   };
 
   const removeUserFromLocalStorage = () => {
@@ -59,6 +124,81 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("location");
   };
 
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  };
+
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
+  const getObjections = async (currentObjection) => {
+    dispatch({ type: GET_OBJECTIONS_BEGIN });
+    try {
+      const response = await authFetch.post("/objections/", currentObjection);
+      const { objections } = response.data;
+      dispatch({
+        type: GET_OBJECTIONS_SUCCESS,
+        payload: { objections },
+      });
+    } catch (err) {
+      dispatch({
+        type: GET_OBJECTIONS_ERROR,
+        payload: { msg: err.response.data.msg },
+      });
+    }
+  };
+
+  const createObjection = async (currentObjection) => {
+    dispatch({ type: CREATE_OBJECTION_BEGIN });
+    try {
+      const response = await authFetch.post("/objections/", currentObjection);
+      const { objection } = response.data;
+      dispatch({
+        type: CREATE_OBJECTION_SUCCES,
+        payload: { objection },
+      });
+      addObjectionToLocalStroge({ objection });
+    } catch (err) {
+      dispatch({
+        type: CREATE_OBJECTION_ERROR,
+        payload: { msg: err.response.data.msg },
+      });
+    }
+  };
+
+  const deleteObjection = async (currentObjection) => {
+    dispatch({ type: DELETE_OBJECTION_BEGIN });
+    try {
+      await authFetch.delete("/objections/", currentObjection);
+      dispatch({
+        type: DELETE_OBJECTION_SUCCES,
+      });
+      setTimeout(logoutUser, 3000);
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: DELETE_OBJECTION_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
+  {
+    /* CHECK */
+  }
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
@@ -108,6 +248,219 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
 
+  const authFetch = axios.create({
+    baseURL: "/api/v1",
+    headers: {
+      Authorization: `Bearer ${state.token}`,
+    },
+  });
+
+  // request interceptor
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  // response interceptor
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        logoutUser();
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  // ratings
+  const createRating = async (ratingDetails) => {
+    dispatch({ type: CREATE_RATING_BEGIN });
+    try {
+      const { data } = await authFetch.post("/ratings", ratingDetails);
+      const { rating } = data;
+      dispatch({ type: CREATE_RATING_SUCCESS, payload: { rating } });
+      // dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: CREATE_RATING_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
+  const getRating = async (matchId) => {
+    dispatch({ type: GET_RATING_BEGIN });
+    try {
+      const { data } = await authFetch.get("/ratings/" + matchId);
+      const { rating } = data;
+      dispatch({ type: GET_RATING_SUCCESS, payload: { rating } });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: GET_RATING_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+  };
+
+  // referees
+  const getReferees = async () => {
+    dispatch({ type: GET_REFEREES_BEGIN });
+    try {
+      const { data } = await authFetch("/referees");
+      const { referees } = data;
+      dispatch({
+        type: GET_REFEREES_SUCCESS,
+        payload: {
+          referees,
+        },
+      });
+    } catch (error) {
+      logoutUser();
+    }
+    clearAlert();
+  };
+
+  const getReferee = async (refID) => {
+    dispatch({ type: GET_REFEREE_BEGIN });
+    try {
+      const { data } = await authFetch.get("/referees/" + refID);
+      const { referee } = data;
+      dispatch({ type: GET_REFEREE_SUCCESS, payload: { referee } });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREE_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
+  const getRefereeRatings = async (refID) => {
+    dispatch({ type: GET_REFEREE_RATINGS_BEGIN });
+    try {
+      const { data: overallRatingData } = await authFetch.get(
+        "/avarageScore/" + refID
+      );
+      const { data: fanRatingData } = await authFetch.get(
+        "/avarageScoreForFan/" + refID
+      );
+      const { data: expertRatingData } = await authFetch.get(
+        "/avarageScoreForExp/" + refID
+      );
+      const { data: overallSentimentData } = await authFetch.get(
+        "/sentimentAnalysis/" + refID
+      );
+      const { data: fanSentimentData } = await authFetch.get(
+        "/sentimentAnalysisForFan/" + refID
+      );
+      const { data: expertSentimentData } = await authFetch.get(
+        "/sentimentAnalysisForExp/" + refID
+      );
+
+      let overallRating = "-";
+      let fanRating = "-";
+      let expertRating = "-";
+      let overallSentiment = "-";
+      let fanSentiment = "-";
+      let expertSentiment = "-";
+
+      if (overallRatingData !== null) {
+        overallRating = overallRatingData.toFixed(2);
+      }
+      if (fanRatingData !== null) {
+        fanRating = fanRatingData.toFixed(2);
+      }
+      if (expertRatingData !== null) {
+        expertRating = expertRatingData.toFixed(2);
+      }
+      if (overallSentimentData.rate !== "-") {
+        overallSentiment = overallSentimentData.rate.toFixed(2);
+      }
+      if (fanSentimentData.rate !== "-") {
+        fanSentiment = fanSentimentData.rate.toFixed(2);
+      }
+      if (expertSentimentData.rate !== "-") {
+        expertSentiment = expertSentimentData.rate.toFixed(2);
+      }
+
+      dispatch({
+        type: GET_REFEREE_RATINGS_SUCCESS,
+        payload: {
+          overallRating,
+          fanRating,
+          expertRating,
+          overallSentiment,
+          fanSentiment,
+          expertSentiment,
+        },
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREE_RATINGS_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN });
+    try {
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+
+      // no token
+      const { user, location } = data;
+      console.log(token);
+
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, location, token },
+      });
+
+      addUserToLocalStorage({ user, location, token: initialState.token });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
+  const deleteUser = async (currentUser) => {
+    dispatch({ type: DELETE_USER_BEGIN });
+    try {
+      await authFetch.delete("/auth/deleteUser", currentUser);
+      // logoutUser();
+      dispatch({
+        type: DELETE_USER_SUCCESS,
+      });
+      setTimeout(logoutUser, 3000);
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: DELETE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -117,6 +470,18 @@ const AppProvider = ({ children }) => {
         loginUser,
         toggleSidebar,
         logoutUser,
+        updateUser,
+        deleteUser,
+        createObjection,
+        deleteObjection,
+        getObjections,
+        createRating,
+        getRating,
+        getReferees,
+        getReferee,
+        clearModal,
+        handleChange,
+        getRefereeRatings,
       }}
     >
       {children}

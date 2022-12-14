@@ -13,16 +13,21 @@ html {
 
 :root {
   /* colors */
-  --primary-50: #e0fcff;
-  --primary-100: #bef8fd;
-  --primary-200: #87eaf2;
-  --primary-300: #54d1db;
-  --primary-400: #38bec9;
-  --primary-500: #2cb1bc;
+  --primary-50: #ffe6e0;
+  --primary-100: #fdd4be;
+  --primary-200: #FAA0A0;
+  --primary-300: #F88379;
+  --primary-400: #DC143C;
+  /* --primary-500: #2cb1bc;
   --primary-600: #14919b;
   --primary-700: #0e7c86;
   --primary-800: #0a6c74;
-  --primary-900: #044e54;
+  --primary-900: #044e54; */
+  --primary-500: #D22B2B;
+  --primary-600: #bd2727;
+  --primary-700: #921e1e;
+  --primary-800: #681515;
+  --primary-900: #3e0d0d;
 
   /* grey */
   --grey-50: #f0f4f8;
@@ -158,6 +163,19 @@ ul {
   text-transform: capitalize;
   display: inline-block;
 }
+.btn-ref{
+  cursor: pointer;
+  color: var(--white);
+  background: var(--primary-400);
+  border: transparent;
+  border-radius: var(--borderRadius);
+  letter-spacing: var(--letterSpacing);
+  padding: 0.375rem 0.75rem;
+  box-shadow: var(--shadow-2);
+  transition: var(--transition);
+  text-transform: capitalize;
+  display: flex;
+}
 .btn:hover {
   background: var(--primary-700);
   box-shadow: var(--shadow-3);
@@ -215,8 +233,42 @@ ul {
   margin: 3rem auto;
   transition: var(--transition);
 }
+.form-ref {
+  width: 90vw;
+  max-width: var(--fixed-width);
+  background: var(--white);
+  border-radius: var(--borderRadius);
+  box-shadow: var(--shadow-2);
+  padding: 2rem 2.5rem;
+  margin: 3rem auto;
+  margin-right: 3rem;
+  transition: var(--transition);
+  display: inline-block;
+}
 .form:hover {
   box-shadow: var(--shadow-4);
+}
+.form-error {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  padding-right: 0.1rem;
+  max-width: 65%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  margin-top: 10px;
+  color: white;
+  background: red;
+  background-size: 50%;
+  border-radius: var(--radius);
+  border-color: transparent;
+}
+.form-control {
+  margin: 0.5rem 0;
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
 }
 .form-label {
   display: block;
@@ -289,6 +341,11 @@ ul {
 }
 
 .container {
+  width: var(--fluid-width);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+.container-ref {
   width: var(--fluid-width);
   max-width: var(--max-width);
   margin: 0 auto;
