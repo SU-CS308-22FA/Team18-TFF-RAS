@@ -1,6 +1,107 @@
-require('dotenv').config();
-const fs = require('fs');
-const Log = require("./Log");
+
+import dotenv from "dotenv";
+dotenv.config();
+// const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import fs from 'fs';
+
+// const Match = require("./matchShcema")
+import Fixture from '../models/Fixture.js';
+
+import date from 'date-and-time';
+if (process.env.LOGGER === 'winston') {
+    const winston = require('winston');
+    const DailyRotateFile = require('winston-daily-rotate-file');
+    const { format } = require('logform');
+
+    const alignedWithColorsAndTime = format.combine(
+        format.colorize(),
+        format.timestamp(),
+        format.align(),
+        format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    );
+
+    const transports = [
+        new DailyRotateFile({
+            filename: './logs/general-%DATE%.log',
+            //datePattern: 'YYYY-MM-DD.',
+            prepend: true,
+            colorize: true,
+            maxSize:'10m',
+            json: false, //Setting JSON as false
+            level: process.env.LOG_LEVEL,
+            maxFiles:'10d',
+            name : 'rotateLog',
+            zippedArchive: true,
+            timestamp: function () {
+                return Date.now();
+            },
+            formatter: function (options) {
+                return options.timestamp() + ' (' + options.level + ') : ' + (options.message ? options.message : '')
+            }
+        }),
+
+        new winston.transports.Console({
+            level: process.env.LOG_LEVEL,
+            name : 'consoleLog'
+        })
+    ];
+
+    const logger = winston.createLogger({
+        format : alignedWithColorsAndTime,
+        transports: transports
+    });
+}
+
+
+function Log() {
+    let that = this;
+    let level = 0;
+    const levels = {
+        off : 99,
+        debug : 0,
+        info : 1,
+        warn : 2,
+        error : 3,
+        fatal : 4
+    };
+
+    this.setLevel = function (l) {
+        if (process.env.LOGGER === 'winston') {
+            winston.transports['rotateLog'].level = l;
+            winston.transports['consoleLog'].level = l;
+        }
+        level = (l && levels[l]) ? levels[l] : (levels[process.env.LOG_LEVEL] || 0);
+    };
+
+    this.debug = function (...args) {
+        if (level > levels.debug) return;
+        process.env.LOGGER === 'winston' ? logger.debug(args) : console.debug(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.warn = function (...args) {
+        if (level > levels.warn) return;
+        process.env.LOGGER === 'winston' ? logger.warn(args) : console.warn(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.info = function (...args) {
+        if (level > levels.info) return;
+        process.env.LOGGER === 'winston' ? logger.info(args) : console.info(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.error = function (...args) {
+        if (level > levels.error) return;
+        process.env.LOGGER === 'winston' ? logger.error(args) : console.error(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+    this.fatal = function (...args) {
+        if (level > levels.fatal) return;
+        process.env.LOGGER === 'winston' ? logger.emerg(args) : console.exception(date.format(new Date(),"YYYY-MM-DD HH:mm:ss") +" : ",...args);
+    };
+}
+
+// module.exports = Log;
+
+
+// const Log =require('./Log.js');
+// // import Log from './Log.js'
+
 let logger = new Log();
 logger.setLevel();
 
@@ -238,7 +339,7 @@ async function collectData(browser, page, leechUrl) {
     } catch (e) {
         logger.error("Exception in collect data : ", e.toString());
     }
-    let data = {Refs : refereeResults, Teams: teamsInfo, Observers : observerResults, Time: timeInfo, HomeCards: homeCards, AwayCards: awayCards, HomeGoalsDetails:homeGoals, AwayGoalsDetails:awayGoals};
+    let data = {Refs : refereeResults, Teams: teamsInfo, Observers : observerResults, Time: timeInfo, HomeCards: homeCards, AwayCards: awayCards, HomeGoalsDetails:homeGoals, AwayGoalsDetails:awayGoals, MatchID:""};
     return data;
 }
 
@@ -254,9 +355,38 @@ async function leechWithMatchID(matchid) {
     }
     logger.debug("will close the browser", browser.close());
     if (browser && browser.close()) await browser.close();
-
-    
+    data.MatchID=matchid;
     return data;
+}
+
+//this function is used once for putting all matches in the current season fixture to database
+async function matchesToDB() {
+    for (let i = 0; i < 342 /*match code*/; i++) {
+        let search = 234706 + i;
+        //scrape it again
+        mongoose.connect("mongodb+srv://cs308team18:BestTeamThereEverWasTeam18@tff-ras.q9epijv.mongodb.net/?retryWrites=true&w=majority");
+        let match = await leechWithMatchID(search.toString());
+        console.log(match);
+        await Fixture.deleteOne({ MatchID: search.toString()}).then(function(){
+            console.log("Data deleted"); // Success
+        }).catch(function(error){
+            console.log(error); // Failure
+        });
+        const t = await Fixture.create({
+            Refs: match.Refs,
+            Teams: match.Teams,
+            Observers: match.Observers,
+            Time: match.Time,
+            MatchID:match.MatchID
+        });
+        await t.save().then(function(){
+            console.log("Data re-entered"); // Success
+        }).catch(function(error){
+            console.log(error); // Failure
+        });
+    }
+    return true;
+
 }
 
 async function leechWithHref(hrefStr) {
@@ -276,4 +406,84 @@ async function leechWithHref(hrefStr) {
     return data;
 }
 
-module.exports = {leechWithMatchID,leechWithHref};
+async function collectDataForDate(browser, page, leechUrl, date) {
+    let matchesRtn = [];
+    try {
+        //open up the page
+        await page.goto(leechUrl, {waitUntil: 'networkidle'});
+//*[@id="ctl00_MPane_m_531_2816_ctnr_m_531_2816_dtlHakemBilgi"]
+        try {
+            
+            await page.locator("//a[contains(@id, 'RadTabStrip1_Tab3')]").click();
+            await page.locator("//input[contains(@id, 'dateBaslangic_dateInput_TextBox')]").fill(date);
+            await page.locator("//input[contains(@id, 'dateBitis_dateInput_TextBox')]").fill(date);
+            await page.locator("//input[contains(@id, 'btnSave3')]").click();
+            //let refs = await page.locator("td.MacDetayAltBG>div a").allTextContents();
+            await page.waitForSelector("table.MasterTable_TFF_Contents", { //find the cell that holds the details for the game and wait until it is visible
+                timeout: 2000,
+                state: "visible"
+            });
+            let matches = await page.locator("table.MasterTable_TFF_Contents >tbody tr td a").allTextContents();
+            
+            for (let i = 0; i < matches.length; i+=4) {
+
+                let match = {matchID: matches[i], home: matches[i+1], score: matches[i+2], away: matches[i+3]};
+                matchesRtn.push(match);
+                
+            }
+            console.log(matches.length);
+
+
+        } catch (err) {
+            logger.error("Exception in referee scrape : ", err.toString());
+        }
+
+
+    } catch (e) {
+        logger.error("Exception in collect data : ", e.toString());
+    }
+
+    return matchesRtn;
+}
+
+//pass the parameter as string
+async function leechDate(date) {
+    let page, browser, data;
+    try {
+        [browser, page] = await initializePage();
+        let leechUrl = "https://www.tff.org/default.aspx?pageID=520";
+        data = await collectDataForDate(browser, page, leechUrl, date);
+
+    } catch (e) {
+        logger.error("Exception in leech : ", e);
+    }
+    logger.debug("will close the browser", browser.close);
+    if (browser && browser.close) await browser.close();
+
+    
+    return data;
+}
+
+
+// mongoose.connect("mongodb+srv://cs308team18:BestTeamThereEverWasTeam18@tff-ras.q9epijv.mongodb.net/?retryWrites=true&w=majority");
+
+/**
+ *Created for finding the input substring in document's Teams field
+ * @param {string} search - The substr to look for
+ * @since 11.12.2022
+ * @return {Object} Matches - Matches that contain match details that has a field containing the substring parameter
+ * @example searchBuSubstr("galata")
+ */
+async function searchBySubstr(search) {
+    search = search.trim();
+    console.log(search);
+    
+    let Matches = await Fixture.find({$or : [{'Teams.home' : new RegExp(search ,'i')}, {'Teams.away' : new RegExp(search ,'i')}]});
+    console.log(Matches.length);
+    console.log(mongoose.connection.readyState);
+    return Matches;
+}
+
+
+
+export default {leechWithMatchID,leechWithHref, leechDate, searchBySubstr, matchesToDB};

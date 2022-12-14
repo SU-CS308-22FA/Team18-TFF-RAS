@@ -1,5 +1,8 @@
-require('dotenv').config();
-let date = require('date-and-time');
+// require('dotenv').config();
+import dotenv from "dotenv";
+dotenv.config();
+// let date = require('date-and-time');
+import date from 'date-and-time';
 if (process.env.LOGGER === 'winston') {
     const winston = require('winston');
     const DailyRotateFile = require('winston-daily-rotate-file');
@@ -87,4 +90,6 @@ function Log() {
     };
 }
 
-module.exports = Log;
+// module.exports = Log;
+
+export default{Log};
