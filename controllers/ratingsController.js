@@ -12,7 +12,7 @@ import {
 
 
 /**
- *Created for finding the input substring in document's name field
+ *
  * @param {string} search - The substr to look for
  * @since 11.12.2022
  * @return {Object} refs - Referees that contain match details that has a field containing the substring parameter
