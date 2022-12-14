@@ -103,31 +103,25 @@ npm install
 ```
 This will load the packages used for frontend of the project.
 
-### Deploying the project to a remote server
+### Deploying the project to a remote server (Railway)
 
-#### Guide: Launching `code-server` on railway.app
-
+#####Step 1: Clone to a git repository 
 [Railway](https://railway.app) is a new cloud development platform! ☁️
 
-Use Railway + code-server to get a dev environment that you can access from any device.
+Use Railway to get a production environment that you can access from any device.
 
-##### Step 1: Click button to deploy
+##### Step 2: On the railway web page, deploy from github repository
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Fcoder%2Fdeploy-code-server&envs=PASSWORD%2CGIT_REPO&optionalEnvs=GIT_REPO&PASSWORDDesc=Your+password+to+log+in+to+code-server&GIT_REPODesc=A+git+repo+to+auto-clone+and+open+in+code-server+%28e.g+https%3A%2F%2Fgithub.com%2Fcoder%2Fdocs%29)
+##### Step 3: Configure & launch your environment
 
-##### Step 2: Configure & launch your environment
+On the railway web page, navigate to your dashboard, select your github deployment and change configuration settings  
 
-You'll need to make a new repository which will contain your code-server configuration. If you push changes to this repo (to install NodeJS, for example), it will re-deploy code-server.
+##### Step 3: Modify environment variables
 
-<img src="../img/launch-railway.gif" alt="Connected git repo" width="650" />
-
-You also need to specity a `PASSWORD` and a `GIT_REPO` to clone in your environment :)
-
-##### Step 3: Modify your environment to add additional tools
-
-1. In Railway, go to `Deployments -> Triggers` to see your source repo.
-1. Open the source repo in GitHub and edit the `Dockerfile`
-1. Add some custom tools (like NodeJS) and push to the main branch:
+1. In Railway, select your deployment
+2. Navigate to variables
+3. Add all environment variables
+4. railway automatically deploys once you are done editing
 
    ```Dockerfile
    # You can add custom software and dependencies for your environment here. Some examples:
