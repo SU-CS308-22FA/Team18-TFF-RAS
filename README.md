@@ -123,24 +123,4 @@ On the railway web page, navigate to your dashboard, select your github deployme
 3. Add all environment variables
 4. railway automatically deploys once you are done editing
 
-   ```Dockerfile
-   # You can add custom software and dependencies for your environment here. Some examples:
-
-   # RUN code-server --install-extension esbenp.prettier-vscode
-   # RUN sudo apt-get install -y build-essential
-   # RUN COPY myTool /home/coder/myTool
-
-   # Install NodeJS
-   RUN sudo curl -fsSL https://deb.nodesource.com/setup_15.x | sudo bash -
-   RUN sudo apt-get install -y nodejs
-   ```
-
-1. Head back to Railway and notice a new deployment was created. After it has completed, you can use these tools in your environment.
-
-1. (Optional): [Configure rclone](https://github.com/cdr/deploy-code-server/tree/main/deploy-container#-persist-your-filesystem-with-rclone) so that you can save your VS Code config and files without commiting
-
-See the [deploy-container README](../deploy-container) for other config vars for your environment. These variables, such as your password, can be managed in the "Variables" section of your project in railway.
-
----
-
-To update your code-server version, modify the version number on line 2 in your Dockerfile. See the [list of tags](https://hub.docker.com/r/codercom/code-server/tags?page=1&ordering=last_updated) for the latest version.
+   
