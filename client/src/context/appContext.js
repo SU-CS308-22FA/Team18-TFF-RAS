@@ -22,24 +22,14 @@ import {
   CREATE_OBJECTION_SUCCES,
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
-  DELETE_OBJECTION_SUCCES,
+  DELETE_OBJECTION_SUCCESS,
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
-  HANDLE_CHANGE,
-  CREATE_RATING_BEGIN,
-  CREATE_RATING_SUCCESS,
-  CREATE_RATING_ERROR,
-  GET_RATING_BEGIN,
-  GET_RATING_SUCCESS,
-  GET_RATING_ERROR,
-  GET_REFEREES_BEGIN,
-  GET_REFEREES_SUCCESS,
-  GET_REFEREE_BEGIN,
-  GET_REFEREE_SUCCESS,
-  GET_REFEREE_ERROR,
-  CLEAR_MODAL,
+  UPDATE_OBJECTION_BEGIN,
+  UPDATE_OBJECTION_SUCCESS,
+  UPDATE_OBJECTION_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -59,15 +49,6 @@ const initialState = {
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
   showSidebar: false,
-  ratingGiven: false,
-  showModal: false,
-  modalType: "",
-  modalText: "",
-  rating: "",
-  review: "",
-  eventReviews: [],
-  referees: [],
-  referee: null,
 };
 
 const AppContext = React.createContext();
@@ -88,10 +69,6 @@ const AppProvider = ({ children }) => {
     }, 3000);
   };
 
-  const clearModal = () => {
-    dispatch({ type: CLEAR_MODAL });
-  };
-
   const addUserToLocalStorage = ({ user, token, location }) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
@@ -99,10 +76,8 @@ const AppProvider = ({ children }) => {
   };
 
   const addObjectionToLocalStroge = ({ newObjection }) => {
-    localStorage.setItem(
-      "objections",
-      JSON.stringify([...objections, newObjection])
-    );
+    console.log(JSON.stringify(newObjection));
+    localStorage.setItem("objections", JSON.stringify([...objections, newObjection ]));
   };
 
   const removeObjectionFromLocalStorage = () => {
@@ -115,37 +90,26 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("location");
   };
 
-  const handleChange = ({ name, value }) => {
-    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
-  };
 
-  {
-    /* CHECK */
-  }
-  {
-    /* CHECK */
-  }
-  {
-    /* CHECK */
-  }
   const getObjections = async (currentObjection) => {
-    dispatch({ type: GET_OBJECTIONS_BEGIN });
+    dispatch({type: GET_OBJECTIONS_BEGIN});
     try {
-      const response = await authFetch.post("/objections/", currentObjection);
-      const { objections } = response.data;
+      const response = await authFetch.get("/objections/",currentObjection)
+      const {objections} = response.data;
       dispatch({
         type: GET_OBJECTIONS_SUCCESS,
-        payload: { objections },
-      });
-    } catch (err) {
-      dispatch({
-        type: GET_OBJECTIONS_ERROR,
-        payload: { msg: err.response.data.msg },
+        payload: {objections}
       });
     }
-  };
+    catch(err) {
+      dispatch({
+        type: GET_OBJECTIONS_ERROR,
+        payload: {msg: err.response.data.msg},
+      })
+    }
+  }
 
-  /**
+/**
  * Created so that an objection made by a club is added to the database in order to be reviewed
  * @param {Object} currentObjection - The objection that is created by the user to add to the database
  * @since 14.12.2022
@@ -162,28 +126,32 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CREATE_OBJECTION_BEGIN });
     try {
       const response = await authFetch.post("/objections/", currentObjection);
-      const { objection } = response.data;
+      const {objection} = response.data;
       dispatch({
         type: CREATE_OBJECTION_SUCCES,
         payload: { objection },
       });
-      addObjectionToLocalStroge({ objection });
-    } catch (err) {
-      dispatch({
+      addObjectionToLocalStroge( {objection} );
+    }
+    catch (err) {
+      // console.log(err);
+        dispatch({
         type: CREATE_OBJECTION_ERROR,
         payload: { msg: err.response.data.msg },
       });
     }
-  };
+  }
 
-  const deleteObjection = async (currentObjection) => {
+  const deleteObjection = async (id) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
     try {
-      await authFetch.delete("/objections/", currentObjection);
+       const response = await authFetch.delete("/objections/", id);
+       const {objection} = response.data;
       dispatch({
-        type: DELETE_OBJECTION_SUCCES,
+        type: DELETE_OBJECTION_SUCCESS,
       });
       setTimeout(logoutUser, 3000);
+      removeObjectionFromLocalStorage({objection});
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -193,16 +161,25 @@ const AppProvider = ({ children }) => {
       }
     }
     clearAlert();
-  };
-  {
-    /* CHECK */
   }
-  {
-    /* CHECK */
-  }
-  {
-    /* CHECK */
-  }
+const updateObjection = async (obj) => {
+    dispatch({ type: UPDATE_OBJECTION_BEGIN });
+    try {
+      await authFetch.post("/objections/", obj);
+      dispatch({
+        type: UPDATE_OBJECTION_SUCCESS
+      });
+      setTimeout(logoutUser, 3000);
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_OBJECTION_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  }  
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
@@ -282,73 +259,6 @@ const AppProvider = ({ children }) => {
     }
   );
 
-  // ratings
-  const createRating = async (ratingDetails) => {
-    dispatch({ type: CREATE_RATING_BEGIN });
-    try {
-      const { data } = await authFetch.post("/ratings", ratingDetails);
-      const { rating } = data;
-      dispatch({ type: CREATE_RATING_SUCCESS, payload: { rating } });
-      // dispatch({ type: CLEAR_VALUES });
-    } catch (error) {
-      if (error.response.status === 401) return;
-      dispatch({
-        type: CREATE_RATING_ERROR,
-        payload: { msg: error.response.data.msg },
-      });
-    }
-    clearAlert();
-  };
-
-  const getRating = async (matchId) => {
-    dispatch({ type: GET_RATING_BEGIN });
-    try {
-      const { data } = await authFetch.get("/ratings/" + matchId);
-      const { rating } = data;
-      dispatch({ type: GET_RATING_SUCCESS, payload: { rating } });
-    } catch (error) {
-      if (error.response.status === 401) return;
-      dispatch({
-        type: GET_RATING_ERROR,
-        payload: { msg: error.response.data.msg },
-      });
-    }
-  };
-
-  // referees
-  const getReferees = async () => {
-    dispatch({ type: GET_REFEREES_BEGIN });
-    try {
-      const { data } = await authFetch("/referees");
-      const { referees } = data;
-      dispatch({
-        type: GET_REFEREES_SUCCESS,
-        payload: {
-          referees,
-        },
-      });
-    } catch (error) {
-      logoutUser();
-    }
-    clearAlert();
-  };
-
-  const getReferee = async (refID) => {
-    dispatch({ type: GET_REFEREE_BEGIN });
-    try {
-      const { data } = await authFetch.get("/referees/" + refID);
-      const { referee } = data;
-      dispatch({ type: GET_REFEREE_SUCCESS, payload: { referee } });
-    } catch (error) {
-      if (error.response.status !== 401) {
-        dispatch({
-          type: GET_REFEREE_ERROR,
-          payload: { msg: error.response.data.msg },
-        });
-      }
-    }
-  };
-
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -409,11 +319,7 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
-        createRating,
-        getRating,
-        getReferees,
-        getReferee,
-        clearModal,
+        updateObjection
       }}
     >
       {children}
