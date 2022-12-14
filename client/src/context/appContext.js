@@ -73,6 +73,7 @@ const AppProvider = ({ children }) => {
   };
 
   const addObjectionToLocalStroge = ({ newObjection }) => {
+    console.log(JSON.stringify(newObjection));
     localStorage.setItem("objections", JSON.stringify([...objections, newObjection ]));
   };
 
@@ -115,9 +116,10 @@ const AppProvider = ({ children }) => {
         type: CREATE_OBJECTION_SUCCES,
         payload: { objection },
       });
-      addObjectionToLocalStroge({ objection });
+      addObjectionToLocalStroge( {objection} );
     }
     catch (err) {
+      // console.log(err);
         dispatch({
         type: CREATE_OBJECTION_ERROR,
         payload: { msg: err.response.data.msg },

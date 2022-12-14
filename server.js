@@ -3,6 +3,7 @@ const app = express();
 
 import dotenv from "dotenv";
 dotenv.config();
+import bodyParser from "body-parser";
 
 import "express-async-errors";
 import morgan from "morgan";
@@ -45,6 +46,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
+app.use(bodyParser.json());
 
 // app.get("/", (req, res) => {
 //   res.json({ msg: "Welcome!" });
@@ -68,19 +70,14 @@ app.get('/api/referee/:id', async(req, res)=>{
 app.get('/api/objection/:id', async(req, res)=>{
 	let data  = await getObjection(req.params.id);
 	// console.log(data);
-	console.log(data);
+	// console.log(data);
 	res.json(data);
 });
-
-app.get("/api/v1/objections", (req,res) => {
-  res.send("SUCCES");
-})
 
 // only when ready to deploy
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
-
 
 
 app.use(notFoundMiddleware);

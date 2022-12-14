@@ -21,7 +21,20 @@ const objectionSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   }
-});
+}); 
+
+// const t = await Fixture.create({
+//             clubId: match.Refs,
+//             Teams: match.Teams,
+//             Observers: match.Observers,
+//             Time: match.Time,
+//             MatchID:match.MatchID
+//         });
+//         await t.save().then(function(){
+//             console.log("Data re-entered"); // Success
+//         }).catch(function(error){
+//             console.log(error); // Failure
+//         });
 
 
 

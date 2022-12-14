@@ -7,23 +7,9 @@ const createObjection = async (req, res) => {
   console.log(req.body);
 
   if (!clubId || !refereeId || !anObjection) {
-    console.log("WHYYYYY")
     throw new BadRequestError("please provide all values");
   }
-
-  console.log("hi")
   const objection = await Objection.create({ clubId, refereeId, anObjection, isInProcess, isResolved });
-  console.log("bye")
-
-  res.status(StatusCodes.CREATED).json({
-    objection: {
-      clubId: objection.clubId,
-      refereeId: objection.refereeId,
-      objection: objection.anObjection,
-      isInProcess: objection.isInProcess,
-      isResolved: objection.isResolved,
-    }
-  });
 };
 
 const getAllObjections = async (req, res) => {

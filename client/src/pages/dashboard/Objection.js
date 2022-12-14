@@ -2,28 +2,29 @@ import React, { useState } from "react";
 import Wrapper from "../../assets/wrappers/LandingPage";
 import { Logo, FormRow } from "../../components"
 import { useAppContext } from "../../context/appContext";
+import axios from 'axios';
+import {refToId, idToref} from "./refIds";
 
 const Objection = () => {
   const [objection, setObjection] = useState({
     showError: false,
     referee: "",
-    refereeId: "356",
+    refereeId: "",
     anObjection: "",
     isInProcess: false,
-    clubId: "136",
+    clubId: "123",
     isResolved: false,
     //new mongoose.Types.ObjectId()
   });
 
-  
 
-  const { createObjection } = useAppContext();
+  const {createObjection} = useAppContext();
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    const newObjection = { ...objection, [name]: value };
-
+    const newObjection = { ...objection, [name]: value, refereeId: refToId[objection.referee]};
+    
     if (newObjection.referee &&
         newObjection.anObjection) {
            newObjection.showError = false;
@@ -45,6 +46,8 @@ const Objection = () => {
   const [searchId, setSearchId] = useState("");
   const [refObjections, setRefObjections] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showInput, setShowInput] = useState(true);
+  const [error, setError] = useState(false);
 
 
 const handleInvestigationChange = (e) => {
@@ -53,38 +56,72 @@ const handleInvestigationChange = (e) => {
   }
 
 
-  const handleInvestigationSubmit = (e) => {
-    e.prevenDefault();
+  const handleInvestigationSubmit = () => {
     if(searchId !== "")
     {
+      setShowInput(false);
       setIsLoading(true);
+      console.log(searchId);
       getRefereeObjections(searchId);
       setSearchId("");
     }
   }
 
     async function getRefereeObjections(id) { // API
-	try {
-		const response = await axios.get(`${baseURL + id}`);
-    const data = response.data;
-    setRefObjections(data);
-    setIsLoading(false);
-	}
-	catch (error) {
-		console.log(error)
-    setIsLoading(false);
-	}
-}
+      try {
+        const response = await axios.get(`${baseURL + id}`);
+        const data = response.data;
+        setRefObjections(data);
+        setIsLoading(false);
+      }
+      catch (error) {
+        console.log(error)
+        setIsLoading(false);
+        setError(true);
+      }
+    }
 
   
   // ----------------------------------------->>> for investigators
 
 
-  const [isInvestigator, setIsInvetigator] = useState(true);
-
-  if (!isInvestigator)
-  {
-    return (
+  // const [isInvestigator, setIsInvetigator] = useState(true);
+  const isInvestigator = false;
+if(isInvestigator)
+{
+  return (
+    <Wrapper>
+            {showInput? 
+          <form className="form">
+            <div style={{"textAlign": "center"}}>
+              <Logo/>
+              <h3>See Referee Objections</h3>
+            </div>
+            <FormRow
+              type="text"
+              name="searchId"
+              value={searchId}
+              handleChange={handleInvestigationChange}
+              labelText="Referee Id:"
+              />
+            <button type="submit" className="btn" onClick={handleInvestigationSubmit}>
+              See Objections
+            </button>
+          </form>
+            : 
+          isLoading? <div>Loading...</div> : <div> <h1>Objections: </h1> {refObjections.map((obj) => {
+            return (
+              <div key={obj._id} className="form">
+                <h4>Referee ID: {obj.refereeId}</h4>
+                <h4>Referee ID: {obj.anObjection}</h4>
+              </div>
+            )
+          })}</div>
+          }
+    </Wrapper>
+  )
+}
+  return (
       <Wrapper className="full-page">
           <form className="form">
             <div style={{"textAlign": "center"}}>
@@ -96,6 +133,7 @@ const handleInvestigationChange = (e) => {
               name="referee"
               value={objection.referee}
               handleChange={handleChange}
+              placeholder="Enter first letters capital and 1 whitespace between words..."
               />
             <FormRow
               type="text"
@@ -103,6 +141,7 @@ const handleInvestigationChange = (e) => {
               value={objection.anObjection}
               handleChange={handleChange}
               labelText="Objection"
+              placeholder="Enter your objection here..."
               />
             <button type="submit" className="btn" onClick={handleSubmit}>
               Submit
@@ -116,28 +155,7 @@ const handleInvestigationChange = (e) => {
           ) : null}
           </form>
       </Wrapper>
-    );
-  }
-  return (
-    <Wrapper>
-          <form className="form">
-            <div style={{"textAlign": "center"}}>
-              <Logo/>
-              <h3>Enter Referee ID</h3>
-            </div>
-            <FormRow
-              type="text"
-              name="searchId"
-              value={searchId}
-              handleChange={handleInvestigationChange}
-              labelText="Referee Id:"
-              />
-            <button type="submit" className="btn" onClick={(e) => handleInvestigationSubmit(e)}>
-              See Referee
-            </button>
-          </form>
-    </Wrapper>
-  )
+    );  
 };
 
 export default Objection;
