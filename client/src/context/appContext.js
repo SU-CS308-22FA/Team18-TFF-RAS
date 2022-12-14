@@ -145,6 +145,19 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+ * Created so that an objection made by a club is added to the database in order to be reviewed
+ * @param {Object} currentObjection - The objection that is created by the user to add to the database
+ * @since 14.12.2022
+ * @return {Object} objection - refereeId, anObjection, isInProcess, isResolved are returned after posting
+ * @example createObjection({
+ * clubId: "123",
+ * refereeId: "1385054",
+ * anObjection: "Çok kırmızı kart gösterdi",
+ * isInProcess: false,
+ * isResolved: false,
+ * })
+ */
   const createObjection = async (currentObjection) => {
     dispatch({ type: CREATE_OBJECTION_BEGIN });
     try {
