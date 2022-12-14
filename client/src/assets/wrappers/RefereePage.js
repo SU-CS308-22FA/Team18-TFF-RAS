@@ -776,6 +776,41 @@ const Wrapper = styled.main`
     display: flex;
     justify-content: center;
   }
+
+  .referee-matches-table-legend-css {
+    display: grid;
+    grid-auto-flow: column;
+    -webkit-column-gap: 20px;
+    column-gap: 20px;
+    height: 60px;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    margin: 0 20px;
+  }
+
+  .referee-matches-table-legend-css div {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+
+  .referee-matches-table-legend-css img {
+    margin-right: 5px;
+  }
+
+  .referee-matches-table-legend-css span {
+    font-size: 14px;
+    line-height: 1.17;
+    /* color: var(--PlayerPageColorScheme-legendDescriptionColor); */
+  }
 `;
 
 export default Wrapper;

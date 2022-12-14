@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const RefereeTitleContainer = ({ name, classification }) => {
+const RefereeTitleContainer = ({ name, classification, image }) => {
   return (
     <div className="referee-page-card-css">
       <section className="referee-header">
@@ -19,7 +19,7 @@ const RefereeTitleContainer = ({ name, classification }) => {
               className="image referee-page-image"
               width="70"
               height="70"
-              src="https://images.fotmob.com/image_resources/playerimages/1057703.png"
+              src={image}
             />
           </div>
           <h1 className="referee-page-name">{name}</h1>
@@ -42,11 +42,13 @@ const RefereeTitleContainer = ({ name, classification }) => {
 RefereeTitleContainer.propTypes = {
   name: PropTypes.string,
   classification: PropTypes.string,
+  image: PropTypes.string,
 };
 
 RefereeTitleContainer.defaultProps = {
   name: "",
   classification: "",
+  image: "",
 };
 
 export default RefereeTitleContainer;

@@ -5,9 +5,11 @@ import RefereeInfoContainer from "../../components/RefereeInfoContainer";
 import RefereeMatchesContainer from "../../components/RefereeMatchesContainer";
 import RefereeTitleContainer from "../../components/RefereeTitleContainer";
 import { useAppContext } from "../../context/appContext";
+import { referees } from "../../utils/constants";
 
 const Referee = () => {
   const { id } = useParams();
+  const refereePhoto = referees.find((ref) => ref.id === id).image;
 
   const [numPages, setNumPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -91,6 +93,7 @@ const Referee = () => {
         <RefereeTitleContainer
           name={referee?.name}
           classification={referee?.classification}
+          image={refereePhoto}
         />
         <RefereeInfoContainer
           homeAvgGoal={homeAvgGoal}

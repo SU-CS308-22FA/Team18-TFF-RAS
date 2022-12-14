@@ -189,7 +189,28 @@ const RefereeMatchesContainer = ({
                 page={currentPage}
                 onChange={onPageChange}
               />
-              <div className="referee-matches-table-legend-css"></div>
+              <div className="referee-matches-table-legend-css">
+                <div>
+                  <img src={RefereeStatsGoalIcon} />
+                  <span>Goals</span>
+                </div>
+                <div>
+                  <img src={RefereeStatsPenaltyIcon} />
+                  <span>Penalties</span>
+                </div>
+                <div>
+                  <img src={RefereeStatsYellowCardIcon} />
+                  <span>Yellow cards</span>
+                </div>
+                <div>
+                  <img src={RefereeStatsRedCardIcon} />
+                  <span>Red cards</span>
+                </div>
+                <div>
+                  <img src={RefereeStatsStarIcon} />
+                  <span>Match referee rating</span>
+                </div>
+              </div>
             </article>
           </div>
         </section>
