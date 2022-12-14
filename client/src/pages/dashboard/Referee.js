@@ -18,7 +18,7 @@ const Referee = () => {
     setCurrentPage(value);
   };
 
-  const { referee, getReferee } = useAppContext();
+  const { referee, getReferee, handleChange } = useAppContext();
   console.log("REFEREE: " + JSON.stringify(referee));
 
   let homeAvgGoal = "-";
@@ -79,6 +79,8 @@ const Referee = () => {
 
   useEffect(() => {
     getReferee(id);
+
+    return () => handleChange({ name: "referee", value: null });
   }, []);
 
   useEffect(() => {
