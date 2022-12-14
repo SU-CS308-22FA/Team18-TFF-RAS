@@ -81,15 +81,77 @@ app.get("/api/sentimentAnalysis/:id", async (req, res) => {
     const element = reviews[i];
     sentSTR += element;
   }
-  console.log(sentSTR);
-  let rate = await sentiment.getSentimentScore(sentSTR);
-  rate *= 2.5;
-  rate+=2.5;
-  res.json(rate);
+  if (sentSTR != "") {
+    console.log(sentSTR);
+    let rate = await sentiment.getSentimentScore(sentSTR);
+    rate *= 2.5;
+    rate+=2.5;
+    res.json({rate});
+  }
+  res.json({rate: "-"});
 });
+
 
 app.get("/api/avarageScore/:id", async (req, res) => {
   let reviews = await Rating.find({referee : req.params.id}).select('rating -_id');
+  let sum = 0;
+  for (let i = 0; i < reviews.length; i++) {
+    const element = reviews[i].rating;
+    sum += element;
+  }
+  let avrg = sum/reviews.length
+  console.log(avrg);
+  res.json(avrg);
+});
+
+app.get("/api/sentimentAnalysisForExp/:id", async (req, res) => {
+  let reviews = await Rating.find({referee : req.params.id, ratingType:"expert"}).select('review -_id');
+  let sentSTR = "";
+  for (let i = 0; i < reviews.length; i++) {
+    const element = reviews[i];
+    sentSTR += element;
+  }
+  if (sentSTR != "") {
+    console.log(sentSTR);
+    let rate = await sentiment.getSentimentScore(sentSTR);
+    rate *= 2.5;
+    rate+=2.5;
+    res.json({rate});
+  }
+  res.json({rate: "-"});
+});
+
+app.get("/api/sentimentAnalysisForFan/:id", async (req, res) => {
+  let reviews = await Rating.find({referee : req.params.id, ratingType:"fan"}).select('review -_id');
+  let sentSTR = "";
+  for (let i = 0; i < reviews.length; i++) {
+    const element = reviews[i];
+    sentSTR += element;
+  }
+  if (sentSTR != "") {
+    console.log(sentSTR);
+    let rate = await sentiment.getSentimentScore(sentSTR);
+    rate *= 2.5;
+    rate+=2.5;
+    res.json({rate});
+  }
+  res.json({rate: "-"});
+});
+
+app.get("/api/avarageScoreForExp/:id", async (req, res) => {
+  let reviews = await Rating.find({referee : req.params.id, ratingType:"expert"}).select('rating -_id');
+  let sum = 0;
+  for (let i = 0; i < reviews.length; i++) {
+    const element = reviews[i].rating;
+    sum += element;
+  }
+  let avrg = sum/reviews.length
+  console.log(avrg);
+  res.json(avrg);
+});
+
+app.get("/api/avarageScoreForFan/:id", async (req, res) => {
+  let reviews = await Rating.find({referee : req.params.id, ratingType:"fan"}).select('rating -_id');
   let sum = 0;
   for (let i = 0; i < reviews.length; i++) {
     const element = reviews[i].rating;
