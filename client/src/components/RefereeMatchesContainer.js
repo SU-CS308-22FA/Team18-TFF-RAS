@@ -3,9 +3,17 @@ import RefereeStatsYellowCardIcon from "../assets/images/referee-stats-yellow-ca
 import RefereeStatsRedCardIcon from "../assets/images/referee-stats-red-card-icon.svg";
 import RefereeStatsStarIcon from "../assets/images/referee-stats-star-icon.svg";
 import RefereeStatsPenaltyIcon from "../assets/images/referee-stats-penalty-icon.svg";
+
+import Pagination from "@mui/material/Pagination";
+
 import PropTypes from "prop-types";
 
-const RefereeMatchesContainer = ({ matches }) => {
+const RefereeMatchesContainer = ({
+  matches,
+  numPages,
+  currentPage,
+  onPageChange,
+}) => {
   return (
     <div className="referee-matches-section-css">
       <div className="referee-page-card-css">
@@ -39,7 +47,7 @@ const RefereeMatchesContainer = ({ matches }) => {
                   </tr>
                 </thead>
                 <tbody className="css-referee-matches-table-container">
-                  {matches.slice(0, 10).map((match) => (
+                  {matches.map((match) => (
                     <>
                       <tr className="referee-match-stats-body-css referee-match-stats-body-css-no-border">
                         <td>
@@ -169,6 +177,12 @@ const RefereeMatchesContainer = ({ matches }) => {
                   ))}
                 </tbody>
               </table>
+              <Pagination
+                className="referee-matches-pagination"
+                count={numPages}
+                page={currentPage}
+                onChange={onPageChange}
+              />
               <div className="referee-matches-table-legend-css"></div>
             </article>
           </div>
@@ -180,10 +194,16 @@ const RefereeMatchesContainer = ({ matches }) => {
 
 RefereeMatchesContainer.propTypes = {
   matches: PropTypes.array,
+  numPages: PropTypes.number,
+  currentPage: PropTypes.number,
+  onPageChange: PropTypes.func,
 };
 
 RefereeMatchesContainer.defaultProps = {
   matches: [],
+  numPages: 0,
+  currentPage: 1,
+  onPageChange: null,
 };
 
 export default RefereeMatchesContainer;

@@ -754,6 +754,11 @@ const Wrapper = styled.main`
   .referee-match-date {
     padding-right: 10px;
   }
+
+  .referee-matches-pagination {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 export default Wrapper;
