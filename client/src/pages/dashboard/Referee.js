@@ -18,7 +18,18 @@ const Referee = () => {
     setCurrentPage(value);
   };
 
-  const { referee, getReferee, handleChange } = useAppContext();
+  const {
+    referee,
+    getReferee,
+    handleChange,
+    getRefereeRatings,
+    overallRating,
+    fanRating,
+    expertRating,
+    overallSentiment,
+    fanSentiment,
+    expertSentiment,
+  } = useAppContext();
   console.log("REFEREE: " + JSON.stringify(referee));
 
   let homeAvgGoal = "-";
@@ -79,8 +90,18 @@ const Referee = () => {
 
   useEffect(() => {
     getReferee(id);
+    getRefereeRatings(id);
 
-    return () => handleChange({ name: "referee", value: null });
+    return () => {
+      handleChange({ name: "referee", value: null });
+
+      handleChange({ name: "overallRating", value: "-" });
+      handleChange({ name: "fanRating", value: "-" });
+      handleChange({ name: "expertRating", value: "-" });
+      handleChange({ name: "overallSentiment", value: "-" });
+      handleChange({ name: "fanSentiment", value: "-" });
+      handleChange({ name: "expertSentiment", value: "-" });
+    };
   }, []);
 
   useEffect(() => {
@@ -106,6 +127,12 @@ const Referee = () => {
           awayAvgRed={awayAvgRed}
           region={referee?.region}
           licenseNumber={referee?.lisenceNumber}
+          overallRating={overallRating}
+          fanRating={fanRating}
+          expertRating={expertRating}
+          overallSentiment={overallSentiment}
+          fanSentiment={fanSentiment}
+          expertSentiment={expertSentiment}
         />
         <RefereeMatchesContainer
           matches={referee?.matchesRuled.slice(

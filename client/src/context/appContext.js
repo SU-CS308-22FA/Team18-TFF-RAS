@@ -40,6 +40,9 @@ import {
   GET_REFEREE_SUCCESS,
   GET_REFEREE_ERROR,
   CLEAR_MODAL,
+  GET_REFEREE_RATINGS_BEGIN,
+  GET_REFEREE_RATINGS_SUCCESS,
+  GET_REFEREE_RATINGS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -68,6 +71,12 @@ const initialState = {
   eventReviews: [],
   referees: [],
   referee: null,
+  overallRating: "-",
+  fanRating: "-",
+  expertRating: "-",
+  overallSentiment: "-",
+  fanSentiment: "-",
+  expertSentiment: "-",
 };
 
 const AppContext = React.createContext();
@@ -336,6 +345,76 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getRefereeRatings = async (refID) => {
+    dispatch({ type: GET_REFEREE_RATINGS_BEGIN });
+    try {
+      const { data: overallRatingData } = await authFetch.get(
+        "/avarageScore/" + refID
+      );
+      const { data: fanRatingData } = await authFetch.get(
+        "/avarageScoreForFan/" + refID
+      );
+      const { data: expertRatingData } = await authFetch.get(
+        "/avarageScoreForExp/" + refID
+      );
+      const { data: overallSentimentData } = await authFetch.get(
+        "/sentimentAnalysis/" + refID
+      );
+      const { data: fanSentimentData } = await authFetch.get(
+        "/sentimentAnalysisForFan/" + refID
+      );
+      const { data: expertSentimentData } = await authFetch.get(
+        "/sentimentAnalysisForExp/" + refID
+      );
+
+      let overallRating = "-";
+      let fanRating = "-";
+      let expertRating = "-";
+      let overallSentiment = "-";
+      let fanSentiment = "-";
+      let expertSentiment = "-";
+
+      if (overallRatingData !== null) {
+        overallRating = overallRatingData.toFixed(2);
+      }
+      if (fanRatingData !== null) {
+        fanRating = fanRatingData.toFixed(2);
+      }
+      if (expertRatingData !== null) {
+        expertRating = expertRatingData.toFixed(2);
+      }
+      if (overallSentimentData.rate !== "-") {
+        overallSentiment = overallSentimentData.rate.toFixed(2);
+      }
+      if (fanSentimentData.rate !== "-") {
+        fanSentiment = fanSentimentData.rate.toFixed(2);
+      }
+      if (expertSentimentData.rate !== "-") {
+        expertSentiment = expertSentimentData.rate.toFixed(2);
+      }
+
+      dispatch({
+        type: GET_REFEREE_RATINGS_SUCCESS,
+        payload: {
+          overallRating,
+          fanRating,
+          expertRating,
+          overallSentiment,
+          fanSentiment,
+          expertSentiment,
+        },
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREE_RATINGS_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -402,6 +481,7 @@ const AppProvider = ({ children }) => {
         getReferee,
         clearModal,
         handleChange,
+        getRefereeRatings,
       }}
     >
       {children}
