@@ -24,11 +24,14 @@ import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
 
+import sentiment from './sentimentAnalysis.js';
+
 //web-scrape stuff
 import FixtureFunc from "./controllers/matchController.js";
 import Referee from "./models/refSchema.js";
 import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
+import Rating from "./models/Rating.js";
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -69,6 +72,32 @@ app.use("/api/v1/referees", authenticateUser, refereesRouter);
 app.get("/api/referee/:id", async (req, res) => {
   let data = await Referee.findOne({refID : req.params.id});
   res.json(data);
+});
+
+app.get("/api/sentimentAnalysis/:id", async (req, res) => {
+  let reviews = await Rating.find({referee : req.params.id}).select('review -_id');
+  let sentSTR = "";
+  for (let i = 0; i < reviews.length; i++) {
+    const element = reviews[i];
+    sentSTR += element;
+  }
+  console.log(sentSTR);
+  let rate = await sentiment.getSentimentScore(sentSTR);
+  rate *= 2.5;
+  rate+=2.5;
+  res.json(rate);
+});
+
+app.get("/api/avarageScore/:id", async (req, res) => {
+  let reviews = await Rating.find({referee : req.params.id}).select('rating -_id');
+  let sum = 0;
+  for (let i = 0; i < reviews.length; i++) {
+    const element = reviews[i].rating;
+    sum += element;
+  }
+  let avrg = sum/reviews.length
+  console.log(avrg);
+  res.json(avrg);
 });
 
 //every detail is taken from db

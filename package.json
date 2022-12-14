@@ -29,6 +29,7 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "@google-cloud/language": "^5.1.2",
     "bcryptjs": "^2.4.3",
     "date": "^2.0.2",
     "date-and-time": "^2.4.1",
