@@ -28,9 +28,9 @@ const getRatingColor = (rating) => {
   }
 
   let floatRating = parseFloat(rating);
-  return floatRating >= 6.9
+  return floatRating >= 3.45
     ? "rgb(30, 200, 83)"
-    : floatRating >= 5.0
+    : floatRating >= 2.5
     ? "rgb(240, 128, 34)"
     : "rgb(229, 94, 91)";
 };

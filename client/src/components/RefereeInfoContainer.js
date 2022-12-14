@@ -15,14 +15,13 @@ const RefereeInfoContainer = ({
   awayAvgRed,
   region,
   licenseNumber,
+  overallRating,
+  fanRating,
+  expertRating,
+  overallSentiment,
+  fanSentiment,
+  expertSentiment,
 }) => {
-  const fanRating = "-";
-  const overallRating = "-";
-  const expertRating = "-";
-  const fanSentiment = "-";
-  const overallSentiment = "-";
-  const expertSentiment = "-";
-
   return (
     <div className="referee-rating-section-css">
       <div className="referee-page-card-css">
@@ -187,6 +186,12 @@ RefereeInfoContainer.propTypes = {
   awayAvgRed: PropTypes.string,
   region: PropTypes.string,
   licenseNumber: PropTypes.string,
+  overallRating: PropTypes.string,
+  fanRating: PropTypes.string,
+  expertRating: PropTypes.string,
+  overallSentiment: PropTypes.string,
+  fanSentiment: PropTypes.string,
+  expertSentiment: PropTypes.string,
 };
 
 RefereeInfoContainer.defaultProps = {
@@ -198,6 +203,12 @@ RefereeInfoContainer.defaultProps = {
   awayAvgRed: "-",
   region: "-",
   licenseNumber: "-",
+  overallRating: "-",
+  fanRating: "-",
+  expertRating: "-",
+  overallSentiment: "-",
+  fanSentiment: "-",
+  expertSentiment: "-",
 };
 
 export default RefereeInfoContainer;
