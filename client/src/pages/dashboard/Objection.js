@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Wrapper from "../../assets/wrappers/LandingPage";
 import { Logo, FormRow } from "../../components"
 import { useAppContext } from "../../context/appContext";
@@ -19,7 +19,14 @@ const Objection = () => {
   });
 
 
-  const {createObjection, deleteObjection ,updateObjection} = useAppContext();
+  const {createObjection, deleteObjection ,updateObjection, alertText} = useAppContext();
+
+  useEffect(() => {
+    if (alertText === "Updated") {
+      alert("Comment added")
+    }
+  }, [alertText])
+  
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -83,31 +90,39 @@ const handleInvestigationChange = (e) => {
     }
 
     const handleClose = async (obj) => {
-      // const response = await axios.delete("/api/objections/" + obj._id);
-      // console.lolg(response.data);
       deleteObjection(obj)
       setRefObjections(refObjections.filter((o) => o._id !== obj._id))
-    }
-
-    const handleComment = (e) => {
-    setObjection({...objection, [e.target.name]: e.target.value});
-    }
-
-    const handleCommentClick = (obj) => {
-      if (obj.comment) {
-      updateObjection(obj);
-      } 
     }
   
   // ----------------------------------------->>> for investigators
 
+  const handleView = () => {
+    setIsInvestigator(!isInvestigator);
+    if(isInvestigator === true)
+    {
+    setShowInput(true);
+    }
+  }
+// Commenting
+const [newComment, setNewComment] = useState("");
+  const handleComment = (e) => {
+    setNewComment(e.target.value);
+    }
+
+    const handleCommentClick = (obj) => {
+      updateObjection(obj);
+    }
+// Commenting
 
   // const [isInvestigator, setIsInvetigator] = useState(true);
-  const isInvestigator = true;
+  const [isInvestigator, setIsInvestigator] = useState(false);
 if(isInvestigator)
 {
   return (
     <Wrapper>
+      <button type="submit" className="btn" onClick={handleView}>
+            Change View
+            </button>
             {showInput? 
           <form className="form">
             <div style={{"textAlign": "center"}}>
@@ -131,12 +146,18 @@ if(isInvestigator)
               <div key={obj._id} className="form">
                 <h4>Referee ID:</h4> <h5>{obj.refereeId}</h5>
                 <h4>Objection:</h4> <h5> {obj.anObjection}</h5>
+                <h4>Comment:</h4> <h5> {obj.comment}</h5>
             <FormRow
               type="text"
-              name="comment"
-              value={objection.comment}
-              handleChange={handleComment}
-              labelText="Comment:"
+              name="newComment"
+              value={obj.comment}
+              handleChange={(e) => {
+                const temp = [...refObjections];
+                const idx = refObjections.findIndex((item) => item._id === obj._id);
+                temp[idx] = {...obj, comment: e.target.value};
+                setRefObjections(temp);
+              }}
+              labelText="Add comment:"
               />
             <button type="submit" className="btn" onClick={() => handleCommentClick(obj)}>
               Add Comment
@@ -153,6 +174,9 @@ if(isInvestigator)
 }
   return (
       <Wrapper className="full-page">
+        <button type="submit" className="btn" onClick={handleView}>
+            Change View
+            </button>
           <form className="form">
             <div style={{"textAlign": "center"}}>
               <Logo/>

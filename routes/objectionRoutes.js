@@ -12,7 +12,7 @@ const apiLimiter = rateLimiter({
 
 import { createObjection, getObjection, getAllObjections, deleteObjection, updateObjection } from "../controllers/objectionController.js";
 
-router.route("/").post(createObjection).get(getAllObjections);
+router.route("/").post(createObjection).get(getAllObjections).patch(updateObjection);
 router.route("/:id").get(apiLimiter, getObjection).delete(apiLimiter, deleteObjection).post(apiLimiter, updateObjection);
 
 export default router;

@@ -35,6 +35,7 @@ const deleteObjection = async (req, res) => {
 };
 
 const updateObjection = async (req, res) => {
+
   const {comment} = req.body;
 
   const obj = await Objection.findOne({ _id: req.body._id });
@@ -42,6 +43,10 @@ const updateObjection = async (req, res) => {
   obj.comment = comment;
 
   await obj.save();
+
+  res.status(StatusCodes.OK).json({
+    msg: "Updated"
+  });
 };
 
 export { createObjection, getObjection, getAllObjections, deleteObjection, updateObjection };

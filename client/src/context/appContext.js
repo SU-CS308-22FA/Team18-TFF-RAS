@@ -149,14 +149,40 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   }
+
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN });
+    try {
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+
+      // no token
+      const { user, location } = data;
+      console.log(token);
+
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, location, token },
+      });
+
+      addUserToLocalStorage({ user, location, token: initialState.token });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
 const updateObjection = async (obj) => {
     dispatch({ type: UPDATE_OBJECTION_BEGIN });
     try {
-      await authFetch.post("/objections/", obj);
+      await authFetch.patch("/objections", obj);
       dispatch({
         type: UPDATE_OBJECTION_SUCCESS
       });
-      setTimeout(logoutUser, 3000);
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -246,31 +272,7 @@ const updateObjection = async (obj) => {
     }
   );
 
-  const updateUser = async (currentUser) => {
-    dispatch({ type: UPDATE_USER_BEGIN });
-    try {
-      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
-
-      // no token
-      const { user, location } = data;
-      console.log(token);
-
-      dispatch({
-        type: UPDATE_USER_SUCCESS,
-        payload: { user, location, token },
-      });
-
-      addUserToLocalStorage({ user, location, token: initialState.token });
-    } catch (error) {
-      if (error.response.status !== 401) {
-        dispatch({
-          type: UPDATE_USER_ERROR,
-          payload: { msg: error.response.data.msg },
-        });
-      }
-    }
-    clearAlert();
-  };
+  
 
   const deleteUser = async (currentUser) => {
     dispatch({ type: DELETE_USER_BEGIN });

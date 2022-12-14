@@ -176,21 +176,19 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      objections: action.payload.objections,
     }
   }
   if (action.type === UPDATE_OBJECTION_ERROR) {
     return {
       ...state,
       isLoading: false,
-      objections: action.payload.objections,
     }
   }
   if (action.type === UPDATE_OBJECTION_SUCCESS) {
     return {
       ...state,
       isLoading: false,
-      objections: action.payload.objections,
+      alertText: "Updated"
     }
   }
   if (action.type === CREATE_OBJECTION_ERROR) {
