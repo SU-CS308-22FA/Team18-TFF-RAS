@@ -401,6 +401,7 @@ const AppProvider = ({ children }) => {
         getReferees,
         getReferee,
         clearModal,
+        handleChange,
       }}
     >
       {children}

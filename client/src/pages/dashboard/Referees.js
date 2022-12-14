@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Wrapper from "../../assets/wrappers/RegisterPage";
 import axios from "axios";
 import { referees } from "../../utils/constants";
+import { Link } from "react-router-dom";
 
 const Referees = () => {
   const [refName, setRefName] = useState("");
@@ -22,7 +23,7 @@ const Referees = () => {
       setGames(data["matchesRuled"]);
       setClassification(data["classification"]);
       setRegion(data["region"]);
-      setLicense(data["licenceNumber"]);
+      setLicense(data["lisenceNumber"]);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -49,9 +50,9 @@ const Referees = () => {
             return (
               <div key={ref.Id} className="form-ref">
                 <h5>Name: {ref.name} </h5>
-                <button className="btn" onClick={() => handleClick(ref.Id)}>
+                <Link className="btn" to={"/referees/" + ref.id}>
                   Click to see more
-                </button>
+                </Link>
               </div>
             );
           })
