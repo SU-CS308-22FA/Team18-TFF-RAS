@@ -1,29 +1,74 @@
-import PropTypes from "prop-types";
+import RefereeStatsGoalIcon from "../assets/images/referee-stats-goal-icon.svg";
+import RefereeStatsYellowCardIcon from "../assets/images/referee-stats-yellow-card-icon.svg";
+import RefereeStatsRedCardIcon from "../assets/images/referee-stats-red-card-icon.svg";
+import RefereeStatsPenaltyIcon from "../assets/images/referee-stats-penalty-icon.svg";
 
-const RefereeInfoContainer = ({ region, licenseNumber }) => {
-  const fanRating = 8.5;
-  const overallRating = 6;
-  const expertRating = 3;
-  const fanSentiment = 10;
-  const overallSentiment = 10;
-  const expertSentiment = 10;
+import PropTypes from "prop-types";
+import { getRatingColor } from "../utils/helper";
+
+const RefereeInfoContainer = ({
+  homeAvgGoal,
+  awayAvgGoal,
+  homeAvgYellow,
+  awayAvgYellow,
+  homeAvgRed,
+  awayAvgRed,
+  region,
+  licenseNumber,
+}) => {
+  const fanRating = "-";
+  const overallRating = "-";
+  const expertRating = "-";
+  const fanSentiment = "-";
+  const overallSentiment = "-";
+  const expertSentiment = "-";
 
   return (
     <div className="referee-rating-section-css">
       <div className="referee-page-card-css">
         <section className="referee-stats-section-css">
-          <div className="referee-single-stat-container-top"></div>
           <div className="referee-single-stat-container-top">
-            <div className="referee-stat-title">Region</div>
-            <b className="referee-stat-value">{region}</b>
+            <div className="referee-stat-title">
+              <span>Home Avg. </span>
+              <img src={RefereeStatsGoalIcon} />
+            </div>
+            <b className="referee-stat-value">{homeAvgGoal}</b>
           </div>
-          <div className="referee-single-stat-container-top"></div>
-          <div className="referee-single-stat-container-bottom"></div>
+          <div className="referee-single-stat-container-top">
+            <div className="referee-stat-title">
+              <span>Home Avg. </span>
+              <img src={RefereeStatsYellowCardIcon} />
+            </div>
+            <b className="referee-stat-value">{homeAvgYellow}</b>
+          </div>
+          <div className="referee-single-stat-container-top">
+            <div className="referee-stat-title">
+              <span>Home Avg. </span>
+              <img src={RefereeStatsRedCardIcon} />
+            </div>
+            <b className="referee-stat-value">{homeAvgRed}</b>
+          </div>
           <div className="referee-single-stat-container-bottom">
-            <div className="referee-stat-title">License Number</div>
-            <b className="referee-stat-value">{licenseNumber}</b>
+            <div className="referee-stat-title">
+              <span>Away Avg. </span>
+              <img src={RefereeStatsGoalIcon} />
+            </div>
+            <b className="referee-stat-value">{awayAvgGoal}</b>
           </div>
-          <div className="referee-single-stat-container-bottom"></div>
+          <div className="referee-single-stat-container-bottom">
+            <div className="referee-stat-title">
+              <span>Away Avg. </span>
+              <img src={RefereeStatsYellowCardIcon} />
+            </div>
+            <b className="referee-stat-value">{awayAvgYellow}</b>
+          </div>
+          <div className="referee-single-stat-container-bottom">
+            <div className="referee-stat-title">
+              <span>Away Avg. </span>
+              <img src={RefereeStatsRedCardIcon} />
+            </div>
+            <b className="referee-stat-value">{awayAvgRed}</b>
+          </div>
         </section>
       </div>
       <div className="referee-page-card-css">
@@ -44,114 +89,84 @@ const RefereeInfoContainer = ({ region, licenseNumber }) => {
       <div className="referee-page-card-css">
         <section className="referee-stats-section-css referee-rating-card-css">
           <div className="referee-single-stat-container-top">
-            <div className="referee-stat-title">Overall Rating</div>
+            <div className="referee-stat-title-rating">Overall Rating</div>
             <div
               fontSize="20"
               width="52"
               height="30"
               className="css-referee-rating-styled"
               style={{
-                backgroundColor:
-                  overallRating >= 6.9
-                    ? "rgb(30, 200, 83)"
-                    : overallRating >= 5.0
-                    ? "rgb(240, 128, 34)"
-                    : "rgb(229, 94, 91)",
+                backgroundColor: getRatingColor(overallRating),
               }}
             >
               <span>{overallRating}</span>
             </div>
           </div>
           <div className="referee-single-stat-container-top">
-            <div className="referee-stat-title">Fan Rating</div>
+            <div className="referee-stat-title-rating">Fan Rating</div>
             <div
               fontSize="20"
               width="52"
               height="30"
               className="css-referee-rating-styled"
               style={{
-                backgroundColor:
-                  fanRating >= 6.9
-                    ? "rgb(30, 200, 83)"
-                    : fanRating >= 5.0
-                    ? "rgb(240, 128, 34)"
-                    : "rgb(229, 94, 91)",
+                backgroundColor: getRatingColor(fanRating),
               }}
             >
               <span>{fanRating}</span>
             </div>
           </div>
           <div className="referee-single-stat-container-top">
-            <div className="referee-stat-title">Expert Rating</div>
+            <div className="referee-stat-title-rating">Expert Rating</div>
             <div
               fontSize="20"
               width="52"
               height="30"
               className="css-referee-rating-styled"
               style={{
-                backgroundColor:
-                  expertRating >= 6.9
-                    ? "rgb(30, 200, 83)"
-                    : expertRating >= 5.0
-                    ? "rgb(240, 128, 34)"
-                    : "rgb(229, 94, 91)",
+                backgroundColor: getRatingColor(expertRating),
               }}
             >
               <span>{expertRating}</span>
             </div>
           </div>
           <div className="referee-single-stat-container-bottom">
-            <div className="referee-stat-title">Overall Sentiment</div>
+            <div className="referee-stat-title-rating">Overall Sentiment</div>
             <div
               fontSize="20"
               width="52"
               height="30"
               className="css-referee-rating-styled"
               style={{
-                backgroundColor:
-                  overallSentiment >= 6.9
-                    ? "rgb(30, 200, 83)"
-                    : overallSentiment >= 5.0
-                    ? "rgb(240, 128, 34)"
-                    : "rgb(229, 94, 91)",
+                backgroundColor: getRatingColor(overallSentiment),
               }}
             >
               <span>{overallSentiment}</span>
             </div>
           </div>
           <div className="referee-single-stat-container-bottom">
-            <div className="referee-stat-title">Fan Sentiment</div>
+            <div className="referee-stat-title-rating">Fan Sentiment</div>
             <div
               fontSize="20"
               width="52"
               height="30"
               className="css-referee-rating-styled"
               style={{
-                backgroundColor:
-                  fanSentiment >= 6.9
-                    ? "rgb(30, 200, 83)"
-                    : fanSentiment >= 5.0
-                    ? "rgb(240, 128, 34)"
-                    : "rgb(229, 94, 91)",
+                backgroundColor: getRatingColor(fanSentiment),
               }}
             >
               <span>{fanSentiment}</span>
             </div>
           </div>
           <div className="referee-single-stat-container-bottom">
-            <div className="referee-stat-title">Expert Sentiment</div>
+            <div className="referee-stat-title-rating">Expert Sentiment</div>
             <div
               fontSize="20"
               width="52"
               height="30"
               className="css-referee-rating-styled"
               style={{
-                backgroundColor:
-                  expertSentiment >= 6.9
-                    ? "rgb(30, 200, 83)"
-                    : expertSentiment >= 5.0
-                    ? "rgb(240, 128, 34)"
-                    : "rgb(229, 94, 91)",
+                backgroundColor: getRatingColor(expertSentiment),
               }}
             >
               <span>{expertSentiment}</span>
@@ -164,13 +179,25 @@ const RefereeInfoContainer = ({ region, licenseNumber }) => {
 };
 
 RefereeInfoContainer.propTypes = {
+  homeAvgGoal: PropTypes.string,
+  awayAvgGoal: PropTypes.string,
+  homeAvgYellow: PropTypes.string,
+  awayAvgYellow: PropTypes.string,
+  homeAvgRed: PropTypes.string,
+  awayAvgRed: PropTypes.string,
   region: PropTypes.string,
   licenseNumber: PropTypes.string,
 };
 
 RefereeInfoContainer.defaultProps = {
-  region: "",
-  licenseNumber: "",
+  homeAvgGoal: "-",
+  awayAvgGoal: "-",
+  homeAvgYellow: "-",
+  awayAvgYellow: "-",
+  homeAvgRed: "-",
+  awayAvgRed: "-",
+  region: "-",
+  licenseNumber: "-",
 };
 
 export default RefereeInfoContainer;

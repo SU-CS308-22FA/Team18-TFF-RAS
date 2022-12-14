@@ -19,6 +19,62 @@ const Referee = () => {
   const { referee, getReferee } = useAppContext();
   console.log("REFEREE: " + JSON.stringify(referee));
 
+  let homeAvgGoal = "-";
+  let awayAvgGoal = "-";
+  let homeAvgYellow = "-";
+  let awayAvgYellow = "-";
+  let homeAvgRed = "-";
+  let awayAvgRed = "-";
+
+  if (referee !== null) {
+    homeAvgGoal = 0;
+    awayAvgGoal = 0;
+    homeAvgYellow = 0;
+    awayAvgYellow = 0;
+    homeAvgRed = 0;
+    awayAvgRed = 0;
+
+    let currentMatch = null;
+    let goalMatchesNumber = referee.matchesRuled.length;
+    for (let i = 0; i < referee.matchesRuled.length; i++) {
+      currentMatch = referee.matchesRuled[i].matchDetail;
+
+      if (currentMatch.Teams.homeScore === "") {
+        goalMatchesNumber--;
+      } else {
+        homeAvgGoal += parseInt(currentMatch.Teams.homeScore);
+        awayAvgGoal += parseInt(currentMatch.Teams.awayScore);
+      }
+
+      homeAvgYellow += currentMatch.HomeCards.filter(
+        (card) => card.cardType === "yellow"
+      ).length;
+      awayAvgYellow += currentMatch.AwayCards.filter(
+        (card) => card.cardType === "yellow"
+      ).length;
+
+      homeAvgRed += currentMatch.HomeCards.filter(
+        (card) => card.cardType === "red"
+      ).length;
+      awayAvgRed += currentMatch.AwayCards.filter(
+        (card) => card.cardType === "red"
+      ).length;
+    }
+
+    homeAvgGoal /= goalMatchesNumber;
+    homeAvgGoal = homeAvgGoal.toFixed(2);
+    awayAvgGoal /= goalMatchesNumber;
+    awayAvgGoal = awayAvgGoal.toFixed(2);
+    homeAvgYellow /= referee.matchesRuled.length;
+    homeAvgYellow = homeAvgYellow.toFixed(2);
+    awayAvgYellow /= referee.matchesRuled.length;
+    awayAvgYellow = awayAvgYellow.toFixed(2);
+    homeAvgRed /= referee.matchesRuled.length;
+    homeAvgRed = homeAvgRed.toFixed(2);
+    awayAvgRed /= referee.matchesRuled.length;
+    awayAvgRed = awayAvgRed.toFixed(2);
+  }
+
   useEffect(() => {
     getReferee(id);
   }, []);
@@ -37,6 +93,12 @@ const Referee = () => {
           classification={referee?.classification}
         />
         <RefereeInfoContainer
+          homeAvgGoal={homeAvgGoal}
+          awayAvgGoal={awayAvgGoal}
+          homeAvgYellow={homeAvgYellow}
+          awayAvgYellow={awayAvgYellow}
+          homeAvgRed={homeAvgRed}
+          awayAvgRed={awayAvgRed}
           region={referee?.region}
           licenseNumber={referee?.lisenceNumber}
         />

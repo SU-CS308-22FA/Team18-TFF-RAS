@@ -35,6 +35,10 @@ const Wrapper = styled.main`
     color: white;
   }
 
+  .referee-rating-card-css .referee-stat-title-rating {
+    color: white;
+  }
+
   .referee-rating-card-css .referee-single-stat-container-top {
     border-bottom: 0;
   }
@@ -287,11 +291,24 @@ const Wrapper = styled.main`
   }
 
   .referee-stat-title {
-    text-align: center;
     height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  .referee-stat-title span {
+    text-align: center;
     font-size: 13px;
     font-weight: bold;
-    color: rgba(159, 159, 159, 1);
+    /* color: rgba(159, 159, 159, 1); */
+  }
+
+  .referee-stat-title-rating {
+    height: 40px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    /* color: rgba(159, 159, 159, 1); */
   }
 
   .referee-stat-value {

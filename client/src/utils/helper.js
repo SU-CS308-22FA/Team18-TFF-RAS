@@ -22,4 +22,22 @@ const getRatingLabelText = (value) => {
   return `${value} Star${value !== 1 ? "s" : ""}, ${ratingLabels[value]}`;
 };
 
-export { getEventTimeString, getReviewEventTimeString, getRatingLabelText };
+const getRatingColor = (rating) => {
+  if (rating === "-") {
+    return "lightgrey";
+  }
+
+  let floatRating = parseFloat(rating);
+  return floatRating >= 6.9
+    ? "rgb(30, 200, 83)"
+    : floatRating >= 5.0
+    ? "rgb(240, 128, 34)"
+    : "rgb(229, 94, 91)";
+};
+
+export {
+  getEventTimeString,
+  getReviewEventTimeString,
+  getRatingLabelText,
+  getRatingColor,
+};

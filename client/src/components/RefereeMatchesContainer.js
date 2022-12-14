@@ -5,6 +5,7 @@ import RefereeStatsStarIcon from "../assets/images/referee-stats-star-icon.svg";
 import RefereeStatsPenaltyIcon from "../assets/images/referee-stats-penalty-icon.svg";
 
 import Pagination from "@mui/material/Pagination";
+import { getRatingColor } from "../utils/helper";
 
 import PropTypes from "prop-types";
 
@@ -71,7 +72,9 @@ const RefereeMatchesContainer = ({
                         </td>
                         <td>
                           <span className="center-span-in-td-css">
-                            {match.matchDetail.Teams.homeScore}
+                            {match.matchDetail.Teams.homeScore !== ""
+                              ? match.matchDetail.Teams.homeScore
+                              : "-"}
                           </span>
                         </td>
                         <td>
@@ -107,8 +110,9 @@ const RefereeMatchesContainer = ({
                             width="34"
                             height="20"
                             className="referee-table-rating-styled"
+                            style={{ backgroundColor: getRatingColor("-") }}
                           >
-                            <span>8.4</span>
+                            <span>-</span>
                           </div>
                         </td>
                       </tr>
@@ -132,7 +136,9 @@ const RefereeMatchesContainer = ({
                         </td>
                         <td>
                           <span className="center-span-in-td-css">
-                            {match.matchDetail.Teams.awayScore}
+                            {match.matchDetail.Teams.awayScore !== ""
+                              ? match.matchDetail.Teams.awayScore
+                              : "-"}
                           </span>
                         </td>
                         <td>
