@@ -36,6 +36,10 @@ import {
   GET_RATING_SUCCESS,
   GET_RATING_ERROR,
   CLEAR_MODAL,
+  HANDLE_CHANGE,
+  GET_REFEREE_RATINGS_BEGIN,
+  GET_REFEREE_RATINGS_SUCCESS,
+  GET_REFEREE_RATINGS_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -314,6 +318,41 @@ const reducer = (state, action) => {
       modalText: action.payload.msg,
     };
   }
+  if (action.type === GET_REFEREE_RATINGS_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREE_RATINGS_SUCCESS) {
+    const {
+      overallRating,
+      fanRating,
+      expertRating,
+      overallSentiment,
+      fanSentiment,
+      expertSentiment,
+    } = action.payload;
+
+    console.log(JSON.stringify(action.payload));
+
+    return {
+      ...state,
+      isLoading: false,
+      overallRating,
+      fanRating,
+      expertRating,
+      overallSentiment,
+      fanSentiment,
+      expertSentiment,
+    };
+  }
+  if (action.type === GET_REFEREE_RATINGS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
   if (action.type === GET_RATING_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
@@ -346,6 +385,13 @@ const reducer = (state, action) => {
       showModal: true,
       modalType: "danger",
       modalText: action.payload.msg,
+    };
+  }
+  if (action.type === HANDLE_CHANGE) {
+    console.log({ [action.payload.name]: action.payload.value });
+    return {
+      ...state,
+      [action.payload.name]: action.payload.value,
     };
   }
 
