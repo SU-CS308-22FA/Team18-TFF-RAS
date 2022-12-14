@@ -421,6 +421,339 @@ const Wrapper = styled.main`
     font-size: 20px;
     color: white;
   }
+
+  .referee-matches-section-css {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  @media (min-width: 992px) {
+    .referee-matches-section-css {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(300px, 1fr));
+      grid-column-gap: 20px;
+    }
+  }
+
+  .referee-matches-section-css > [class*="card-css"] {
+    display: none;
+  }
+
+  .referee-matches-section-css [class*="card-css"] {
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+
+  @media (min-width: 768px) {
+    .referee-matches-section-css [class*="card-css"] {
+      display: block;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .referee-matches-section-css [class*="card-css"]:first-of-type {
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
+  }
+
+  .referee-table-section-css {
+    margin: 20px;
+  }
+
+  .referee-matches-table-container {
+    width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  table {
+    display: table;
+    border-collapse: separate;
+    -webkit-border-horizontal-spacing: 2px;
+    -webkit-border-vertical-spacing: 2px;
+    border-top-color: gray;
+  }
+
+  thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-top-color: inherit;
+    border-right-color: inherit;
+    border-bottom-color: inherit;
+    border-left-color: inherit;
+  }
+
+  .referee-match-stats-header-css {
+    height: 60px;
+    display: grid;
+    grid-template-columns: minmax(50px, 125px) minmax(100px, 1fr) repeat(
+        5,
+        minmax(20px, 40px)
+      );
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    border-bottom: solid 1px var(--primary-800);
+  }
+
+  tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-top-color: inherit;
+    border-right-color: inherit;
+    border-bottom-color: inherit;
+    border-left-color: inherit;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  td,
+  th {
+    display: table-cell;
+    vertical-align: inherit;
+  }
+
+  .css-referee-matches-header-text {
+    font-size: 16px;
+    line-height: 1.15;
+    letter-spacing: 0.2px;
+    text-align: left;
+    color: rgba(159, 159, 159, 1);
+  }
+
+  html,
+  body,
+  div,
+  span,
+  applet,
+  object,
+  iframe,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  abbr,
+  acronym,
+  address,
+  big,
+  cite,
+  code,
+  del,
+  dfn,
+  em,
+  img,
+  ins,
+  kbd,
+  q,
+  s,
+  samp,
+  small,
+  strike,
+  strong,
+  sub,
+  sup,
+  tt,
+  var,
+  b,
+  u,
+  i,
+  center,
+  dl,
+  dt,
+  dd,
+  ol,
+  ul,
+  li,
+  fieldset,
+  form,
+  label,
+  legend,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td,
+  article,
+  aside,
+  canvas,
+  details,
+  embed,
+  figure,
+  figcaption,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  output,
+  ruby,
+  section,
+  summary,
+  time,
+  mark,
+  audio,
+  video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+
+  h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+  }
+
+  tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-top-color: inherit;
+    border-right-color: inherit;
+    border-bottom-color: inherit;
+    border-left-color: inherit;
+  }
+
+  .referee-match-stats-body-css {
+    height: 60px;
+    display: grid;
+    grid-template-columns: minmax(50px, 125px) minmax(100px, 1fr) repeat(
+        5,
+        minmax(20px, 40px)
+      );
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    border-bottom: solid 1px var(--primary-800);
+  }
+
+  .referee-match-stats-body-css:last-of-type {
+    border-bottom: 0;
+  }
+
+  .referee-match-stats-body-css-no-border {
+    border-bottom: 0;
+  }
+
+  .referee-match-stats-body-css td:first-of-type span {
+    color: rgba(159, 159, 159, 1);
+  }
+
+  .referee-match-stats-body-css a,
+  .referee-match-stats-body-css button {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    /* color: rgba(255, 255, 255, 1); */
+    outline: none;
+    border: 0;
+    background: 0;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .referee-score-wrapper-applyMediumHover {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .referee-score-wrapper-applyMediumHover:hover {
+      opacity: 0.6;
+    }
+  }
+
+  .referee-score-wrapper-applyMediumHover span {
+    font-weight: bold;
+  }
+
+  .center-span-in-td-css {
+    display: grid;
+    justify-self: center;
+    text-align: center;
+  }
+
+  .referee-match-stats-body-css [class*="referee-table-rating-styled"] {
+    margin-left: 6px;
+  }
+
+  .referee-table-rating-styled {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 2px;
+    min-width: 32px;
+    min-height: 21px;
+    width: 34px;
+    height: 20px;
+    border-radius: 10px;
+    padding: 2px 6px 2px 6px;
+    background-color: #1ec853;
+  }
+
+  .referee-table-rating-styled span {
+    white-space: nowrap;
+    letter-spacing: 0;
+    font-size: 14px;
+    color: white;
+
+    font-weight: bold;
+  }
+
+  .referee-match-date {
+    padding-right: 10px;
+  }
 `;
 
 export default Wrapper;

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import RefereePageWrapper from "../../assets/wrappers/RefereePage";
 import RefereeInfoContainer from "../../components/RefereeInfoContainer";
+import RefereeMatchesContainer from "../../components/RefereeMatchesContainer";
 import RefereeTitleContainer from "../../components/RefereeTitleContainer";
 import { useAppContext } from "../../context/appContext";
 
@@ -26,6 +27,7 @@ const Referee = () => {
           region={referee?.region}
           licenseNumber={referee?.lisenceNumber}
         />
+        <RefereeMatchesContainer matches={referee?.matchesRuled} />
       </article>
     </RefereePageWrapper>
   );
