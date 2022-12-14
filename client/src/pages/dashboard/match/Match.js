@@ -246,6 +246,7 @@ const Match = () => {
             refereeName={refereeName}
             refereeImage={refereeImage}
             loading={loading}
+            refID={refID}
           />
         </div>
       </main>
