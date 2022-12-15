@@ -7,12 +7,9 @@ import {
   SharedLayout,
   Objection,
   Match,
-<<<<<<< HEAD
   DueReports,
-=======
   Referee,
   Referees,
->>>>>>> develop
 } from "./pages/dashboard";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
