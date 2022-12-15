@@ -20,12 +20,8 @@ const objectionSchema = new mongoose.Schema({
   isResolved: {
     type: Boolean,
     default: false,
-  },
-  comment: {
-    type: String,
-    default: "No comment",
   }
-}); 
+});
 
 
 

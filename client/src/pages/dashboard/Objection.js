@@ -1,38 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Wrapper from "../../assets/wrappers/LandingPage";
 import { Logo, FormRow } from "../../components"
 import { useAppContext } from "../../context/appContext";
-import axios from 'axios';
-import {refToId, idToref} from "./refIds";
 
 const Objection = () => {
   const [objection, setObjection] = useState({
     showError: false,
     referee: "",
-    refereeId: "",
+    refereeId: "356",
     anObjection: "",
     isInProcess: false,
-    clubId: "123",
+    clubId: "136",
     isResolved: false,
-    comment: "",
     //new mongoose.Types.ObjectId()
   });
 
-
-  const {createObjection, deleteObjection ,updateObjection, alertText} = useAppContext();
-
-  useEffect(() => {
-    if (alertText === "Updated") {
-      alert("Comment added")
-    }
-  }, [alertText])
-  
+  const { createObjection } = useAppContext();
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    const newObjection = { ...objection, [name]: value, refereeId: refToId[objection.referee]};
-    
+    const newObjection = { ...objection, [name]: value };
+
     if (newObjection.referee &&
         newObjection.anObjection) {
            newObjection.showError = false;
@@ -49,167 +38,40 @@ const Objection = () => {
     }
   };
 
-  // ----------------------------------------->>> for investigators
-  const baseURL = "/api/objection/";
-  const [searchId, setSearchId] = useState("");
-  const [refObjections, setRefObjections] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showInput, setShowInput] = useState(true);
-  const [error, setError] = useState(false);
-
-
-const handleInvestigationChange = (e) => {
-    // console.log(e.target.value);
-    setSearchId(e.target.value);
-  }
-
-
-  const handleInvestigationSubmit = () => {
-    if(searchId !== "")
-    {
-      setShowInput(false);
-      setIsLoading(true);
-      console.log(searchId);
-      getRefereeObjections(searchId);
-      setSearchId("");
-    }
-  }
-
-    async function getRefereeObjections(id) { // API
-      try {
-        const response = await axios.get(`${baseURL + id}`);
-        const data = response.data;
-        setRefObjections(data);
-        setIsLoading(false);
-      }
-      catch (error) {
-        console.log(error)
-        setIsLoading(false);
-        setError(true);
-      }
-    }
-
-    const handleClose = async (obj) => {
-      deleteObjection(obj)
-      setRefObjections(refObjections.filter((o) => o._id !== obj._id))
-    }
-  
-  // ----------------------------------------->>> for investigators
-
-  const handleView = () => {
-    setIsInvestigator(!isInvestigator);
-    if(isInvestigator === true)
-    {
-    setShowInput(true);
-    }
-  }
-// Commenting
-const [newComment, setNewComment] = useState("");
-  const handleComment = (e) => {
-    setNewComment(e.target.value);
-    }
-
-    const handleCommentClick = (obj) => {
-      updateObjection(obj);
-    }
-// Commenting
-
-  // const [isInvestigator, setIsInvetigator] = useState(true);
-  const [isInvestigator, setIsInvestigator] = useState(false);
-if(isInvestigator)
-{
+  const refs = [{name: "kerim"}, {name: "mehmet"}]
   return (
-    <Wrapper>
-      <button type="submit" className="btn" onClick={handleView}>
-            Change View
-            </button>
-            {showInput? 
-          <form className="form">
-            <div style={{"textAlign": "center"}}>
-              <Logo/>
-              <h3>See Referee Objections</h3>
-            </div>
-            <FormRow
-              type="text"
-              name="searchId"
-              value={searchId}
-              handleChange={handleInvestigationChange}
-              labelText="Referee Id:"
-              />
-            <button type="submit" className="btn" onClick={handleInvestigationSubmit}>
-              See Objections
-            </button>
-          </form>
-            : 
-          isLoading? <div>Loading...</div> : <div> <h1>Objections: </h1> {refObjections.map((obj) => {
-            return (
-              <div key={obj._id} className="form">
-                <h4>Referee ID:</h4> <h5>{obj.refereeId}</h5>
-                <h4>Objection:</h4> <h5> {obj.anObjection}</h5>
-                <h4>Comment:</h4> <h5> {obj.comment}</h5>
-            <FormRow
-              type="text"
-              name="newComment"
-              value={obj.comment}
-              handleChange={(e) => {
-                const temp = [...refObjections];
-                const idx = refObjections.findIndex((item) => item._id === obj._id);
-                temp[idx] = {...obj, comment: e.target.value};
-                setRefObjections(temp);
-              }}
-              labelText="Add comment:"
-              />
-            <button type="submit" className="btn" onClick={() => handleCommentClick(obj)}>
-              Add Comment
-            </button>
-            <button type="submit" className="btn" onClick={() => handleClose(obj)}>
-              Close Objection
-            </button>
-              </div>
-            )
-          })}</div>
-          }
+    <Wrapper className="full-page">
+        <form className="form">
+          <div style={{"textAlign": "center"}}>
+            <Logo/>
+            <h3>Objection</h3>
+          </div>
+          <FormRow
+            type="text"
+            name="referee"
+            value={objection.referee}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="text"
+            name="anObjection"
+            value={objection.anObjection}
+            handleChange={handleChange}
+            labelText="Objection"
+          />
+          <button type="submit" className="btn" onClick={handleSubmit}>
+            Submit
+          </button>
+        {objection.showError ? (
+          <h4 className="form-error">
+            {(objection.referee &&
+              objection.anObjection) ? null:
+              "ERROR!!! Please fill all the blanks."}
+          </h4>
+        ) : null}
+        </form>
     </Wrapper>
-  )
-}
-  return (
-      <Wrapper className="full-page">
-        <button type="submit" className="btn" onClick={handleView}>
-            Change View
-            </button>
-          <form className="form">
-            <div style={{"textAlign": "center"}}>
-              <Logo/>
-              <h3>Objection</h3>
-            </div>
-            <FormRow
-              type="text"
-              name="referee"
-              value={objection.referee}
-              handleChange={handleChange}
-              placeholder="Enter first letters capital and 1 whitespace between words..."
-              />
-            <FormRow
-              type="text"
-              name="anObjection"
-              value={objection.anObjection}
-              handleChange={handleChange}
-              labelText="Objection"
-              placeholder="Enter your objection here..."
-              />
-            <button type="submit" className="btn" onClick={handleSubmit}>
-              Submit
-            </button>
-          {objection.showError ? (
-            <h4 className="form-error">
-              {(objection.referee &&
-                objection.anObjection) ? null:
-                "ERROR!!! Please fill all the blanks."}
-            </h4>
-          ) : null}
-          </form>
-      </Wrapper>
-    );  
+  );
 };
 
 export default Objection;

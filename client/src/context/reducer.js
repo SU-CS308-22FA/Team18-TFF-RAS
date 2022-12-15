@@ -19,14 +19,11 @@ import {
   CREATE_OBJECTION_SUCCES,
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
-  DELETE_OBJECTION_SUCCESS,
+  DELETE_OBJECTION_SUCCES,
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
-  UPDATE_OBJECTION_BEGIN,
-  UPDATE_OBJECTION_SUCCESS,
-  UPDATE_OBJECTION_ERROR,
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
   CREATE_RATING_ERROR,
@@ -41,10 +38,6 @@ import {
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
-  HANDLE_CHANGE,
-  GET_REFEREE_RATINGS_BEGIN,
-  GET_REFEREE_RATINGS_SUCCESS,
-  GET_REFEREE_RATINGS_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -198,25 +191,6 @@ const reducer = (state, action) => {
       alertText: "Objection created! Redirecting...",
     };
   }
-  if (action.type === UPDATE_OBJECTION_BEGIN) {
-    return {
-      ...state,
-      isLoading: false,
-    }
-  }
-  if (action.type === UPDATE_OBJECTION_ERROR) {
-    return {
-      ...state,
-      isLoading: false,
-    }
-  }
-  if (action.type === UPDATE_OBJECTION_SUCCESS) {
-    return {
-      ...state,
-      isLoading: false,
-      alertText: "Updated"
-    }
-  }
   if (action.type === CREATE_OBJECTION_ERROR) {
     return {
       ...state,
@@ -229,7 +203,7 @@ const reducer = (state, action) => {
   if (action.type === DELETE_OBJECTION_BEGIN) {
     return { ...state, isDeleting: true };
   }
-  if (action.type === DELETE_OBJECTION_SUCCESS) {
+  if (action.type === DELETE_OBJECTION_SUCCES) {
     return {
       ...state,
       isDeleting: false,
@@ -342,41 +316,6 @@ const reducer = (state, action) => {
       modalText: action.payload.msg,
     };
   }
-  if (action.type === GET_REFEREE_RATINGS_BEGIN) {
-    return { ...state, isLoading: true, showAlert: false };
-  }
-  if (action.type === GET_REFEREE_RATINGS_SUCCESS) {
-    const {
-      overallRating,
-      fanRating,
-      expertRating,
-      overallSentiment,
-      fanSentiment,
-      expertSentiment,
-    } = action.payload;
-
-    console.log(JSON.stringify(action.payload));
-
-    return {
-      ...state,
-      isLoading: false,
-      overallRating,
-      fanRating,
-      expertRating,
-      overallSentiment,
-      fanSentiment,
-      expertSentiment,
-    };
-  }
-  if (action.type === GET_REFEREE_RATINGS_ERROR) {
-    return {
-      ...state,
-      isLoading: false,
-      showModal: true,
-      modalType: "danger",
-      modalText: action.payload.msg,
-    };
-  }
   if (action.type === GET_RATING_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
@@ -441,13 +380,6 @@ const reducer = (state, action) => {
       accuracy,
       fairness,
       comments,
-    }
-  }
-  if (action.type === HANDLE_CHANGE) {
-    console.log({ [action.payload.name]: action.payload.value });
-    return {
-      ...state,
-      [action.payload.name]: action.payload.value,
     };
   }
 

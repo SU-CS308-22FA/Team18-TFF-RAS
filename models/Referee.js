@@ -5,7 +5,7 @@ const refSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  lisenceNumber: {
+  licenceNumber: {
     type: String,
     default: "",
   },
