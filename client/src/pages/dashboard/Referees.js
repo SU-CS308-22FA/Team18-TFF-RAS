@@ -155,7 +155,7 @@ const handleGoBack = () => {
               <h5>Region: {region} </h5>
               <h5>games: {games.map((game) => {
                 return (
-                  <div className="form">
+                  <div key={game.id} className="form">
                     <h5>Home: {game.home}  </h5> <h5>  Away: {game.away}  </h5> <h5>  Score: {game.score}</h5>
                     <h5>Date: {game.date} </h5>
                     <h5>League: {game.organisation}</h5>
