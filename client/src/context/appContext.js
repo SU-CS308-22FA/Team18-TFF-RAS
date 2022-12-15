@@ -74,12 +74,12 @@ const initialState = {
   numDueReports: 0,
   DueReportPage: 1,
   numofDueReportPages: 1,
-  //final_grade: "",
-  //editReportId: _id,
-  //strictness: "",
-  //accuracy: "",
-  //fairness: "",
-  //comments: "",
+  final_grade: "",
+  editReportId: "",
+  strictness: "",
+  accuracy: "",
+  fairness: "",
+  comments: "",
 };
 
 const AppContext = React.createContext();
@@ -413,7 +413,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: SET_EDIT_JOB, payload: { id } });
   };
 
-  /*const editJob = async () => {
+  const editJob = async () => {
     dispatch({ type: EDIT_REPORT_BEGIN });
     try {
       const {} = state;
@@ -436,7 +436,7 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
-  };*/
+  };
 
   return (
     <AppContext.Provider
