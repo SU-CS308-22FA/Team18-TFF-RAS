@@ -3,6 +3,7 @@ import { MdQueryStats } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 import { AiFillExclamationCircle } from "react-icons/ai";
+import { AiTwotoneContainer } from "react-icons/ai";
 
 const links = [
   {
@@ -39,7 +40,7 @@ const links = [
     id: 6,
     text: "reports",
     path: "reports",
-    icon: <AiFillExclamationCircle />,
+    icon: <AiTwotoneContainer />,
   },
 ];
 
