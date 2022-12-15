@@ -60,20 +60,5 @@
     "eslint-plugin-react": "^7.31.10",
     "prettier": "^2.7.1"
   },
-  "proxy": "http://localhost:4000",
-<<<<<<< HEAD
-    "prettier/prettier": [
-        "error",
-        {
-            "endOfLine" : "auto"
-        }
-    ]
-=======
-  "prettier/prettier": [
-    "error",
-    {
-      "endOfLine": "auto"
-    }
-  ]
->>>>>>> develop
+  "proxy": "http://localhost:4000"
 }

@@ -5,13 +5,8 @@ import Referee from "./Referee";
 import Profile from "./Profile";
 import Match from "./match/Match";
 import SharedLayout from "./SharedLayout";
-<<<<<<< HEAD
-import Objection from "./Objection"
-import RefereeAssignment from "./RefereeAssignment"
-
-export { Home, Matches, Referees, Profile, Match, SharedLayout, Objection, RefereeAssignment };
-=======
 import Objection from "./Objection";
+import RefereeAssignment from "./RefereeAssignment"
 
 export {
   Home,
@@ -22,5 +17,5 @@ export {
   Match,
   SharedLayout,
   Objection,
+  RefereeAssignment
 };
->>>>>>> develop

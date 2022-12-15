@@ -7,12 +7,9 @@ import {
   SharedLayout,
   Objection,
   Match,
-<<<<<<< HEAD
-  RefereeAssignment
-=======
+  RefereeAssignment,
   Referee,
   Referees,
->>>>>>> develop
 } from "./pages/dashboard";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -31,32 +28,6 @@ const theme = createTheme({
 
 function App() {
   return (
-<<<<<<< HEAD
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <SharedLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Home />} />
-          <Route path="matches" element={<Matches />} />
-          <Route path="matches/:id" element={<Match />} />
-          <Route path="referees" element={<Referees />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="/objection" element={<Objection />} />
-          <Route path="/referee-assignment" element={<RefereeAssignment />} />
-        </Route>
-        <Route path="/register" element={<Register />} />
-        <Route path="/landing" element={<Landing />} />
-        <Route path="/referee-page" element={<Referees />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </BrowserRouter>
-=======
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
@@ -73,6 +44,8 @@ function App() {
             <Route path="referees" element={<Referees />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/objection" element={<Objection />} />
+          <Route path="/referee-assignment" element={<RefereeAssignment />} />
+
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<Landing />} />
@@ -83,7 +56,6 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
->>>>>>> develop
   );
 }
 
