@@ -1,12 +1,14 @@
 import React, {useState} from 'react'
-
+import axios from "axios"
 
 
 const RefereeAssignment = () => 
 {
     const [ratings, setRatings] = useState([])
 
-    async function getRefereeRatings() {
+    const baseURL = "api/";
+
+    async function getRefereeRatings(id) {
 	try {
 		const response = await axios.get(`${baseURL + id}`);
     const data = response.data;
