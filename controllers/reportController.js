@@ -4,11 +4,14 @@ import Report from "../models/Report.js";
 
 const updateReports = async (req, res) => {
   const { name } = req.body;
-  const filter = {
+};
+
+const dueReports = async (req, res) => {
+  const { name } = req.body;
+  const query = {
     "Observers.name": name,
   };
-  const fixture = await fixtures.find(filter);
-  const match = [];
+  const fixture = await fixtures.find(query);
   for (let element of fixture) {
     let daydetails = element.Time.date.split(".");
     let timedetails = element.Time.hour.split(":");
@@ -25,14 +28,9 @@ const updateReports = async (req, res) => {
       });
     }
   }
-};
-
-const dueReports = async (req, res) => {
-  const { name } = req.body;
-  updateReports(req, res);
-  console.log("I am out of ");
   const filter = {
     observer: name,
+    isSubmitted: false,
   };
   const sort = {
     matchyear: 1,
@@ -41,7 +39,7 @@ const dueReports = async (req, res) => {
     matchHour: 1,
     matchMinute: 1,
   };
-  const reports = await Report.find({ observer: name }).sort(sort);
-  res.status(200);
+  const reports = await Report.find(filter).sort(sort);
+  res.status(200).json(reports);
 };
 export { dueReports };
