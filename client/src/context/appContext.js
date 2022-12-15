@@ -111,7 +111,6 @@ const AppProvider = ({ children }) => {
   };
 
   const addObjectionToLocalStroge = ({ newObjection }) => {
-    console.log(JSON.stringify(newObjection));
     localStorage.setItem(
       "objections",
       JSON.stringify([...objections, newObjection])
