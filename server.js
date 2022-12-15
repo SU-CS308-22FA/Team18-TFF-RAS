@@ -24,7 +24,6 @@ import authRouter from "./routes/authRoutes.js";
 import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
-import reportRouter from "./routes/reportRoutes.js";
 
 import sentiment from "./sentimentAnalysis.js";
 
@@ -72,7 +71,6 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
-app.use("/api/v1/reports", reportRouter);
 
 //get referee from d with specified id
 app.get("/api/referee/:id", async (req, res) => {
