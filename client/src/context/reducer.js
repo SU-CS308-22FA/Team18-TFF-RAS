@@ -19,11 +19,14 @@ import {
   CREATE_OBJECTION_SUCCES,
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
-  DELETE_OBJECTION_SUCCES,
+  DELETE_OBJECTION_SUCCESS,
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
+  UPDATE_OBJECTION_BEGIN,
+  UPDATE_OBJECTION_SUCCESS,
+  UPDATE_OBJECTION_ERROR,
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
   CREATE_RATING_ERROR,
@@ -193,6 +196,25 @@ const reducer = (state, action) => {
       alertText: "Objection created! Redirecting...",
     };
   }
+  if (action.type === UPDATE_OBJECTION_BEGIN) {
+    return {
+      ...state,
+      isLoading: false,
+    }
+  }
+  if (action.type === UPDATE_OBJECTION_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+    }
+  }
+  if (action.type === UPDATE_OBJECTION_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      alertText: "Updated"
+    }
+  }
   if (action.type === CREATE_OBJECTION_ERROR) {
     return {
       ...state,
@@ -205,7 +227,7 @@ const reducer = (state, action) => {
   if (action.type === DELETE_OBJECTION_BEGIN) {
     return { ...state, isDeleting: true };
   }
-  if (action.type === DELETE_OBJECTION_SUCCES) {
+  if (action.type === DELETE_OBJECTION_SUCCESS) {
     return {
       ...state,
       isDeleting: false,
