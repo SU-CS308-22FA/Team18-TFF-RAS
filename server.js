@@ -3,6 +3,7 @@ const app = express();
 
 import dotenv from "dotenv";
 dotenv.config();
+import bodyParser from "body-parser";
 
 import "express-async-errors";
 import morgan from "morgan";
@@ -37,6 +38,10 @@ import Rating from "./models/Rating.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
+import {
+  getObjection,
+  deleteObjection,
+} from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
 
@@ -53,6 +58,7 @@ app.use(express.json());
 app.use(helmet({ contentsecuritypolicy: false }));
 app.use(xss());
 app.use(mongoSanitize());
+app.use(bodyParser.json());
 
 // app.get("/", (req, res) => {
 //   res.json({ msg: "Welcome!" });
@@ -90,6 +96,13 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
   } else {
     res.json({ rate: "-" });
   }
+});
+
+app.get("/api/objection/:id", async (req, res) => {
+  let data = await getObjection(req.params.id);
+  // console.log(data);
+  // console.log(data);
+  res.json(data);
 });
 
 app.get("/api/v1/avarageScore/:id", async (req, res) => {
@@ -189,10 +202,6 @@ app.get("/api/v1/refereeBySubstr/:substr", async (req, res) => {
   let data = await RefereeFunc.searchBySubstr(req.params.substr);
   console.log(data);
   res.json(data);
-});
-
-app.get("/api/v1/objections", (req, res) => {
-  res.send("SUCCES");
 });
 
 // only when ready to deploy
