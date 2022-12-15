@@ -21,8 +21,9 @@ const dueReports = async (req, res) => {
     let away = element.Teams.away;
     let homeScore = element.Teams.homeScore;
     let awayScore = element.Teams.awayScore;
-    const entryexists = Report.findOne({ matchId: element.MatchID });
-    if (!entryexists) {
+    const entryexists = Report.find({ matchId: element.MatchID });
+    console.log(entryexists);
+    if (!entryexists.length) {
       const report = await Report.create({
         matchId: element.MatchID,
         observer: name,
