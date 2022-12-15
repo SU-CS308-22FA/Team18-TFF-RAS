@@ -1,11 +1,11 @@
 import express from "express";
 const router = express.Router();
 
-import { getReferee, getReferees } from "../controllers/refereesController.js";
+import RefereeFunc from "../controllers/refereesController.js";
 
 // import testUser from "../middleware/testUser.js";
 
-router.route("/").get(getReferees);
-router.route("/:id").get(getReferee);
+router.route("/").get(RefereeFunc.getReferees);
+router.route("/:id").get(RefereeFunc.getReferee);
 
 export default router;

@@ -22,11 +22,14 @@ import {
   CREATE_OBJECTION_SUCCES,
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
-  DELETE_OBJECTION_SUCCES,
+  DELETE_OBJECTION_SUCCESS,
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
+  UPDATE_OBJECTION_BEGIN,
+  UPDATE_OBJECTION_SUCCESS,
+  UPDATE_OBJECTION_ERROR,
   HANDLE_CHANGE,
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
@@ -42,6 +45,9 @@ import {
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
+  GET_REFEREE_RATINGS_BEGIN,
+  GET_REFEREE_RATINGS_SUCCESS,
+  GET_REFEREE_RATINGS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -80,6 +86,12 @@ const initialState = {
   accuracy: "",
   fairness: "",
   comments: "",
+  overallRating: "-",
+  fanRating: "-",
+  expertRating: "-",
+  overallSentiment: "-",
+  fanSentiment: "-",
+  expertSentiment: "-",
 };
 
 const AppContext = React.createContext();
@@ -143,7 +155,7 @@ const AppProvider = ({ children }) => {
   const getObjections = async (currentObjection) => {
     dispatch({ type: GET_OBJECTIONS_BEGIN });
     try {
-      const response = await authFetch.post("/objections/", currentObjection);
+      const response = await authFetch.get("/objections/", currentObjection);
       const { objections } = response.data;
       dispatch({
         type: GET_OBJECTIONS_SUCCESS,
@@ -168,6 +180,7 @@ const AppProvider = ({ children }) => {
       });
       addObjectionToLocalStroge({ objection });
     } catch (err) {
+      // console.log(err);
       dispatch({
         type: CREATE_OBJECTION_ERROR,
         payload: { msg: err.response.data.msg },
@@ -175,14 +188,15 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const deleteObjection = async (currentObjection) => {
+  const deleteObjection = async (objection) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
     try {
-      await authFetch.delete("/objections/", currentObjection);
+      const response = await authFetch.delete("/objections/" + objection._id);
+      const { msg } = response.data;
       dispatch({
-        type: DELETE_OBJECTION_SUCCES,
+        type: DELETE_OBJECTION_SUCCESS,
+        payload: { objection },
       });
-      setTimeout(logoutUser, 3000);
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -217,6 +231,24 @@ const AppProvider = ({ children }) => {
   {
     /* CHECK */
   }
+
+  const updateObjection = async (obj) => {
+    dispatch({ type: UPDATE_OBJECTION_BEGIN });
+    try {
+      await authFetch.patch("/objections", obj);
+      dispatch({
+        type: UPDATE_OBJECTION_SUCCESS,
+      });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_OBJECTION_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
@@ -363,6 +395,76 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getRefereeRatings = async (refID) => {
+    dispatch({ type: GET_REFEREE_RATINGS_BEGIN });
+    try {
+      const { data: overallRatingData } = await authFetch.get(
+        "/avarageScore/" + refID
+      );
+      const { data: fanRatingData } = await authFetch.get(
+        "/avarageScoreForFan/" + refID
+      );
+      const { data: expertRatingData } = await authFetch.get(
+        "/avarageScoreForExp/" + refID
+      );
+      const { data: overallSentimentData } = await authFetch.get(
+        "/sentimentAnalysis/" + refID
+      );
+      const { data: fanSentimentData } = await authFetch.get(
+        "/sentimentAnalysisForFan/" + refID
+      );
+      const { data: expertSentimentData } = await authFetch.get(
+        "/sentimentAnalysisForExp/" + refID
+      );
+
+      let overallRating = "-";
+      let fanRating = "-";
+      let expertRating = "-";
+      let overallSentiment = "-";
+      let fanSentiment = "-";
+      let expertSentiment = "-";
+
+      if (overallRatingData !== null) {
+        overallRating = overallRatingData.toFixed(2);
+      }
+      if (fanRatingData !== null) {
+        fanRating = fanRatingData.toFixed(2);
+      }
+      if (expertRatingData !== null) {
+        expertRating = expertRatingData.toFixed(2);
+      }
+      if (overallSentimentData.rate !== "-") {
+        overallSentiment = overallSentimentData.rate.toFixed(2);
+      }
+      if (fanSentimentData.rate !== "-") {
+        fanSentiment = fanSentimentData.rate.toFixed(2);
+      }
+      if (expertSentimentData.rate !== "-") {
+        expertSentiment = expertSentimentData.rate.toFixed(2);
+      }
+
+      dispatch({
+        type: GET_REFEREE_RATINGS_SUCCESS,
+        payload: {
+          overallRating,
+          fanRating,
+          expertRating,
+          overallSentiment,
+          fanSentiment,
+          expertSentiment,
+        },
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREE_RATINGS_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -452,12 +554,15 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
+        updateObjection,
         createRating,
         getRating,
         getReferees,
         getReferee,
         getDueReports,
         clearModal,
+        handleChange,
+        getRefereeRatings,
       }}
     >
       {children}
