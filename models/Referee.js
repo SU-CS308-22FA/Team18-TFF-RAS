@@ -26,6 +26,10 @@ const refSchema = new mongoose.Schema({
     // unique: true,
     default: "",
   },
+  observerGrade: {
+    type: Array,
+    default: [],
+  },
 });
 
 export default mongoose.model("Referee", refSchema);
