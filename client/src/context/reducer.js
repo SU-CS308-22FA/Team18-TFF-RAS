@@ -35,6 +35,8 @@ import {
   GET_RATING_BEGIN,
   GET_RATING_SUCCESS,
   GET_RATING_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
 } from "./actions";
 
@@ -346,6 +348,38 @@ const reducer = (state, action) => {
       showModal: true,
       modalType: "danger",
       modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_DUE_REPORTS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    };
+  }
+  if (action.type === GET_DUE_REPORTS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      dueReports: action.payload.dueReports,
+      numDueReports: action.payload.numDueReports,
+      numofDueReportPages: action.payload.numofDueReportPages,
+    };
+  }
+  if (action.type === SET_EDIT_JOB) {
+    const report = state.dueReports.find(
+      (report) => report._id === action.payload.id
+    );
+    const { _id, final_grade, accuracy, strictness, fairness, comments } =
+      report;
+    return {
+      ...state,
+      final_grade,
+      editReportId: _id,
+      strictness,
+      accuracy,
+      fairness,
+      comments,
     };
   }
 

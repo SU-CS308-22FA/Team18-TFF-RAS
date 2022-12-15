@@ -8,7 +8,7 @@ const FixtureSchema = new mongoose.Schema({
       name: String,
     },
   ],
-  Referees: [
+  Refs: [
     {
       duty: String,
       name: String,

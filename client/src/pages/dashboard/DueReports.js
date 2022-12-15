@@ -1,5 +1,11 @@
+import { ReportContainer } from "../../components";
+
 const DueReports = () => {
-  return <h1>Reports</h1>;
+  return (
+    <>
+      <ReportContainer />
+    </>
+  );
 };
 
 export default DueReports;
