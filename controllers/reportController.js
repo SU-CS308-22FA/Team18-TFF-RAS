@@ -1,15 +1,16 @@
 import e from "express";
 import fixtures from "../models/fixtures.js";
 import Report from "../models/Report.js";
-
-const updateReports = async (req, res) => {
-  const { name } = req.body;
-};
+import User from "../models/User.js";
 
 const dueReports = async (req, res) => {
-  const { name } = req.body;
+  const user = await User.findOne({ _id: req.user.userId });
+  const firstname = user.name;
+  const lastName = user.lastName;
+  const name = firstname + " " + lastName;
+  console.log(name);
   const query = {
-    "Observers.name": name,
+    "Observers.name": new RegExp("\\b" + name + "\\b", "i"),
   };
   const fixture = await fixtures.find(query);
   for (let element of fixture) {
@@ -29,7 +30,7 @@ const dueReports = async (req, res) => {
     }
   }
   const filter = {
-    observer: name,
+    observer: new RegExp("\\b" + name + "\\b", "i"),
     isSubmitted: false,
   };
   const sort = {
