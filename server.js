@@ -25,7 +25,6 @@ import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
 import reportRouter from "./routes/reportRoutes.js";
-import ref from "./web-scraping/tff-bot-refereeID.js";
 
 import sentiment from "./sentimentAnalysis.js";
 
