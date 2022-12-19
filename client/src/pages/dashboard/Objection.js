@@ -112,6 +112,16 @@ const [newComment, setNewComment] = useState("");
     const handleCommentClick = (obj) => {
       updateObjection(obj);
     }
+    const handleSave = (obj) => {
+      updateObjection(obj);
+    }
+    const handlePost = (obj) => {
+      const temp = [...refObjections];
+                const idx = refObjections.findIndex((item) => item._id === obj._id);
+                temp[idx] = {...obj, isResolved:true};
+                setRefObjections(temp);
+      updateObjection(obj);
+    }
 // Commenting
 
   // const [isInvestigator, setIsInvetigator] = useState(true);
@@ -146,24 +156,29 @@ if(isInvestigator)
               <div key={obj._id} className="form">
                 <h4>Referee ID:</h4> <h5>{obj.refereeId}</h5>
                 <h4>Objection:</h4> <h5> {obj.anObjection}</h5>
-                <h4>Comment:</h4> <h5> {obj.comment}</h5>
             <FormRow
               type="text"
               name="newComment"
               value={obj.comment}
+              id="textfieldToClose"
               handleChange={(e) => {
                 const temp = [...refObjections];
                 const idx = refObjections.findIndex((item) => item._id === obj._id);
                 temp[idx] = {...obj, comment: e.target.value};
                 setRefObjections(temp);
               }}
-              labelText="Add comment:"
+              labelText="My decision:"
               />
-            <button type="submit" className="btn" onClick={() => handleCommentClick(obj)}>
-              Add Comment
+            <button type="submit"
+              className="btn"
+              onClick={handlePost}>
+              Post Decision
             </button>
             <button type="submit" className="btn" onClick={() => handleClose(obj)}>
               Close Objection
+            </button>
+            <button type="submit" className="btn" onClick={() => handleSave(obj)}>
+              Save
             </button>
               </div>
             )
