@@ -33,6 +33,7 @@ import Referee from "./models/refSchema.js";
 import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
+import Objections from "./models/Objection.js"
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -44,6 +45,7 @@ import {
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
+import Objection from "./models/Objection.js";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -117,6 +119,12 @@ app.get("/api/v1/avarageScore/:id", async (req, res) => {
   let avrg = sum / reviews.length;
   console.log(avrg);
   res.json(avrg);
+});
+
+app.put("/api/v1/makeInReview/:id", async (req, res) => {
+  console.log("id: ",req.params.id);
+  let objection = await Objection.findOne({ _id: req.params.id }, { $set: { isInProcess: true }});
+  res.json(objection);
 });
 
 app.get("/api/v1/sentimentAnalysisForExp/:id", async (req, res) => {

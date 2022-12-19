@@ -115,12 +115,10 @@ const [newComment, setNewComment] = useState("");
     const handleSave = (obj) => {
       updateObjection(obj);
     }
-    const handlePost = (obj) => {
-      const temp = [...refObjections];
-                const idx = refObjections.findIndex((item) => item._id === obj._id);
-                temp[idx] = {...obj, isResolved:true};
-                setRefObjections(temp);
-      updateObjection(obj);
+    const handlePost = async (obj) => {
+      console.log("f id: ", obj._id);
+      let response = await axios.put('http://localhost:4000/api/v1/makeInReview/'+ obj._id);
+      console.log(response);
     }
 // Commenting
 
@@ -169,9 +167,10 @@ if(isInvestigator)
               }}
               labelText="My decision:"
               />
+            <div>
             <button type="submit"
               className="btn"
-              onClick={handlePost}>
+              onClick={() => handlePost(obj)}>
               Post Decision
             </button>
             <button type="submit" className="btn" onClick={() => handleClose(obj)}>
@@ -180,6 +179,7 @@ if(isInvestigator)
             <button type="submit" className="btn" onClick={() => handleSave(obj)}>
               Save
             </button>
+            </div>
               </div>
             )
           })}</div>
