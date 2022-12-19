@@ -42,6 +42,7 @@ import authenticateUser from "./middleware/auth.js";
 import {
   getObjection,
   deleteObjection,
+  getObjectionAndSet
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
@@ -107,6 +108,13 @@ app.get("/api/objection/:id", async (req, res) => {
   res.json(data);
 });
 
+app.patch("/api/objection/:id", async (req, res) => {
+  let data = await getObjectionAndSet(req.params.id);
+  // console.log(data);
+  // console.log(data);
+  res.json(data);
+});
+
 app.get("/api/v1/avarageScore/:id", async (req, res) => {
   let reviews = await Rating.find({ referee: req.params.id }).select(
     "rating -_id"
@@ -121,9 +129,8 @@ app.get("/api/v1/avarageScore/:id", async (req, res) => {
   res.json(avrg);
 });
 
-app.put("/api/v1/makeInReview/:id", async (req, res) => {
-  console.log("id: ",req.params.id);
-  let objection = await Objection.findOne({ _id: req.params.id }, { $set: { isInProcess: true }});
+app.get("/api/makeInReview/:id", async (req, res) => {
+  let objection = await Objection.findOne({ _id: req.params.id });
   res.json(objection);
 });
 

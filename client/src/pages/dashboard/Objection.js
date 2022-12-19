@@ -116,8 +116,8 @@ const [newComment, setNewComment] = useState("");
       updateObjection(obj);
     }
     const handlePost = async (obj) => {
-      console.log("f id: ", obj._id);
-      let response = await axios.put('http://localhost:4000/api/v1/makeInReview/'+ obj._id);
+      console.log(typeof obj._id)
+      let response = await axios.patch('/api/objection/'+ obj._id);
       console.log(response);
     }
 // Commenting
@@ -185,7 +185,7 @@ if(isInvestigator)
           })}</div>
           }
     </Wrapper>
-  )
+  )  
 }
   return (
       <Wrapper className="full-page">
