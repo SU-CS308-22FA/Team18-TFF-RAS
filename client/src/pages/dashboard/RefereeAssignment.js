@@ -1,27 +1,36 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from "axios"
-
+import { useAppContext } from "../../context/appContext";
 
 const RefereeAssignment = () => 
 {
-    const [ratings, setRatings] = useState([])
+    // const {getRefereeRatings} = useAppContext();
+    const [refRatings, setRefRatings] = useState([]);
+    const baseURL = "/api/ratings/";
 
-    const baseURL = "api/";
-
-    async function getRefereeRatings(id) {
-	try {
-		const response = await axios.get(`${baseURL + id}`);
-    const data = response.data;
-        // assign the data to somewhere 
+    const getRefRating = async (id) => {
+        try {
+        const ratings = await axios.get(`${baseURL + id}`);
+        const data = ratings.data;
+        setRefRatings(data);
+      }
+      catch (error) {
+        console.log(error)
+      }
     }
-	catch (error) {
-		console.log(error)
-	}
-}
+
+    useEffect(() => {
+      getRefRating("1385054");
+    },[])
+    
 
 
     return (
-        <div>Assign me</div>
+        <div><h4>Ratings:</h4> {refRatings.map(vote => {
+            return (
+                <div key={vote._id}><p>{vote.review}</p></div>                
+            )
+        })}</div>
     )
 }
 

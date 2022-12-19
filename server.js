@@ -78,6 +78,13 @@ app.get("/api/referee/:id", async (req, res) => {
   res.json(data);
 });
 
+//----------------------------- RATINGS
+app.get("/api/ratings/:id", async (req,res) => {
+  let ratings = await Rating.find({referee: req.params.id})
+  res.json(ratings);
+})
+//-----------------------------
+
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
   let reviews = await Rating.find({ referee: req.params.id }).select(
     "review -_id"
@@ -87,7 +94,7 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
     const element = reviews[i];
     sentSTR += element;
   }
-  if (sentSTR != "") {
+  if (sentSTR !== "") {
     console.log(sentSTR);
     let rate = await sentiment.getSentimentScore(sentSTR);
     rate *= 2.5;

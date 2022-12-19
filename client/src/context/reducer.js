@@ -43,6 +43,9 @@ import {
   GET_REFEREE_RATINGS_BEGIN,
   GET_REFEREE_RATINGS_SUCCESS,
   GET_REFEREE_RATINGS_ERROR,
+  GET_ALLRATING_BEGIN,
+  GET_ALLRATING_SUCCESS,
+  GET_ALLRATING_ERROR
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -343,6 +346,9 @@ const reducer = (state, action) => {
   if (action.type === GET_REFEREE_RATINGS_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
+  if (action.type === GET_ALLRATING_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
   if (action.type === GET_REFEREE_RATINGS_SUCCESS) {
     const {
       overallRating,
@@ -366,7 +372,27 @@ const reducer = (state, action) => {
       expertSentiment,
     };
   }
+  if (action.type === GET_ALLRATING_SUCCESS) {
+    const ratings = action.payload;
+
+    console.log(JSON.stringify(action.payload));
+
+    return {
+      ...state,
+      isLoading: false,
+      ratings,
+    };
+  }
   if (action.type === GET_REFEREE_RATINGS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_ALLRATING_ERROR) {
     return {
       ...state,
       isLoading: false,
