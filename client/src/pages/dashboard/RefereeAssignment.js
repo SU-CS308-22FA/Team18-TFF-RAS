@@ -31,14 +31,22 @@ const RefereeAssignment = () =>
     // },[])
 
     const findFanRate = (arr) => {
-      arr.map((vote) => {
-        vote.ratingType ===
+      let tempArr = arr;
+      let tempArr2 = arr;
+      tempArr.filter((vote) => {
+        return (vote.ratingType === "fan")
       })
+      tempArr2.filter((vote) => {
+        return (vote.ratingType === "expert")
+      })
+      setExpertRating(tempArr2);
+      setFanRating(tempArr);
     }
     
     const assignRatings = () => {
       refRatings.forEach((referee) => {
         getRefRating(referee.id);
+        findFanRate(refRating);
       })
     }
 
