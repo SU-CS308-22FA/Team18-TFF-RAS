@@ -8,8 +8,10 @@ import { referees } from "../../utils/constants";
 const RefereeAssignment = () => 
 {
     // const {getRefereeRatings} = useAppContext();
-    const [refRatings, setRefRatings] = useState([]);
-    let refs;
+    const [refRatings, setRefRatings] = useState([...referees]);
+    const [refRating, setRefRating] = useState([]);
+    const [fanRating, setFanRating] = useState(0);
+    const [expertRating, setExpertRating] = useState(0);
     const baseURL = "/api/ratings/";
 
 
@@ -17,7 +19,7 @@ const RefereeAssignment = () =>
         try {
         const ratings = await axios.get(`${baseURL + id}`);
         const data = ratings.data;
-        setRefRatings(data);
+        setRefRating(data);
       }
       catch (error) {
         console.log(error)
@@ -27,7 +29,18 @@ const RefereeAssignment = () =>
     // useEffect(() => {
     //   getRefRating("1385054");
     // },[])
+
+    const findFanRate = (arr) => {
+      arr.map((vote) => {
+        vote.ratingType ===
+      })
+    }
     
+    const assignRatings = () => {
+      refRatings.forEach((referee) => {
+        getRefRating(referee.id);
+      })
+    }
 
 
     return (
@@ -38,11 +51,6 @@ const RefereeAssignment = () =>
             return (
               <div key={ref.id} className="form-ref">
                 <h5>{ref.name} </h5>
-                <h5>{refRatings.map(vote => {
-                  return (
-                    <div key={vote._id}><p>{vote.review}</p></div>
-                  )
-                })} </h5>
                 <button type="submit" className="btn">
               Reviews
             </button>
