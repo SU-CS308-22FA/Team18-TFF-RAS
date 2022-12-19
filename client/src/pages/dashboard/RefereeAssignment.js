@@ -1,12 +1,17 @@
 import React, {useState, useEffect} from 'react'
+import Wrapper from "../../assets/wrappers/RegisterPage";
 import axios from "axios"
-import { useAppContext } from "../../context/appContext";
+import { Link } from "react-router-dom";
+import { referees } from "../../utils/constants";
+
 
 const RefereeAssignment = () => 
 {
     // const {getRefereeRatings} = useAppContext();
     const [refRatings, setRefRatings] = useState([]);
+    let refs;
     const baseURL = "/api/ratings/";
+
 
     const getRefRating = async (id) => {
         try {
@@ -19,18 +24,39 @@ const RefereeAssignment = () =>
       }
     }
 
-    useEffect(() => {
-      getRefRating("1385054");
-    },[])
+    // useEffect(() => {
+    //   getRefRating("1385054");
+    // },[])
     
 
 
     return (
-        <div><h4>Ratings:</h4> {refRatings.map(vote => {
+      <Wrapper className="full-page">
+      <div className="container-ref">
+        
+          {referees.map((ref) => {
             return (
-                <div key={vote._id}><p>{vote.review}</p></div>                
-            )
-        })}</div>
+              <div key={ref.id} className="form-ref">
+                <h5>{ref.name} </h5>
+                <h5>{refRatings.map(vote => {
+                  return (
+                    <div key={vote._id}><p>{vote.review}</p></div>
+                  )
+                })} </h5>
+                <button type="submit" className="btn">
+              Reviews
+            </button>
+              </div>
+            );
+          }) }
+        
+      </div>
+    </Wrapper>
+        // <div><h4>Ratings:</h4> {refRatings.map(vote => {
+        //     return (
+        //         <div key={vote._id}><p>{vote.review}</p></div>                
+        //     )
+        // })}</div>
     )
 }
 

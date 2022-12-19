@@ -78,6 +78,11 @@ app.get("/api/referee/:id", async (req, res) => {
   res.json(data);
 });
 
+app.get("/api/referees/", async (req, res) => {
+  let data = await Referee.find().select("name refID -_id");
+  res.json(data);
+});
+
 //----------------------------- RATINGS
 app.get("/api/ratings/:id", async (req,res) => {
   let ratings = await Rating.find({referee: req.params.id})
