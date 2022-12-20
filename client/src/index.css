@@ -233,6 +233,9 @@ ul {
   margin: 3rem auto;
   transition: var(--transition);
 }
+.form-opacity {
+  background-color: rgba(255, 255, 255, 0.9);
+}
 .form-ref {
   width: 90vw;
   max-width: var(--fixed-width);
