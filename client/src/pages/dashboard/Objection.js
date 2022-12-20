@@ -49,10 +49,77 @@ const Objection = () => {
     }
   };
 
+  const drop1 = async(e) => {
+    e.preventDefault();
+    const div_id = e.dataTransfer.getData("div_id");
+    console.log(div_id);
+    const block = document.getElementById(div_id);
+    console.log(block);
+    let dropIndex = Array.from(e.target.children).findIndex(
+      (child) => child.getBoundingClientRect().bottom > e.clientY
+    );
+    if (dropIndex === -1) {
+      e.target.appendChild(block);
+    } else {
+      e.target.insertBefore(block, e.target.children[dropIndex]);
+    }
+    await axios.put('/api/setInvestigate/'+div_id);
+  };
+
+  const drop2 = async(e) => {
+    e.preventDefault();
+    const div_id = e.dataTransfer.getData("div_id");
+    console.log(div_id);
+    const block = document.getElementById(div_id);
+    console.log(block);
+    let dropIndex = Array.from(e.target.children).findIndex(
+      (child) => child.getBoundingClientRect().bottom > e.clientY
+    );
+    if (dropIndex === -1) {
+      e.target.appendChild(block);
+    } else {
+      e.target.insertBefore(block, e.target.children[dropIndex]);
+    }
+    await axios.put('/api/setInReview/'+div_id);
+  };
+
+  const drop3 = async(e) => {
+    e.preventDefault();
+    const div_id = e.dataTransfer.getData("div_id");
+    console.log(div_id);
+    const block = document.getElementById(div_id);
+    console.log(block);
+    let dropIndex = Array.from(e.target.children).findIndex(
+      (child) => child.getBoundingClientRect().bottom > e.clientY
+    );
+    if (dropIndex === -1) {
+      e.target.appendChild(block);
+    } else {
+      e.target.insertBefore(block, e.target.children[dropIndex]);
+    }
+    await axios.put('/api/setSolved/'+div_id);
+  };
+  
+  const dragOver1 = (e) => {
+    e.preventDefault();
+  };
+
+  const dragStart = (e) => {
+    const target = e.target;
+    e.dataTransfer.setData("div_id", target.id);
+  };
+
+  const dragOver = (e) => {
+    e.stopPropagation();
+  };
+
   // ----------------------------------------->>> for investigators
   const baseURL = "/api/objection/";
   const [searchId, setSearchId] = useState("");
-  const [refObjections, setRefObjections] = useState([]);
+  const [refObjections, setRefObjections] = useState({Object});
+  console.log(JSON.stringify(refObjections))
+  const [end, setEnd] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [showInput, setShowInput] = useState(true);
   const [error, setError] = useState(false);
@@ -80,6 +147,9 @@ const handleInvestigationChange = (e) => {
         const response = await axios.get(`${baseURL + id}`);
         const data = response.data;
         setRefObjections(data);
+        console.log("refObjections: ",refObjections);
+        setEnd(refObjections.End);
+        console.log("end: ", end);
         setIsLoading(false);
       }
       catch (error) {
@@ -150,40 +220,98 @@ if(isInvestigator)
             </button>
           </form>
             : 
-          isLoading? <div>Loading...</div> : <div> <h1>Objections: </h1> {refObjections.map((obj) => {
-            return (
-              <div key={obj._id} className="form" draggable>
-                <h4>Referee ID:</h4> <h5>{obj.refereeId}</h5>
-                <h4>Objection:</h4> <h5> {obj.anObjection}</h5>
-            <FormRow
-              type="text"
-              name="newComment"
-              value={obj.comment}
-              id="textfieldToClose"
-              handleChange={(e) => {
-                const temp = [...refObjections];
-                const idx = refObjections.findIndex((item) => item._id === obj._id);
-                temp[idx] = {...obj, comment: e.target.value};
-                setRefObjections(temp);
+          isLoading? <div>Loading...</div> : <div>
+            
+          
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "50px",
+            }}
+          >
+            <div
+              onDrop={drop1}
+              onDragOver={dragOver1}
+              id="board-1"
+              style={{
+                border: "1px solid #222",
+                padding: 20,
               }}
-              labelText="My decision:"
-              />
-            <div>
-            <button type="submit"
-              className="btn"
-              onClick={() => handlePost(obj)}>
-              Post Decision
-            </button>
-            <button type="submit" className="btn" onClick={() => handleClose(obj)}>
-              Close Objection
-            </button>
-            <button type="submit" className="btn" onClick={() => handleSave(obj)}>
-              Save
-            </button>
-            </div>
+            >
+              
+              {refObjections.NoDecisions.map((obj) => {
+            return (
+              <div key={obj._id} className="card w-100"
+                    id={obj._id}
+                    draggable
+                    onDragStart={dragStart}
+                    onDragOver={dragOver}
+              >
+                <div className="card-body">
+                  <h4 className="card-header">Objection:</h4>
+                  <p className="card-text"> {obj.anObjection}</p>
+                  <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.NoDecisions];const idx = refObjections.NoDecisions.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, NoDecisions: temp});}} labelText="My decision:"/>
+                  <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+                </div>
               </div>
-            )
-          })}</div>
+            )})}
+            </div>
+            <div
+              id="board-2"
+              onDrop={drop2}
+              onDragOver={dragOver1}
+              style={{
+                border: "1px solid #222",
+                padding: 20,
+              }}
+            >
+              {refObjections.InReview.map((obj) => {
+            return (
+              <div key={obj._id} className="card w-100"
+                id={obj._id}
+                    draggable
+                    onDragStart={dragStart}
+                    onDragOver={dragOver}
+              >
+                <div className="card-body">
+                  <h4 className="card-header">Objection:</h4>
+                  <p className="card-text"> {obj.anObjection}</p>
+                  <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.InReview];const idx = refObjections.InReview.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, InReview: temp});}} labelText="My decision:"/>
+                  <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+                </div>
+              </div>
+            )})}
+            </div>
+            <div
+              id="board-3"
+              onDrop={drop3}
+              onDragOver={dragOver1}
+              style={{
+                border: "1px solid #222",
+                padding: 20,
+              }}
+            >
+              {refObjections.End.map((obj) => {
+            return (
+              <div key={obj._id} className="card w-100"
+                    id={obj._id}
+                    draggable
+                    onDragStart={dragStart}
+                    onDragOver={dragOver}
+              >
+                <div className="card-body">
+                  <h4 className="card-header">Objection:</h4>
+                  <p className="card-text"> {obj.anObjection}</p>
+                  <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.End];const idx = refObjections.End.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, End: temp});}} labelText="My decision:"/>
+                  <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+                </div>
+              </div>
+            )})}
+            </div>
+          </div>
+          
+          </div>
           }
     </Wrapper>
   )  

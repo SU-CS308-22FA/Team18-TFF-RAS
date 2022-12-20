@@ -102,19 +102,35 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
 });
 
 app.get("/api/objection/:id", async (req, res) => {
-  let data = await getObjection(req.params.id);
+  let noDecisions = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: false});
+  let inReview = await Objection.find({refereeId:req.params.id, isInProcess: true, isResolved: false});
+  let end = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: true});
   // console.log(data);
   // console.log(data);
+  res.json({NoDecisions: noDecisions, InReview: inReview, End: end});
+});
+
+app.put("/api/setInReview/:id", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true, isResolved: false}});
+  console.log(data);
   res.json(data);
 });
 
-app.put("/api/makeInReview/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true}});
+app.put("/api/setSolved/:id", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true, isInProcess: false}});
+  console.log(data);
   res.json(data);
 });
 
-app.put("/api/makeSolved/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true}});
+app.put("/api/setInvestigate/:id", async (req, res) => {
+  console.log("here");
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: false, isInProcess: false}});
+  console.log(data);
+  res.json(data);
+});
+
+app.put("/api/setComment/:id&:comment", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {comment: req.params.comment}});
   res.json(data);
 });
 
