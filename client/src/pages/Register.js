@@ -3,8 +3,11 @@ import { Logo, FormRow, Alert } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
+import { citiesTurkey } from "../utils/constants";
 const initialState = {
   name: "",
+  lastName: "",
+  city: "",
   email: "",
   password: "",
   isMember: true,
@@ -28,13 +31,13 @@ const Register = () => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const { name, email, password, isMember } = values;
-    if (!email || !password || (!isMember && !name)) {
+    const { name, lastName, city, email, password, isMember } = values;
+    if (!email || !password || (!isMember && (!name || !lastName || !city))) {
       displayAlert();
       return;
     }
 
-    const currentUser = { name, email, password };
+    const currentUser = { name, lastName, city, email, password };
     if (isMember) {
       loginUser(currentUser);
     } else {
@@ -58,14 +61,46 @@ const Register = () => {
         <Logo />
         <h3>{values.isMember ? "Login" : "Register"}</h3>
         {showAlert && <Alert />}
-        {/* name input */}
         {!values.isMember && (
-          <FormRow
-            type="text"
-            name="name"
-            value={values.name}
-            handleChange={handleChange}
-          />
+          <>
+            {/* name input */}
+            <FormRow
+              type="text"
+              name="name"
+              value={values.name}
+              handleChange={handleChange}
+            />
+            {/* last name input */}
+            <FormRow
+              type="text"
+              name="lastName"
+              labelText="Last Name"
+              value={values.lastName}
+              handleChange={handleChange}
+            />
+            {/* location input */}
+            <div className="form-row">
+              <label htmlFor="city" className="form-label">
+                City
+              </label>
+              <select
+                name="city"
+                className="form-select"
+                value={values.city}
+                onChange={handleChange}
+              >
+                <option value="" disabled selected>
+                  Please select a city
+                </option>
+                {citiesTurkey.map((cityTurkey, idx) => (
+                  <option key={idx} value={cityTurkey.name}>
+                    {cityTurkey.name}
+                  </option>
+                ))}
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </>
         )}
         {/* email input */}
         <FormRow
@@ -85,7 +120,7 @@ const Register = () => {
           submit
         </button>
         <p>
-          {values.isMember ? "Not a member yet?" : "Already a member?"}
+          {values.isMember ? "Not a member yet? " : "Already a member? "}
           <button type="button" onClick={toggleMember} className="member-btn">
             {values.isMember ? "Register" : "Login"}
           </button>

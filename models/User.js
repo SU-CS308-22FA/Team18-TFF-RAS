@@ -28,15 +28,30 @@ const UserSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    trim: true,
+    required: [true, "Please provide last name"],
+    minlength: 3,
     maxlength: 20,
-    default: "lastName",
+    trim: true,
   },
   location: {
     type: String,
-    trim: true,
-    maxlength: 20,
-    default: "my city",
+    required: [true, "Please provide city"],
+  },
+  // new columns
+  type: {
+    type: String,
+    required: [true, "Please provide type"],
+    enum: ["fan", "expert", "club", "observer", "assigner", "investigator"],
+    default: "fan",
+  },
+  image: {
+    type: String,
+    default:
+      "https://w7.pngwing.com/pngs/753/432/png-transparent-user-profile-2018-in-sight-user-conference-expo-business-default-business-angle-service-people-thumbnail.png",
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
 });
 
