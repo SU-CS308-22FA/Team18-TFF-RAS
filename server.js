@@ -108,10 +108,13 @@ app.get("/api/objection/:id", async (req, res) => {
   res.json(data);
 });
 
-app.patch("/api/objection/:id", async (req, res) => {
-  let data = await getObjectionAndSet(req.params.id);
-  // console.log(data);
-  // console.log(data);
+app.put("/api/makeInReview/:id", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true}});
+  res.json(data);
+});
+
+app.put("/api/makeSolved/:id", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true}});
   res.json(data);
 });
 
@@ -127,11 +130,6 @@ app.get("/api/v1/avarageScore/:id", async (req, res) => {
   let avrg = sum / reviews.length;
   console.log(avrg);
   res.json(avrg);
-});
-
-app.get("/api/makeInReview/:id", async (req, res) => {
-  let objection = await Objection.findOne({ _id: req.params.id });
-  res.json(objection);
 });
 
 app.get("/api/v1/sentimentAnalysisForExp/:id", async (req, res) => {

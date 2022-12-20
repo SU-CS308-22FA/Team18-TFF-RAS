@@ -89,10 +89,7 @@ const handleInvestigationChange = (e) => {
       }
     }
 
-    const handleClose = async (obj) => {
-      deleteObjection(obj)
-      setRefObjections(refObjections.filter((o) => o._id !== obj._id))
-    }
+    
   
   // ----------------------------------------->>> for investigators
 
@@ -112,12 +109,16 @@ const [newComment, setNewComment] = useState("");
     const handleCommentClick = (obj) => {
       updateObjection(obj);
     }
+    const handleClose = async (obj) => {
+      let response = await axios.put('/api/makeSolved/'+ obj._id);
+      console.log(response);
+    }
     const handleSave = (obj) => {
       updateObjection(obj);
     }
     const handlePost = async (obj) => {
       console.log(typeof obj._id)
-      let response = await axios.patch('/api/objection/'+ obj._id);
+      let response = await axios.put('/api/makeInReview/'+ obj._id);
       console.log(response);
     }
 // Commenting
@@ -151,7 +152,7 @@ if(isInvestigator)
             : 
           isLoading? <div>Loading...</div> : <div> <h1>Objections: </h1> {refObjections.map((obj) => {
             return (
-              <div key={obj._id} className="form">
+              <div key={obj._id} className="form" draggable>
                 <h4>Referee ID:</h4> <h5>{obj.refereeId}</h5>
                 <h4>Objection:</h4> <h5> {obj.anObjection}</h5>
             <FormRow
