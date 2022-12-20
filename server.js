@@ -33,6 +33,7 @@ import Referee from "./models/refSchema.js";
 import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
+import RefereesAndRatings from "./models/RefereesAndRatings.js";
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -84,9 +85,9 @@ app.get("/api/referees/", async (req, res) => {
 });
 
 //----------------------------- RATINGS
-app.get("/api/ratings/:id", async (req,res) => {
-  let ratings = await Rating.find({referee: req.params.id})
-  res.json(ratings);
+app.get("/api/referee-ratings/:id", async(req,res) => {
+  let data = await RefereesAndRatings.find({refereeId: req.params.id});
+  res.json(data);
 })
 //-----------------------------
 

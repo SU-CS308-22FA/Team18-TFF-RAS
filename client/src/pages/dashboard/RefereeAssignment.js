@@ -7,50 +7,24 @@ import { referees } from "../../utils/constants";
 
 const RefereeAssignment = () => 
 {
-    // const {getRefereeRatings} = useAppContext();
-    const [refRatings, setRefRatings] = useState([...referees]);
-    const [refRating, setRefRating] = useState([]);
-    const [fanRating, setFanRating] = useState(0);
-    const [expertRating, setExpertRating] = useState(0);
-    const baseURL = "/api/ratings/";
 
+  const [refRatings, setRefRatings] = useState([]);
 
-    const getRefRating = async (id) => {
-        try {
-        const ratings = await axios.get(`${baseURL + id}`);
-        const data = ratings.data;
-        setRefRating(data);
-      }
-      catch (error) {
-        console.log(error)
-      }
-    }
+  const getRefRating = async (refId) => {
+    let rating = await axios.get("/api/referee-ratings/" + refId);
+    return rating.data;
+  }
 
-    // useEffect(() => {
-    //   getRefRating("1385054");
-    // },[])
+  //------------------------ should work not tested // gets all the ratings,reviews with referee names
+  useEffect(() => {
+    referees.map((ref) => {
+      let data = getRefRating(ref.id);
+      setRefRatings([...refRatings, data]);
+    })
+  }, [])
+  //------------------------
 
-    const findFanRate = (arr) => {
-      let tempArr = arr;
-      let tempArr2 = arr;
-      tempArr.filter((vote) => {
-        return (vote.ratingType === "fan")
-      })
-      tempArr2.filter((vote) => {
-        return (vote.ratingType === "expert")
-      })
-      setExpertRating(tempArr2);
-      setFanRating(tempArr);
-    }
     
-    const assignRatings = () => {
-      refRatings.forEach((referee) => {
-        getRefRating(referee.id);
-        findFanRate(refRating);
-      })
-    }
-
-
     return (
       <Wrapper className="full-page">
       <div className="container-ref">
