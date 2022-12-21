@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 
 import "express-async-errors";
 import morgan from "morgan";
+import axios from "axios"
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -34,7 +35,6 @@ import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
 import RefereesAndRatings from "./models/RefereesAndRatings.js";
-import refs from "./constants.js"
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -46,7 +46,7 @@ import {
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
-
+import fetch from "node-fetch";
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -96,8 +96,12 @@ app.get("/api/referees/create-refRatings/:id", async(req,res) => {
     if (data == false)
     {
       let referee = await Referee.find({refID: req.params.id}).select("name -_id");
+      res.json(referee);
       referee = referee[0].name;
       const refereeId = req.params.id;
+      // const avgRating = await fetch("/api/v1/avarageScore/" + req.params.id);
+      // console.log(avgRating);
+      // res.json(avgRating);
       let reviews = [];
       let all = await Rating.find({referee: req.params.id,});
       let avgRating = 0;
@@ -115,6 +119,9 @@ app.get("/api/referees/create-refRatings/:id", async(req,res) => {
           matchId: rate.match
         })
       })
+      totalFan = totalFan === 1 ? totalFan: totalFan-1;
+      totalExpert = totalExpert === 1 ? totalExpert: totalExpert-1;
+      all.length = all.length === 0 ? 1: all.length;
       fanRating /= totalFan;
       expertRating /= totalExpert;
       avgRating /= all.length;

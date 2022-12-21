@@ -10,6 +10,10 @@ const RefereeAssignment = () =>
   const [refRatings, setRefRatings] = useState([]);
   const [refData, setRefData] = useState({});
   
+  const createRatings = async(id) => {
+    await axios.get("/api/referees/create-refRatings/" + id);
+  }
+
   const getRefRating = async (refId) => {
     let rating = await axios.get("/api/referees/create/" + refId);
     return rating.data;
@@ -18,6 +22,9 @@ const RefereeAssignment = () =>
   
   //------------------------ should work not tested // gets all the ratings,reviews with referee names
   useEffect(() => {
+    referees.forEach((ref) => {
+      createRatings(ref.id)
+    })
     referees.map((ref) => {
       let data = getRefRating(ref.id);
       setRefRatings([...refRatings, data]);
