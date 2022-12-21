@@ -85,10 +85,37 @@ app.get("/api/referees/", async (req, res) => {
 });
 
 //----------------------------- RATINGS
-app.get("/api/referee-ratings/:id", async(req,res) => {
+app.get("/api/referees/create/:id", async(req,res) => {
   let data = await RefereesAndRatings.find({refereeId: req.params.id});
   res.json(data);
 })
+//---------------------------------------------------------------------
+app.get("/api/referees/create-refRatings/:id", async(req,res) => {
+  let data = await RefereesAndRatings.find({ refereeId: req.params.id } );
+  if (data == false)
+  {
+    const referee = await Referee.find({refID: req.params.id}).select("name -_id").data;
+    // const refereeId =
+    // const avgRating = 
+    // const fanRating = 
+    // const expertRating = 
+    // const reviews =  
+    data = await RefereesAndRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews }) // pull this data from database
+  }
+  res.json(data);
+})
+
+// app.get("/api/referees/re-assign/", async(req,res) => {
+//   res.json("hello");
+// //   let id = "20160";
+// //   RefRatings.find({ refereeId: id }, function(err, doc){
+// //   if(doc.length === 0 || err){
+// //     res.render('error', { errorMsg: "Doesn't exist" } )
+// //   }
+// // });
+//   // const { referee, refereeId, avgRating, fanRating, expertRating, reviews } = req.body;
+//   // await RefRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews });
+// })
 //-----------------------------
 
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {

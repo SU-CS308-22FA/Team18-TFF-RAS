@@ -4,17 +4,18 @@ import axios from "axios"
 import { Link } from "react-router-dom";
 import { referees } from "../../utils/constants";
 
-
 const RefereeAssignment = () => 
 {
 
   const [refRatings, setRefRatings] = useState([]);
-
+  const [refData, setRefData] = useState({});
+  
   const getRefRating = async (refId) => {
-    let rating = await axios.get("/api/referee-ratings/" + refId);
+    let rating = await axios.get("/api/referees/create/" + refId);
     return rating.data;
   }
 
+  
   //------------------------ should work not tested // gets all the ratings,reviews with referee names
   useEffect(() => {
     referees.map((ref) => {
@@ -24,22 +25,28 @@ const RefereeAssignment = () =>
   }, [])
   //------------------------
 
+  const handleClick = (e, ref) => {
+    e.preventDefault();
+    const aRef = refRatings.filter((data) => {
+      return (data.refereeId === ref.id);
+    })
+    setRefData(aRef);
+    console.log("completed")
+  }
     
     return (
       <Wrapper className="full-page">
       <div className="container-ref">
-        
           {referees.map((ref) => {
             return (
               <div key={ref.id} className="form-ref">
                 <h5>{ref.name} </h5>
-                <button type="submit" className="btn">
+                <button type="submit" className="btn" onClick={(e) => handleClick(e, ref)}>
               Reviews
             </button>
               </div>
             );
-          }) }
-        
+          })}      
       </div>
     </Wrapper>
         // <div><h4>Ratings:</h4> {refRatings.map(vote => {

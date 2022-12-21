@@ -28,15 +28,14 @@ const RefereesAndRatingsSchema = new mongoose.Schema(
       /* -->> An element inside this array
       [
         {
+            review: "",
             reviewType: "", // fan-expert
             createdBy: {
                 type: mongoose.Types.ObjectId,
                 ref: "User",
                 required: [true, "Please provide user"],
             },
-            match: {
-                id: "" // its a number
-            }
+            matchId: -1 
         }
       ]
       */ 
