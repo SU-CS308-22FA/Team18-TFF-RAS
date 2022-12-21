@@ -34,6 +34,7 @@ import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
 import RefereesAndRatings from "./models/RefereesAndRatings.js";
+import refs from "./constants.js"
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -91,18 +92,35 @@ app.get("/api/referees/create/:id", async(req,res) => {
 })
 //---------------------------------------------------------------------
 app.get("/api/referees/create-refRatings/:id", async(req,res) => {
-  let data = await RefereesAndRatings.find({ refereeId: req.params.id } );
-  if (data == false)
-  {
-    const referee = await Referee.find({refID: req.params.id}).select("name -_id").data;
-    // const refereeId =
-    // const avgRating = 
-    // const fanRating = 
-    // const expertRating = 
-    // const reviews =  
-    data = await RefereesAndRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews }) // pull this data from database
-  }
-  res.json(data);
+    let data = await RefereesAndRatings.find({ refereeId: req.params.id } );
+    if (data == false)
+    {
+      let referee = await Referee.find({refID: req.params.id}).select("name -_id");
+      referee = referee[0].name;
+      const refereeId = req.params.id;
+      let reviews = [];
+      let all = await Rating.find({referee: req.params.id,});
+      let avgRating = 0;
+      let totalFan = 1;
+      let totalExpert = 1;
+      let fanRating = 0;
+      let expertRating = 0;
+      all.forEach((rate) => {
+        avgRating += rate.rating;
+        rate.ratingType === "fan" ? (totalFan++, fanRating += rate.rating): (totalExpert++, expertRating += rate.rating)  
+        reviews.push({
+          review: rate.review,
+          reviewType: rate.ratingType,
+          createdBy: rate.createdBy,
+          matchId: rate.match
+        })
+      })
+      fanRating /= totalFan;
+      expertRating /= totalExpert;
+      avgRating /= all.length;
+      data = await RefereesAndRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews }) // pull this data from database
+    }
+    res.json(data);
 })
 
 // app.get("/api/referees/re-assign/", async(req,res) => {
