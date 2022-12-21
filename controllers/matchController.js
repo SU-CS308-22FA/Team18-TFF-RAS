@@ -4,6 +4,7 @@ dotenv.config();
 // const mongoose = require('mongoose');
 import mongoose from 'mongoose';
 import fs from 'fs';
+import {chromium} from 'playwright';
 
 // const Match = require("./matchShcema")
 import Fixture from '../models/Fixture.js';
@@ -107,7 +108,7 @@ logger.setLevel();
 
 async function initializePage() {
     logger.debug("browser init started");
-    const {chromium} = require('playwright');
+
 
     const browser = await chromium.launch({
         headless: process.env.NODE_ENV === "production",
@@ -131,7 +132,7 @@ const documentHandle = properties.get('document');
 
 
     const page = await context.newPage();
-    const preloadFile = fs.readFileSync(__dirname + '/headless-spoof.js', 'utf8');
+    const preloadFile = fs.readFileSync('./headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
