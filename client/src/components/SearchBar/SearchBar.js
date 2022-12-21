@@ -44,7 +44,7 @@ const SearchBar = (refOrMatch) => {
           </div>
           <div>
           {dropDownCont[1].slice(0, 5).map((referee) => (
-            <a style={{backgroundColor: "red", padding: 10}} href = {"http://localhost:4000/api/referee/"+referee.refID}>{referee.name}</a>
+            <a style={{backgroundColor: "red", padding: 10}} href = {"/referees/"+referee.refID}>{referee.name}</a>
           ))}
           </div>
         </div>
