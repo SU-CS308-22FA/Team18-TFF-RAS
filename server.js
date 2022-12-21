@@ -93,39 +93,41 @@ app.get("/api/referees/create/:id", async(req,res) => {
 //---------------------------------------------------------------------
 app.get("/api/referees/create-refRatings/:id", async(req,res) => {
     let data = await RefereesAndRatings.find({ refereeId: req.params.id } );
-    if (data == false)
+    //--------------------------  DO ANYWAYS
+    let reviews = [];
+    let all = await Rating.find({referee: req.params.id,});
+    let avgRating = 0;
+    let totalFan = 1;
+    let totalExpert = 1;
+    let fanRating = 0;
+    let expertRating = 0;
+    all.forEach((rate) => {
+      avgRating += rate.rating;
+      rate.ratingType === "fan" ? (totalFan++, fanRating += rate.rating): (totalExpert++, expertRating += rate.rating)  
+      reviews.push({
+        review: rate.review,
+        reviewType: rate.ratingType,
+        createdBy: rate.createdBy,
+        matchId: rate.match
+      })
+    })
+    totalFan = totalFan === 1 ? totalFan: totalFan-1;
+    totalExpert = totalExpert === 1 ? totalExpert: totalExpert-1;
+    all.length = all.length === 0 ? 1: all.length;
+    fanRating /= totalFan;
+    expertRating /= totalExpert;
+    avgRating /= all.length;
+  //----------------------------
+  if (data == false)
     {
       let referee = await Referee.find({refID: req.params.id}).select("name -_id");
-      res.json(referee);
       referee = referee[0].name;
       const refereeId = req.params.id;
-      // const avgRating = await fetch("/api/v1/avarageScore/" + req.params.id);
-      // console.log(avgRating);
-      // res.json(avgRating);
-      let reviews = [];
-      let all = await Rating.find({referee: req.params.id,});
-      let avgRating = 0;
-      let totalFan = 1;
-      let totalExpert = 1;
-      let fanRating = 0;
-      let expertRating = 0;
-      all.forEach((rate) => {
-        avgRating += rate.rating;
-        rate.ratingType === "fan" ? (totalFan++, fanRating += rate.rating): (totalExpert++, expertRating += rate.rating)  
-        reviews.push({
-          review: rate.review,
-          reviewType: rate.ratingType,
-          createdBy: rate.createdBy,
-          matchId: rate.match
-        })
-      })
-      totalFan = totalFan === 1 ? totalFan: totalFan-1;
-      totalExpert = totalExpert === 1 ? totalExpert: totalExpert-1;
-      all.length = all.length === 0 ? 1: all.length;
-      fanRating /= totalFan;
-      expertRating /= totalExpert;
-      avgRating /= all.length;
       data = await RefereesAndRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews }) // pull this data from database
+    }
+    else
+    {
+      data  = await RefereesAndRatings.updateOne({refereeId: req.params.id}, {$set: {avgRating, fanRating, expertRating, reviews}});
     }
     res.json(data);
 })

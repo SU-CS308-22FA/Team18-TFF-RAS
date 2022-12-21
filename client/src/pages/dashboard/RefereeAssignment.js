@@ -23,7 +23,7 @@ const RefereeAssignment = () =>
   //------------------------ should work not tested // gets all the ratings,reviews with referee names
   useEffect(() => {
     referees.forEach((ref) => {
-      createRatings(ref.id)
+      createRatings(ref.id) // -->> convert this to update
     })
     referees.map((ref) => {
       let data = getRefRating(ref.id);
