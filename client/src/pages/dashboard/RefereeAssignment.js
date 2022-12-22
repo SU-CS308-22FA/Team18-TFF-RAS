@@ -7,43 +7,66 @@ import { referees } from "../../utils/constants";
 const RefereeAssignment = () => 
 {
 
-  const [refRatings, setRefRatings] = useState([]);
-  const [refData, setRefData] = useState({});
+  const [rating, setRating] = useState({
+    referee: "",
+    refereeId: "",
+    avgRating: 0,
+    fanRating: 0,
+    expertRating: 0,
+    reviews: []
+  })
+
+  const [allRatings, setAllRatings] = useState([]);
   
+  const getRatings = async (refId) => {
+    let aRating = await axios.get("/api/referees/get-refRatings/" + refId)
+    let value = aRating.data;
+    // setRating({
+    //   referee: value.referee,
+    //   refereeId: value.refereeId,
+    //   avgRating: value.avgRating,
+    //   fanRating: value.fanRating,
+    //   expertRating: value.expertRating,
+    //   reviews: value.reviews
+    // });
+    const newRating = {
+      referee: value.referee,
+      refereeId: value.refereeId,
+      avgRating: value.avgRating,
+      fanRating: value.fanRating,
+      expertRating: value.expertRating,
+      reviews: value.reviews
+    };
+    let temp = [...allRatings]
+    temp.push(newRating);
+    const data = temp;
+    setAllRatings(data);
+  }
+
   const createRatings = async(id) => {
     await axios.get("/api/referees/create-refRatings/" + id);
   }
 
-  const getRefRating = async (refId) => {
-    let rating = await axios.get("/api/referees/create/" + refId);
-    return rating.data;
-  }
-
-  
-  //------------------------ should work not tested // gets all the ratings,reviews with referee names
   useEffect(() => {
     referees.forEach((ref) => {
-      createRatings(ref.id) // -->> convert this to update
-    })
-    referees.map((ref) => {
-      let data = getRefRating(ref.id);
-      setRefRatings([...refRatings, data]);
+      createRatings(ref.id);
+      getRatings(ref.id);
     })
   }, [])
   //------------------------
 
   const handleClick = (e, ref) => {
-    e.preventDefault();
-    const aRef = refRatings.filter((data) => {
-      return (data.refereeId === ref.id);
-    })
-    setRefData(aRef);
-    console.log("completed")
+    // const aRef = refRatings.filter((data) => {
+    //   return (data.refereeId === ref.id);
+    // })
+    // setRefData(aRef);
+    // console.log("completed")
   }
     
     return (
       <Wrapper className="full-page">
       <div className="container-ref">
+        {console.log(allRatings)}
           {referees.map((ref) => {
             return (
               <div key={ref.id} className="form-ref">

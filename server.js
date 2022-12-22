@@ -132,17 +132,11 @@ app.get("/api/referees/create-refRatings/:id", async(req,res) => {
     res.json(data);
 })
 
-// app.get("/api/referees/re-assign/", async(req,res) => {
-//   res.json("hello");
-// //   let id = "20160";
-// //   RefRatings.find({ refereeId: id }, function(err, doc){
-// //   if(doc.length === 0 || err){
-// //     res.render('error', { errorMsg: "Doesn't exist" } )
-// //   }
-// // });
-//   // const { referee, refereeId, avgRating, fanRating, expertRating, reviews } = req.body;
-//   // await RefRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews });
-// })
+app.get("/api/referees/get-refRatings/:id", async(req,res) => {
+  let data  = await RefereesAndRatings.find({refereeId: req.params.id});
+  data = data[0];
+  res.json(data);
+})
 //-----------------------------
 
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
