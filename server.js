@@ -7,7 +7,6 @@ import bodyParser from "body-parser";
 
 import "express-async-errors";
 import morgan from "morgan";
-import axios from "axios"
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -86,10 +85,10 @@ app.get("/api/referees/", async (req, res) => {
 });
 
 //----------------------------- RATINGS
-app.get("/api/referees/create/:id", async(req,res) => {
-  let data = await RefereesAndRatings.find({refereeId: req.params.id});
-  res.json(data);
-})
+// app.get("/api/referees/create/:id", async(req,res) => {
+//   let data = await RefereesAndRatings.find({refereeId: req.params.id});
+//   res.json(data);
+// })
 //---------------------------------------------------------------------
 app.get("/api/referees/create-refRatings/:id", async(req,res) => {
     let data = await RefereesAndRatings.find({ refereeId: req.params.id } );
@@ -132,9 +131,8 @@ app.get("/api/referees/create-refRatings/:id", async(req,res) => {
     res.json(data);
 })
 
-app.get("/api/referees/get-refRatings/:id", async(req,res) => {
-  let data  = await RefereesAndRatings.find({refereeId: req.params.id});
-  data = data[0];
+app.get("/api/referees/get-refRatings/", async(req,res) => {
+  let data  = await RefereesAndRatings.find({});
   res.json(data);
 })
 //-----------------------------

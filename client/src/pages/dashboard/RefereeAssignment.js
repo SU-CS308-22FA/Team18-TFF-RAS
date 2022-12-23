@@ -18,60 +18,32 @@ const RefereeAssignment = () =>
 
   const [allRatings, setAllRatings] = useState([]);
   
-  const getRatings = async (refId) => {
-    let aRating = await axios.get("/api/referees/get-refRatings/" + refId)
-    let value = aRating.data;
-    // setRating({
-    //   referee: value.referee,
-    //   refereeId: value.refereeId,
-    //   avgRating: value.avgRating,
-    //   fanRating: value.fanRating,
-    //   expertRating: value.expertRating,
-    //   reviews: value.reviews
-    // });
-    const newRating = {
-      referee: value.referee,
-      refereeId: value.refereeId,
-      avgRating: value.avgRating,
-      fanRating: value.fanRating,
-      expertRating: value.expertRating,
-      reviews: value.reviews
-    };
-    let temp = [...allRatings]
-    temp.push(newRating);
-    const data = temp;
+  const getRatings = async () => {
+    const response = await axios.get("/api/referees/get-refRatings/");
+    const data = await response.data;
     setAllRatings(data);
   }
 
-  const createRatings = async(id) => {
+  const createAndUpdateRatings = async(id) => { // --> mathces the data with the recent input from database
     await axios.get("/api/referees/create-refRatings/" + id);
   }
 
   useEffect(() => {
-    referees.forEach((ref) => {
-      createRatings(ref.id);
-      getRatings(ref.id);
-    })
+      getRatings();
+    // referees.forEach((ref) => {
+    //   createAndUpdateRatings(ref.id);
+    // })
   }, [])
   //------------------------
-
-  const handleClick = (e, ref) => {
-    // const aRef = refRatings.filter((data) => {
-    //   return (data.refereeId === ref.id);
-    // })
-    // setRefData(aRef);
-    // console.log("completed")
-  }
     
     return (
       <Wrapper className="full-page">
       <div className="container-ref">
-        {console.log(allRatings)}
-          {referees.map((ref) => {
+          {allRatings.map((ref) => {
             return (
-              <div key={ref.id} className="form-ref">
-                <h5>{ref.name} </h5>
-                <button type="submit" className="btn" onClick={(e) => handleClick(e, ref)}>
+              <div key={ref._id} className="form-ref">
+                <h5>{ref.referee} </h5>
+                <button type="submit" className="btn">
               Reviews
             </button>
               </div>
@@ -79,11 +51,6 @@ const RefereeAssignment = () =>
           })}      
       </div>
     </Wrapper>
-        // <div><h4>Ratings:</h4> {refRatings.map(vote => {
-        //     return (
-        //         <div key={vote._id}><p>{vote.review}</p></div>                
-        //     )
-        // })}</div>
     )
 }
 
