@@ -166,5 +166,5 @@ async function translate(str) {
     return translation;
 }
 
-translate("alperen çok zeki");
+// translate("alperen çok zeki");
 export default{translate};
