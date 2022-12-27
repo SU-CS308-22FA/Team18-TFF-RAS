@@ -194,13 +194,11 @@ app.get("/api/v1/avarageScoreForFan/:id", async (req, res) => {
 //every detail is taken from db
 app.get("/api/v1/matchBySubstr/:substr", async (req, res) => {
   let data = await FixtureFunc.searchBySubstr(req.params.substr);
-  console.log(data);
   res.json(data);
 });
 //only name and id refid is taken from db and name will de shown in client
 app.get("/api/v1/refereeBySubstr/:substr", async (req, res) => {
   let data = await RefereeFunc.searchBySubstr(req.params.substr);
-  console.log(data);
   res.json(data);
 });
 

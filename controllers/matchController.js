@@ -476,10 +476,20 @@ async function leechDate(date) {
  * @example searchBuSubstr("galata")
  */
 async function searchBySubstr(search) {
+    const today = new Date();
+    const day = today.getDate().toString();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const year = today.getFullYear().toString();
+    const todayString = `${day}.${month}.${year}`;
+    console.log(todayString);
     search = search.trim();
     console.log(search);
-    
-    let Matches = await Fixture.find({$or : [{'Teams.home' : new RegExp(search ,'i')}, {'Teams.away' : new RegExp(search ,'i')}]});
+    let Matches;
+    try {
+        Matches = await Fixture.find({$and : [{'Time.date': { $gte: todayString }}, {$or : [{'Teams.home' : new RegExp(search ,'i')}, {'Teams.away' : new RegExp(search ,'i')}]}]});
+      } catch (error) {
+        console.error(error);
+      }
     console.log(Matches.length);
     console.log(mongoose.connection.readyState);
     return Matches;
