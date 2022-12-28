@@ -5,7 +5,7 @@ dotenv.config();
 // require('dotenv').config();
 // const fs = require('fs');
 import fs from 'fs';
-
+import {chromium} from 'playwright';
 
 import date from 'date-and-time';
 if (process.env.LOGGER === 'winston') {
@@ -128,7 +128,7 @@ const getReferee = async (req, res) => {
 
 async function initializePage() {
     logger.debug("browser init started");
-    const {chromium} = require('playwright');
+    // const {chromium} = require('playwright');
 
     const browser = await chromium.launch({
         headless: process.env.NODE_ENV === "production",
@@ -145,7 +145,7 @@ async function initializePage() {
     });
 
     const page = await context.newPage();
-    const preloadFile = fs.readFileSync(__dirname + '/headless-spoof.js', 'utf8');
+    const preloadFile = fs.readFileSync('./headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
