@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { getMatch } from "../../utils/api";
+import { getMatches } from "../../utils/api";
 import './SearchBarStyles.css';
 
 
@@ -30,39 +32,34 @@ const SearchBar = () => {
     return () => clearTimeout(timeoutId);
   }, [input]);
 
-  
+  document.addEventListener("click", function() {
+    setInput("")
+  });
+
   const handleChange = (e) => {
     e.preventDefault();
     setInput(e.target.value);
     setIsTyping(true);
   }
-  // const handleChange = async (e) => {
-  //   setInput(e.target.value);
-  //   e.preventDefault();
-  //   if (e.target.value != "" && !isTyping) {
-  //     let data = await axios.get("/api/v1/matchBySubstr/"+e.target.value);
-  //     let data2 = await axios.get("/api/v1/refereeBySubstr/"+e.target.value);
-  //     setReferees(data2.data, () => {
-  //       console.log('Referees has been updated');
-  //     });
-  //     setMatches(data.data, () => {
-  //       console.log('Matches has been updated');
-  //     });
-  //     setIsVisible(true);
-  //   }
-  //   else {setMatches([]); setReferees([]); setIsVisible(false);}    
-  // }
-  
-  // let timeoutToken = 0;
-  // $(".text-field").on("keypress", async(e) => {
-    //   e.preventDefault();
-  //   if (timeoutToken !== 0) clearTimeout(timeoutToken)
-  //     if (e.target.value != "") {
-  //       timeoutToken = setTimeout(async() => {
-  //         await handleChange(e);
-  //       }, 200);
-  //     }
-  // });
+  function convertDate(dateString) {
+    // Split the date string into its component parts
+    const parts = dateString.split(".");
+    // Extract the day, month, and year from the parts array
+    const day = parts[0].toString().padStart(2, "0");
+    const month = parts[1].toString().padStart(2, "0");
+    const year = parts[2];
+    // Return the date in the "yyyy-mm-dd" format
+    return `${year}-${month}-${day}`;
+  }
+  const handleMatchSearch = (match) => {
+    const currentDate = convertDate(match.Time.date);
+    // getMatches(currentDate).then((data) => {
+    //   if (data[i].teams.home.name == match.Teams.home && data[i].teams.away.name == match.Teams.away) {
+    //     setFixtureID(data[i].fixture.id);
+    //   }
+    // });
+    window.location.href = "/matches/" + fixtureID;
+  }
   
   return (
 
@@ -70,19 +67,20 @@ const SearchBar = () => {
       <div id="myDropdown" className="dropdown-content">
         <input className="text-field" onChange = {handleChange} value = {input} type="text" placeholder="Search.."/>
         <div className={"search-results-container " +(isVisible ? "var " : "yok ") }>
+        <h4 className="search-for">Matches</h4>
         {matches.length && Array.isArray(matches)? <div>
           {matches.slice(0, 5).map((match) => (
-            <a style={{backgroundColor: "red", padding: 10}}
-            // onClick={handleMatchSearch(match)}
-            href = {"/matches/"+fixtureID}
-            >{match.Teams.home + " " +  match.Teams.homeScore.toString() + "-" + match.Teams.awayScore + " " +match.Teams.away}</a>
+            <p
+            onClick={() => {handleMatchSearch(match)}}
+            >{match.Teams.home + " " +  match.Teams.homeScore.toString() + "-" + match.Teams.awayScore + " " +match.Teams.away}</p>
           ))}
           </div> : <p>No Result for Matches</p>}
+          <h4 className="search-for">Referees</h4>
           {referees.length && Array.isArray(referees) ? <div>
           {referees.slice(0, 5).map((referee) => (
-            <a style={{backgroundColor: "red", padding: 10}} href = {"/referees/"+referee.refID}>{referee.name}</a>
+            <a href = {"/referees/"+referee.refID}>{referee.name}</a>
           ))}
-          </div> : <p style={{color: "black"}}>No Result for Referees</p>}
+          </div> : <p>No Result for Referees</p>}
           
         </div>
       </div>
@@ -90,24 +88,6 @@ const SearchBar = () => {
   );
 };
 
-{/* <div>
-      <div class="topnav">
-        <input onChange={handleChange} value={input} type="text" placeholder="Search.."/>
-      </div>
-        <div>
-          <div>
-          {dropDownCont[0].map((match) => (
-            <div>{match.Teams.home + " " +  match.Teams.homeScore.toString() + "-" + match.Teams.awayScore + " " +match.Teams.away}</div>
-          ))}
-          </div>
-          <div>
-          {dropDownCont[1].map((referee) => (
-            <div>{referee.name}</div>
-          ))}
-          </div>
-        </div>
-
-    </div> */}
 
 
 export default SearchBar;

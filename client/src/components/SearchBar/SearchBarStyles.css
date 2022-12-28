@@ -4,9 +4,10 @@
 
 .search-results-container {
   position: fixed;
-  color: white;
+  color: #F7DADA;
   border-radius: 10px;
-
+  background: rgb(196,27,27);
+  background: linear-gradient(90deg, rgba(196,27,27,1) 35%, rgba(255,0,114,1) 100%);
 }
 
 .search-results-container.var {
@@ -18,19 +19,26 @@
 }
 
 .search-results-container a {
-  color: black;
   padding: 12px 16px;
+  color: #F7DADA;
   text-decoration: none;
   display: block;
-  background-color: "red";
+  padding: 10;
+  /* background-color: red; */
   padding: 10;
 }
 
 .search-results-container p {
-  color: black;
   padding: 12px 16px;
+  color: #F7DADA;
   text-decoration: none;
-  background-color: red;
+  /* background-color: red; */
   display: block;
   margin :0;
+}
+
+.search-results-container h4{
+  color: #3A0014;
+  margin: 10px;
+
 }
