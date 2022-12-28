@@ -61,5 +61,5 @@ async function getMatchWithHighlights(homeTeam, awayTeam, round) {
 
 // console.log(isSame("Fatih Karagümrük", "VavaCars Fatih Karagümrük"))
 
-export default {getMatchWithHighlights, getVideoUrl};
+export default {getMatchWithHighlights, getVideoUrl, isSame};
 // console.log(await getVideoUrl('https://switch.dt.ercdn.com/api/er/Get?ai=636&ar=ligtvcomtr_tauri_haber_22_11_kara_net_13kas_ip&ak=null&switch=castup&customerid=1&format=4&action=redirect&secure=1'));

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { getMatch } from "../../utils/api";
 import { getMatches } from "../../utils/api";
+import {isSame} from "../../../../controllers/videoClip.js";  
 import './SearchBarStyles.css';
 
 
@@ -53,11 +53,11 @@ const SearchBar = () => {
   }
   const handleMatchSearch = (match) => {
     const currentDate = convertDate(match.Time.date);
-    // getMatches(currentDate).then((data) => {
-    //   if (data[i].teams.home.name == match.Teams.home && data[i].teams.away.name == match.Teams.away) {
-    //     setFixtureID(data[i].fixture.id);
-    //   }
-    // });
+    getMatches(currentDate).then((data) => {
+      if (isSame(data[i].teams.home.name, match.Teams.home) && isSame(data[i].teams.away.name, match.Teams.away)) {
+        setFixtureID(data[i].fixture.id);
+      }
+    });
     window.location.href = "/matches/" + fixtureID;
   }
   
