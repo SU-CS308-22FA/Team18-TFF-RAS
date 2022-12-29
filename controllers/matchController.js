@@ -4,6 +4,7 @@ dotenv.config();
 // const mongoose = require('mongoose');
 import mongoose from 'mongoose';
 import fs from 'fs';
+import {chromium} from 'playwright';
 
 // const Match = require("./matchShcema")
 import Fixture from '../models/Fixture.js';
@@ -107,7 +108,7 @@ logger.setLevel();
 
 async function initializePage() {
     logger.debug("browser init started");
-    const {chromium} = require('playwright');
+
 
     const browser = await chromium.launch({
         headless: process.env.NODE_ENV === "production",
@@ -131,7 +132,7 @@ const documentHandle = properties.get('document');
 
 
     const page = await context.newPage();
-    const preloadFile = fs.readFileSync(__dirname + '/headless-spoof.js', 'utf8');
+    const preloadFile = fs.readFileSync('./headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
@@ -475,10 +476,20 @@ async function leechDate(date) {
  * @example searchBuSubstr("galata")
  */
 async function searchBySubstr(search) {
+    const today = new Date();
+    const day = today.getDate().toString();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const year = today.getFullYear().toString();
+    const todayString = `${day}.${month}.${year}`;
+    console.log(todayString);
     search = search.trim();
     console.log(search);
-    
-    let Matches = await Fixture.find({$or : [{'Teams.home' : new RegExp(search ,'i')}, {'Teams.away' : new RegExp(search ,'i')}]});
+    let Matches;
+    try {
+        Matches = await Fixture.find({$and : [{'Time.date': { $gte: todayString }}, {$or : [{'Teams.home' : new RegExp(search ,'i')}, {'Teams.away' : new RegExp(search ,'i')}]}]});
+      } catch (error) {
+        console.error(error);
+      }
     console.log(Matches.length);
     console.log(mongoose.connection.readyState);
     return Matches;
