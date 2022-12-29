@@ -34,6 +34,7 @@ import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
 import RefereesAndRatings from "./models/RefereesAndRatings.js";
+import Objections from "./models/Objection.js"
 import Video from "./controllers/videoClip.js";
 
 // middleware
@@ -43,11 +44,14 @@ import authenticateUser from "./middleware/auth.js";
 import {
   getObjection,
   deleteObjection,
+  getObjectionAndSet
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import { textTransform } from "@mui/system";
+import Objection from "./models/Objection.js";
+
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -179,9 +183,35 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
 });
 
 app.get("/api/objection/:id", async (req, res) => {
-  let data = await getObjection(req.params.id);
+  let noDecisions = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: false});
+  let inReview = await Objection.find({refereeId:req.params.id, isInProcess: true, isResolved: false});
+  let end = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: true});
   // console.log(data);
   // console.log(data);
+  res.json({NoDecisions: noDecisions, InReview: inReview, End: end});
+});
+
+app.put("/api/setInReview/:id", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true, isResolved: false}});
+  console.log(data);
+  res.json(data);
+});
+
+app.put("/api/setSolved/:id", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true, isInProcess: false}});
+  console.log(data);
+  res.json(data);
+});
+
+app.put("/api/setInvestigate/:id", async (req, res) => {
+  console.log("here");
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: false, isInProcess: false}});
+  console.log(data);
+  res.json(data);
+});
+
+app.put("/api/setComment/:id&:comment", async (req, res) => {
+  const data = await Objection.updateOne({_id: req.params.id}, {$set: {comment: req.params.comment}});
   res.json(data);
 });
 
