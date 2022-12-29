@@ -47,6 +47,7 @@ import {
 import { serialize } from "v8";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
+import { textTransform } from "@mui/system";
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -147,6 +148,12 @@ app.get("/api/referees/create-refRatings/:id", async(req,res) => {
 
 app.get("/api/referees/get-refRatings/", async(req,res) => {
   let data  = await RefereesAndRatings.find({});
+  res.json(data);
+})
+
+
+app.get("/api/assignment/get-matches-with-no-ref/", async(req,res) => {
+  let data = await Fixture.find({Refs: []}).select("Refs Teams Observers Time");
   res.json(data);
 })
 //-----------------------------

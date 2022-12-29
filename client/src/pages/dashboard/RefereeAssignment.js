@@ -6,12 +6,12 @@ import { Button } from '@mui/material';
 const RefereeAssignment = () => 
 {
   const [display, setDisplay] = useState({
-    showOptions: true,
     showRefs: false,
     showMathces: false,
   }) 
 
   const [allRatings, setAllRatings] = useState([]);
+  const [allMatches, setAllMatches] = useState([]);
   
   const getRatings = async () => {
     const response = await axios.get("/api/referees/get-refRatings/");
@@ -23,33 +23,55 @@ const RefereeAssignment = () =>
     await axios.get("/api/referees/create-refRatings/" + id);
   }
 
+  const getMatches = async () => {
+    const response = await axios.get("/api/assignment/get-matches-with-no-ref/");
+    const data = await response.data;
+    setAllMatches(data);
+  }
+
   useEffect(() => {
       getRatings();
+      getMatches();
     // referees.forEach((ref) => {
     //   createAndUpdateRatings(ref.id);
     // })
   }, [])
   //------------------------
 
-  const handleRefClick = (num) => {
-    if(num === 0) // refs
-      setDisplay({showOptions: false, showRefs: true, showMathces: false});
-    else if(num === 1) 
-      setDisplay({showOptions: false, showRefs: false, showMathces: true});
+  // const handleRefClick = (num) => {
+  //   if(num === 0) // refs
+  //     setDisplay({ showRefs: true, showMathces: false});
+  //   else if(num === 1) 
+  //     setDisplay({showRefs: false, showMathces: true});
+  // }
 
+  const handleRefClick = () => {
+    setDisplay({ showRefs: true, showMathces: false});
+  }
+
+  const handleMatchClick = () => {
+    setDisplay({showRefs: false, showMathces: true});
+  }
+
+  const handleHomeClick = () => {
+    setDisplay({showRefs: false, showMathces: false});
+  }
+
+  const PageSwap = () => {
+    return (
+    <ButtonGroup fullWidth={true} disableElevation={true} variant="contained" aria-label="outlined primary button group" style={{ maxWidth: '500px', marginLeft: "auto", marginRight: "auto", marginTop: "-20rem" }}>
+        <Button onClick={handleHomeClick}>Home</Button>
+        <Button onClick={handleRefClick}>Referees</Button>
+        <Button onClick={handleMatchClick}>Matches</Button>
+      </ButtonGroup>
+          )
   }
     
     return (
       <Wrapper className="full-page">
-          <ButtonGroup fullWidth={true} disableElevation={true} variant="contained" aria-label="outlined primary button group" style={{ maxWidth: '500px' }}>
-            <Button onClick={() => handleRefClick(0)}>Referees</Button>
-            <Button onClick={() => handleRefClick(1)}>Matches</Button>
-          </ButtonGroup>
-      <div className="container-ref">
-        {/* <div> */}
-        {/* </div> */}
-        {display.showOptions? <h1>True</h1>: <h1>False</h1>}
-          {/* {allRatings.map((ref) => {
+          <PageSwap/> 
+      <div>
+        {display.showRefs? <div> <PageSwap/> <div className="container-ref">{allRatings.map((ref) => {
             return (
               <div key={ref._id} className="form-ref">
                 <h5>{ref.referee} </h5>
@@ -58,10 +80,27 @@ const RefereeAssignment = () =>
             </button>
               </div>
             );
-          })}       */}
+          })}</div></div> 
+          : 
+          display.showMathces? <div> <PageSwap/> <div className="container-ref"> 
+            {allMatches.map((game) => {
+              if(game.Teams.home != false)
+              {
+                return (
+                  <div key={game._id} className="form-ref">
+                  <h4>Home: {game.Teams.home}</h4> 
+                  <h4>Away: {game.Teams.away}</h4> 
+              </div>
+                )
+              }
+              })}
+            </div></div>
+            :
+             <h1>Assingment</h1>}                
       </div>
     </Wrapper>
     )
 }
+
 
 export default RefereeAssignment;
