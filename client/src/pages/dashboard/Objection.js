@@ -222,6 +222,16 @@ if(isInvestigator)
             : 
           isLoading? <div>Loading...</div> : <div>
             
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "50px",
+            }}>
+              <h3>New Objections</h3>
+              <h3>In progress</h3>
+              <h3>Closed Objections</h3>
+            </div>
           
             <div
             style={{
