@@ -74,8 +74,10 @@ const SearchBar = () => {
   const handleMatchSearch = (match) => {
     const currentDate = convertDate(match.Time.date);
     getMatches(currentDate).then((data) => {
-      if (isSame(data[i].teams.home.name, match.Teams.home) && isSame(data[i].teams.away.name, match.Teams.away)) {
-        setFixtureID(data[i].fixture.id);
+      for (let i = 0; i < data.length; i++) {  
+        if (isSame(data[i].teams.home.name, match.Teams.home) && isSame(data[i].teams.away.name, match.Teams.away)) {
+          setFixtureID(data[i].fixture.id);
+        }
       }
     });
     window.location.href = "/matches/" + fixtureID;
@@ -92,7 +94,9 @@ const SearchBar = () => {
           {matches.slice(0, 5).map((match) => (
             <p
             onClick={() => {handleMatchSearch(match)}}
-            >{match.Teams.home + " " +  match.Teams.homeScore.toString() + "-" + match.Teams.awayScore + " " +match.Teams.away}</p>
+            >
+              {match.Teams.home + " " +  match.Teams.homeScore.toString() + "-" + match.Teams.awayScore + " " +match.Teams.away}
+              </p>
           ))}
           </div> : <p>No Result for Matches</p>}
           <h4 className="search-for">Referees</h4>

@@ -23,6 +23,10 @@ const getObjection = async (id) => {
   const objection = await Objection.find({ refereeId: id });
   return objection;
 }
+const getObjectionAndSet = async (id) => {
+  const objection = await Objection.updateOne({_id: id}, {$set: {isInProcess: true}});
+  return objection;
+}
 
 const deleteObjection = async (req, res) => {
   const { id } = req.params;
@@ -49,4 +53,4 @@ const updateObjection = async (req, res) => {
   });
 };
 
-export { createObjection, getObjection, getAllObjections, deleteObjection, updateObjection };
+export { createObjection, getObjection, getAllObjections, deleteObjection, updateObjection, getObjectionAndSet };
