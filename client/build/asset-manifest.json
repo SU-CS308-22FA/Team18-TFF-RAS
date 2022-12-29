@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.467d3b2d.css",
-    "main.js": "/static/js/main.79735335.js",
+    "main.js": "/static/js/main.ead2ad52.js",
     "static/media/tffLogo.png": "/static/media/tffLogo.30357abfff30f0998400.png",
     "static/media/roboto-all-500-normal.woff": "/static/media/roboto-all-500-normal.0ab669b7a0d19b178f57.woff",
     "static/media/roboto-all-700-normal.woff": "/static/media/roboto-all-700-normal.a457fde362a540fcadff.woff",
@@ -35,7 +35,7 @@
     "static/media/roboto-vietnamese-300-normal.woff2": "/static/media/roboto-vietnamese-300-normal.32fc45a3d1e8ea11fabc.woff2",
     "static/media/goal-event-icon.svg": "/static/media/goal-event-icon.9671292dd57f117c2eb3e4f36de5edbf.svg",
     "static/media/var-icon.svg": "/static/media/var-icon.62ad49427de11b142a106b5e4e876de1.svg",
-    "static/media/referee-stats-goal-icon.svg": "/static/media/referee-stats-goal-icon.e1dfd76cd91d30eef9f6cf4864f3606b.svg",
+    "static/media/referee-stats-goal-icon.svg": "/static/media/referee-stats-goal-icon.0edc19f8c08e5719b8861e4527a58594.svg",
     "static/media/own-goal-event-icon.svg": "/static/media/own-goal-event-icon.5d57442c78af5b6aeed70db3d2bd6cc1.svg",
     "static/media/player-sub-in.svg": "/static/media/player-sub-in.4274d6fb510e29d88bb75e358c24b0df.svg",
     "static/media/substitution-event-icon.svg": "/static/media/substitution-event-icon.7611e5027fcf98ad7666ce9e2e15ecee.svg",
@@ -60,10 +60,10 @@
     "static/media/lineup-card-yellow.svg": "/static/media/lineup-card-yellow.452850a95855de2ef0426c884a112970.svg",
     "static/media/referee-stats-penalty-icon.svg": "/static/media/referee-stats-penalty-icon.6f303631990334fbf10ebee205348ac1.svg",
     "main.467d3b2d.css.map": "/static/css/main.467d3b2d.css.map",
-    "main.79735335.js.map": "/static/js/main.79735335.js.map"
+    "main.ead2ad52.js.map": "/static/js/main.ead2ad52.js.map"
   },
   "entrypoints": [
     "static/css/main.467d3b2d.css",
-    "static/js/main.79735335.js"
+    "static/js/main.ead2ad52.js"
   ]
 }
