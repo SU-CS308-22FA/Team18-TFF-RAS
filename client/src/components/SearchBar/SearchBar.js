@@ -1,8 +1,28 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getMatches } from "../../utils/api";
-import {isSame} from "../../../../controllers/videoClip.js";  
+
 import './SearchBarStyles.css';
+
+function Tr2En(text){
+  var Maps = {
+      "İ":"I","Ş":"S","Ç":"C","Ğ":"G","Ü":"U","Ö":"O",
+      "ı":"i","ş":"s","ç":"c","ğ":"g","ü":"u","ö":"o"
+  };
+  Object.keys(Maps).forEach(function(Old){
+      text    = text.replace(Old,Maps[Old]);
+  });
+  return text;
+}
+
+function isSame(webPage, bein) {
+  webPage = Tr2En(webPage).toLowerCase();
+  bein = Tr2En(bein).toLowerCase();
+  if (bein.indexOf(webPage)!==-1) {
+    return true;
+  }
+  return false;
+}
 
 
 const SearchBar = () => {
@@ -27,7 +47,7 @@ const SearchBar = () => {
         setIsVisible(true);
       }
       else {setMatches([]); setReferees([]); setIsVisible(false);}  
-    }, 200);
+    }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [input]);
