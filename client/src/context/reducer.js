@@ -35,8 +35,6 @@ import {
   GET_RATING_BEGIN,
   GET_RATING_SUCCESS,
   GET_RATING_ERROR,
-  GET_DUE_REPORTS_BEGIN,
-  GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
 } from "./actions";
 
@@ -364,6 +362,13 @@ const reducer = (state, action) => {
       dueReports: action.payload.dueReports,
       numDueReports: action.payload.numDueReports,
       numofDueReportPages: action.payload.numofDueReportPages,
+    };
+  }
+  if (action.type === HANDLE_CHANGE) {
+    console.log({ [action.payload.name]: action.payload.value });
+    return {
+      ...state,
+      [action.payload.name]: action.payload.value,
     };
   }
 

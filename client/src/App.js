@@ -7,7 +7,6 @@ import {
   SharedLayout,
   Objection,
   Match,
-  DueReports,
 } from "./pages/dashboard";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -42,7 +41,6 @@ function App() {
             <Route path="referees" element={<Referees />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/objection" element={<Objection />} />
-            <Route path="reports" element={<DueReports />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<Landing />} />

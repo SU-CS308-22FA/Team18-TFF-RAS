@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useEffect } from "react";
+import React, { useReducer, useContext } from "react";
 import reducer from "./reducer";
 import axios from "axios";
 import {
@@ -39,8 +39,6 @@ import {
   GET_REFEREE_BEGIN,
   GET_REFEREE_SUCCESS,
   GET_REFEREE_ERROR,
-  GET_DUE_REPORTS_BEGIN,
-  GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
 } from "./actions";
 
@@ -70,16 +68,6 @@ const initialState = {
   eventReviews: [],
   referees: [],
   referee: null,
-  dueReports: [],
-  numDueReports: 0,
-  DueReportPage: 1,
-  numofDueReportPages: 1,
-  final_grade: "",
-  editReportId: "",
-  strictness: "",
-  accuracy: "",
-  fairness: "",
-  comments: "",
 };
 
 const AppContext = React.createContext();
@@ -193,21 +181,6 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
-  const getDueReports = async () => {
-    dispatch({ type: GET_DUE_REPORTS_BEGIN });
-    try {
-      const { data } = await authFetch("/reports");
-      const { dueReports, numDueReports, numofDueReportPages } = data;
-      dispatch({
-        type: GET_DUE_REPORTS_SUCCESS,
-        payload: { dueReports, numDueReports, numofDueReportPages },
-      });
-    } catch (error) {
-      console.log(error.response);
-    }
-    clearAlert();
-  };
-
   {
     /* CHECK */
   }
@@ -409,35 +382,6 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
-  const setEditReport = (id) => {
-    dispatch({ type: SET_EDIT_JOB, payload: { id } });
-  };
-
-  const editJob = async () => {
-    dispatch({ type: EDIT_REPORT_BEGIN });
-    try {
-      const {} = state;
-
-      await authFetch.patch(`/reports/edit-report/${state.editReportId}`, {
-        final_grade,
-        strictness,
-        accuracy,
-        fairness,
-        comments,
-      });
-      dispatch({
-        type: EDIT_REPORT_SUCCESS,
-      });
-    } catch (error) {
-      if (error.response.status === 401) return;
-      dispatch({
-        type: EDIT_REPORT_ERROR,
-        payload: { msg: error.response.data.msg },
-      });
-    }
-    clearAlert();
-  };
-
   return (
     <AppContext.Provider
       value={{
@@ -456,7 +400,6 @@ const AppProvider = ({ children }) => {
         getRating,
         getReferees,
         getReferee,
-        getDueReports,
         clearModal,
       }}
     >

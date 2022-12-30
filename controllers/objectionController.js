@@ -38,6 +38,10 @@ const getObjection = async (req, res) => {
   res.status(StatusCodes.OK).json({ objection });
 }
 
+const getObjectionAndSet = async (id) => {
+  const objection = await Objection.updateOne({_id: id}, {$set: {isInProcess: true}});
+  return objection;
+}
 
 const deleteObjection = async (req, res) => {
   const objection = await Objection.findOne({ _id: req.objection.objectionId });
@@ -47,4 +51,19 @@ const deleteObjection = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Success! Objection removed" });
 };
 
-export { createObjection, getObjection, getAllObjections, deleteObjection };
+const updateObjection = async (req, res) => {
+
+  const {comment} = req.body;
+
+  const obj = await Objection.findOne({ _id: req.body._id });
+
+  obj.comment = comment;
+
+  await obj.save();
+
+  res.status(StatusCodes.OK).json({
+    msg: "Updated"
+  });
+};
+
+export { createObjection, getObjection, getAllObjections, deleteObjection, updateObjection, getObjectionAndSet };
