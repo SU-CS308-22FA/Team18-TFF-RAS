@@ -1,14 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Register, Landing, Error, ProtectedRoute } from "./pages";
+import { Register, Landing, Error, ProtectedRoute, Referees } from "./pages";
 import {
   Home,
   Matches,
   Profile,
   SharedLayout,
   Objection,
+  DueReports,
   Match,
-  Referee,
-  Referees,
 } from "./pages/dashboard";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -43,12 +42,12 @@ function App() {
             <Route path="referees" element={<Referees />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/objection" element={<Objection />} />
+            <Route path="reports" element={<DueReports />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/referee-page" element={<Referees />} />
           <Route path="/matches/:id" element={<Match />} />
-          <Route path="/referees/:id" element={<Referee />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </BrowserRouter>

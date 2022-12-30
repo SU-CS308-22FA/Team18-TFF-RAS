@@ -25,7 +25,6 @@ import {
   getRatingLabelText,
   getReviewEventTimeString,
 } from "../../utils/helper";
-import { Link } from "react-router-dom";
 
 const MatchRefRatingColumn = ({
   setRating,
@@ -53,7 +52,6 @@ const MatchRefRatingColumn = ({
   refereeName,
   refereeImage,
   loading,
-  refID,
 }) => {
   const eventReviewsToShow = ratingGiven
     ? Object.keys(storedEventReviews)
@@ -102,10 +100,7 @@ const MatchRefRatingColumn = ({
             </h2>
           </header>
           <div className="rating-body-container">
-            <Link
-              to={"/referees/" + refID}
-              className="rating-body-referee-container"
-            >
+            <div className="rating-body-referee-container">
               <img
                 alt=""
                 className="Image team-icon referee-image"
@@ -114,7 +109,7 @@ const MatchRefRatingColumn = ({
                 src={refereeImage}
               />
               <span>{refereeName}</span>
-            </Link>
+            </div>
             <div className="rating-body-rating-container">
               {/* <Rating
                 allowHover={false}

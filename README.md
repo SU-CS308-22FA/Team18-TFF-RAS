@@ -103,24 +103,4 @@ npm install
 ```
 This will load the packages used for frontend of the project.
 
-### Deploying the project to a remote server (Railway)
-
-#####Step 1: Clone to a git repository 
-[Railway](https://railway.app) is a new cloud development platform! ☁️
-
-Use Railway to get a production environment that you can access from any device.
-
-##### Step 2: On the railway web page, deploy from github repository
-
-##### Step 3: Configure & launch your environment
-
-On the railway web page, navigate to your dashboard, select your github deployment and change configuration settings  
-
-##### Step 3: Modify environment variables
-
-1. In Railway, select your deployment
-2. Navigate to variables
-3. Add all environment variables
-4. railway automatically deploys once you are done editing
-
-   
+### Deploying the project to a remote server

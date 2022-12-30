@@ -3,7 +3,6 @@ const app = express();
 
 import dotenv from "dotenv";
 dotenv.config();
-import bodyParser from "body-parser";
 
 import "express-async-errors";
 import morgan from "morgan";
@@ -24,20 +23,9 @@ import authRouter from "./routes/authRoutes.js";
 import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
-
-import sentiment from "./sentimentAnalysis.js";
-
-//web-scrape stuff
-import FixtureFunc from "./controllers/matchController.js";
-import Referee from "./models/refSchema.js";
-import RefereeFunc from "./controllers/refereesController.js";
-import Fixture from "./models/Fixture.js";
-import Rating from "./models/Rating.js";
-<<<<<<< HEAD
-import Objections from "./models/Objection.js"
-=======
+import reportRouter from "./routes/reportRoutes.js";
+import Objections from "./models/Objection.js";
 import Video from "./controllers/videoClip.js";
->>>>>>> develop
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
@@ -46,7 +34,7 @@ import authenticateUser from "./middleware/auth.js";
 import {
   getObjection,
   deleteObjection,
-  getObjectionAndSet
+  getObjectionAndSet,
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
@@ -62,10 +50,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 app.use(express.json());
-app.use(helmet({ contentsecuritypolicy: false }));
+app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
-app.use(bodyParser.json());
 
 // app.get("/", (req, res) => {
 //   res.json({ msg: "Welcome!" });
@@ -78,27 +65,26 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
-
+app.use("/api/v1/reports", reportRouter);
 
 app.get("/api/videoClipsOfMatch/:home&:away&:round", async (req, res) => {
-  let data = await Video.getMatchWithHighlights(req.params.home, req.params.away, req.params.round);
+  let data = await Video.getMatchWithHighlights(
+    req.params.home,
+    req.params.away,
+    req.params.round
+  );
   res.json(data);
 });
-
 
 app.get("/api/video/:url", async (req, res) => {
   let data = await Video.getVideoUrl(req.params.url);
   res.json(data);
 });
 
-
-//get referee from d with specified id
 app.get("/api/referee/:id", async (req, res) => {
   let data = await Referee.findOne({ refID: req.params.id });
   res.json(data);
 });
-
-
 
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
   let reviews = await Rating.find({ referee: req.params.id }).select(
@@ -121,35 +107,59 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
 });
 
 app.get("/api/objection/:id", async (req, res) => {
-  let noDecisions = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: false});
-  let inReview = await Objection.find({refereeId:req.params.id, isInProcess: true, isResolved: false});
-  let end = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: true});
+  let noDecisions = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: false,
+    isResolved: false,
+  });
+  let inReview = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: true,
+    isResolved: false,
+  });
+  let end = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: false,
+    isResolved: true,
+  });
   // console.log(data);
   // console.log(data);
-  res.json({NoDecisions: noDecisions, InReview: inReview, End: end});
+  res.json({ NoDecisions: noDecisions, InReview: inReview, End: end });
 });
 
 app.put("/api/setInReview/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true, isResolved: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isInProcess: true, isResolved: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setSolved/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true, isInProcess: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isResolved: true, isInProcess: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setInvestigate/:id", async (req, res) => {
   console.log("here");
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: false, isInProcess: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isResolved: false, isInProcess: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setComment/:id&:comment", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {comment: req.params.comment}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { comment: req.params.comment } }
+  );
   res.json(data);
 });
 
@@ -263,7 +273,7 @@ app.use(errorHandlerMiddleware);
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URL);
-    app.listen(process.env.PORT || 4000, () => {
+    app.listen(process.env.PORT || 5000, () => {
       console.log(`Server is listening...`);
     });
   } catch (error) {

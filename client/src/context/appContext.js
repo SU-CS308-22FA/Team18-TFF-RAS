@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useEffect } from "react";
 import reducer from "./reducer";
 import axios from "axios";
 import {
@@ -22,14 +22,11 @@ import {
   CREATE_OBJECTION_SUCCES,
   CREATE_OBJECTION_ERROR,
   DELETE_OBJECTION_BEGIN,
-  DELETE_OBJECTION_SUCCESS,
+  DELETE_OBJECTION_SUCCES,
   DELETE_OBJECTION_ERROR,
   GET_OBJECTIONS_BEGIN,
   GET_OBJECTIONS_SUCCESS,
   GET_OBJECTIONS_ERROR,
-  UPDATE_OBJECTION_BEGIN,
-  UPDATE_OBJECTION_SUCCESS,
-  UPDATE_OBJECTION_ERROR,
   HANDLE_CHANGE,
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
@@ -42,10 +39,9 @@ import {
   GET_REFEREE_BEGIN,
   GET_REFEREE_SUCCESS,
   GET_REFEREE_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
-  GET_REFEREE_RATINGS_BEGIN,
-  GET_REFEREE_RATINGS_SUCCESS,
-  GET_REFEREE_RATINGS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -74,12 +70,16 @@ const initialState = {
   eventReviews: [],
   referees: [],
   referee: null,
-  overallRating: "-",
-  fanRating: "-",
-  expertRating: "-",
-  overallSentiment: "-",
-  fanSentiment: "-",
-  expertSentiment: "-",
+  dueReports: [],
+  numDueReports: 0,
+  DueReportPage: 1,
+  numofDueReportPages: 1,
+  final_grade: "",
+  editReportId: "",
+  strictness: "",
+  accuracy: "",
+  fairness: "",
+  comments: "",
 };
 
 const AppContext = React.createContext();
@@ -143,7 +143,7 @@ const AppProvider = ({ children }) => {
   const getObjections = async (currentObjection) => {
     dispatch({ type: GET_OBJECTIONS_BEGIN });
     try {
-      const response = await authFetch.get("/objections/", currentObjection);
+      const response = await authFetch.post("/objections/", currentObjection);
       const { objections } = response.data;
       dispatch({
         type: GET_OBJECTIONS_SUCCESS,
@@ -168,7 +168,6 @@ const AppProvider = ({ children }) => {
       });
       addObjectionToLocalStroge({ objection });
     } catch (err) {
-      // console.log(err);
       dispatch({
         type: CREATE_OBJECTION_ERROR,
         payload: { msg: err.response.data.msg },
@@ -176,15 +175,14 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const deleteObjection = async (objection) => {
+  const deleteObjection = async (currentObjection) => {
     dispatch({ type: DELETE_OBJECTION_BEGIN });
     try {
-      const response = await authFetch.delete("/objections/" + objection._id);
-      const { msg } = response.data;
+      await authFetch.delete("/objections/", currentObjection);
       dispatch({
-        type: DELETE_OBJECTION_SUCCESS,
-        payload: { objection },
+        type: DELETE_OBJECTION_SUCCES,
       });
+      setTimeout(logoutUser, 3000);
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -204,21 +202,17 @@ const AppProvider = ({ children }) => {
   {
     /* CHECK */
   }
-
-  const updateObjection = async (obj) => {
-    dispatch({ type: UPDATE_OBJECTION_BEGIN });
+  const getDueReports = async () => {
+    dispatch({ type: GET_DUE_REPORTS_BEGIN });
     try {
-      await authFetch.patch("/objections", obj);
+      const { data } = await authFetch("/reports");
+      const { dueReports, numDueReports, numofDueReportPages } = data;
       dispatch({
-        type: UPDATE_OBJECTION_SUCCESS,
+        type: GET_DUE_REPORTS_SUCCESS,
+        payload: { dueReports, numDueReports, numofDueReportPages },
       });
     } catch (error) {
-      if (error.response.status !== 401) {
-        dispatch({
-          type: UPDATE_OBJECTION_ERROR,
-          payload: { msg: error.response.data.msg },
-        });
-      }
+      console.log(error.response);
     }
     clearAlert();
   };
@@ -368,76 +362,6 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const getRefereeRatings = async (refID) => {
-    dispatch({ type: GET_REFEREE_RATINGS_BEGIN });
-    try {
-      const { data: overallRatingData } = await authFetch.get(
-        "/avarageScore/" + refID
-      );
-      const { data: fanRatingData } = await authFetch.get(
-        "/avarageScoreForFan/" + refID
-      );
-      const { data: expertRatingData } = await authFetch.get(
-        "/avarageScoreForExp/" + refID
-      );
-      const { data: overallSentimentData } = await authFetch.get(
-        "/sentimentAnalysis/" + refID
-      );
-      const { data: fanSentimentData } = await authFetch.get(
-        "/sentimentAnalysisForFan/" + refID
-      );
-      const { data: expertSentimentData } = await authFetch.get(
-        "/sentimentAnalysisForExp/" + refID
-      );
-
-      let overallRating = "-";
-      let fanRating = "-";
-      let expertRating = "-";
-      let overallSentiment = "-";
-      let fanSentiment = "-";
-      let expertSentiment = "-";
-
-      if (overallRatingData !== null) {
-        overallRating = overallRatingData.toFixed(2);
-      }
-      if (fanRatingData !== null) {
-        fanRating = fanRatingData.toFixed(2);
-      }
-      if (expertRatingData !== null) {
-        expertRating = expertRatingData.toFixed(2);
-      }
-      if (overallSentimentData.rate !== "-") {
-        overallSentiment = overallSentimentData.rate.toFixed(2);
-      }
-      if (fanSentimentData.rate !== "-") {
-        fanSentiment = fanSentimentData.rate.toFixed(2);
-      }
-      if (expertSentimentData.rate !== "-") {
-        expertSentiment = expertSentimentData.rate.toFixed(2);
-      }
-
-      dispatch({
-        type: GET_REFEREE_RATINGS_SUCCESS,
-        payload: {
-          overallRating,
-          fanRating,
-          expertRating,
-          overallSentiment,
-          fanSentiment,
-          expertSentiment,
-        },
-      });
-    } catch (error) {
-      console.log(JSON.stringify(error));
-      if (error.response.status !== 401) {
-        dispatch({
-          type: GET_REFEREE_RATINGS_ERROR,
-          payload: { msg: error.response.data.msg },
-        });
-      }
-    }
-  };
-
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -498,14 +422,12 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
-        updateObjection,
         createRating,
         getRating,
         getReferees,
         getReferee,
+        getDueReports,
         clearModal,
-        handleChange,
-        getRefereeRatings,
       }}
     >
       {children}

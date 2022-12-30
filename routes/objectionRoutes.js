@@ -10,9 +10,9 @@ const apiLimiter = rateLimiter({
     "Too many requests from this IP address, please try again after 15 minutes",
 });
 
-import { createObjection, getObjection, getAllObjections, deleteObjection, updateObjection } from "../controllers/objectionController.js";
+import { createObjection, getObjection, getAllObjections, deleteObjection } from "../controllers/objectionController.js";
 
-router.route("/").post(createObjection).get(getAllObjections).patch(updateObjection);
-router.route("/:id").get(apiLimiter, getObjection).delete(apiLimiter, deleteObjection).post(apiLimiter, updateObjection);
+router.route("/").post(createObjection).get(getAllObjections);
+router.route("/:id").get(apiLimiter, getObjection).delete(apiLimiter, deleteObjection);
 
 export default router;
