@@ -143,7 +143,9 @@ const Match = () => {
       const currentReferee = referees.find(
         (refereeObject) =>
           refereeObject?.apiName ===
-          data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
+          (data.fixture.referee.indexOf(",") === -1
+            ? data.fixture.referee
+            : data.fixture.referee.slice(0, data.fixture.referee.indexOf(",")))
       );
       // getReferee(currentReferee.id);
       setRefID(currentReferee.id);
@@ -244,6 +246,7 @@ const Match = () => {
             refereeName={refereeName}
             refereeImage={refereeImage}
             loading={loading}
+            refID={refID}
           />
         </div>
       </main>
