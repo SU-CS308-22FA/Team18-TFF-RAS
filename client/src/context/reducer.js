@@ -366,22 +366,6 @@ const reducer = (state, action) => {
       numofDueReportPages: action.payload.numofDueReportPages,
     };
   }
-  if (action.type === SET_EDIT_JOB) {
-    const report = state.dueReports.find(
-      (report) => report._id === action.payload.id
-    );
-    const { _id, final_grade, accuracy, strictness, fairness, comments } =
-      report;
-    return {
-      ...state,
-      final_grade,
-      editReportId: _id,
-      strictness,
-      accuracy,
-      fairness,
-      comments,
-    };
-  }
 
   throw new Error(`no such action : ${action.type}`);
 };
