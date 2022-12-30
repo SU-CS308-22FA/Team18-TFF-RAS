@@ -23,7 +23,8 @@ import authRouter from "./routes/authRoutes.js";
 import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
-import Objections from "./models/Objection.js"
+import reportRouter from "./routes/reportRoutes.js";
+import Objections from "./models/Objection.js";
 import Video from "./controllers/videoClip.js";
 
 // middleware
@@ -33,7 +34,7 @@ import authenticateUser from "./middleware/auth.js";
 import {
   getObjection,
   deleteObjection,
-  getObjectionAndSet
+  getObjectionAndSet,
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
@@ -64,13 +65,16 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
-
+app.use("/api/v1/reports", reportRouter);
 
 app.get("/api/videoClipsOfMatch/:home&:away&:round", async (req, res) => {
-  let data = await Video.getMatchWithHighlights(req.params.home, req.params.away, req.params.round);
+  let data = await Video.getMatchWithHighlights(
+    req.params.home,
+    req.params.away,
+    req.params.round
+  );
   res.json(data);
 });
-
 
 app.get("/api/video/:url", async (req, res) => {
   let data = await Video.getVideoUrl(req.params.url);
@@ -81,8 +85,6 @@ app.get("/api/referee/:id", async (req, res) => {
   let data = await Referee.findOne({ refID: req.params.id });
   res.json(data);
 });
-
-
 
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
   let reviews = await Rating.find({ referee: req.params.id }).select(
@@ -105,35 +107,59 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
 });
 
 app.get("/api/objection/:id", async (req, res) => {
-  let noDecisions = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: false});
-  let inReview = await Objection.find({refereeId:req.params.id, isInProcess: true, isResolved: false});
-  let end = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: true});
+  let noDecisions = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: false,
+    isResolved: false,
+  });
+  let inReview = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: true,
+    isResolved: false,
+  });
+  let end = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: false,
+    isResolved: true,
+  });
   // console.log(data);
   // console.log(data);
-  res.json({NoDecisions: noDecisions, InReview: inReview, End: end});
+  res.json({ NoDecisions: noDecisions, InReview: inReview, End: end });
 });
 
 app.put("/api/setInReview/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true, isResolved: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isInProcess: true, isResolved: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setSolved/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true, isInProcess: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isResolved: true, isInProcess: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setInvestigate/:id", async (req, res) => {
   console.log("here");
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: false, isInProcess: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isResolved: false, isInProcess: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setComment/:id&:comment", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {comment: req.params.comment}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { comment: req.params.comment } }
+  );
   res.json(data);
 });
 

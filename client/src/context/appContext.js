@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useEffect } from "react";
 import reducer from "./reducer";
 import axios from "axios";
 import {
@@ -39,6 +39,8 @@ import {
   GET_REFEREE_BEGIN,
   GET_REFEREE_SUCCESS,
   GET_REFEREE_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
   CLEAR_MODAL,
 } from "./actions";
 
@@ -68,6 +70,16 @@ const initialState = {
   eventReviews: [],
   referees: [],
   referee: null,
+  dueReports: [],
+  numDueReports: 0,
+  DueReportPage: 1,
+  numofDueReportPages: 1,
+  final_grade: "",
+  editReportId: "",
+  strictness: "",
+  accuracy: "",
+  fairness: "",
+  comments: "",
 };
 
 const AppContext = React.createContext();
@@ -190,6 +202,20 @@ const AppProvider = ({ children }) => {
   {
     /* CHECK */
   }
+  const getDueReports = async () => {
+    dispatch({ type: GET_DUE_REPORTS_BEGIN });
+    try {
+      const { data } = await authFetch("/reports");
+      const { dueReports, numDueReports, numofDueReportPages } = data;
+      dispatch({
+        type: GET_DUE_REPORTS_SUCCESS,
+        payload: { dueReports, numDueReports, numofDueReportPages },
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+    clearAlert();
+  };
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
@@ -400,6 +426,7 @@ const AppProvider = ({ children }) => {
         getRating,
         getReferees,
         getReferee,
+        getDueReports,
         clearModal,
       }}
     >

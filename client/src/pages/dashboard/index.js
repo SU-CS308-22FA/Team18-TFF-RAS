@@ -5,6 +5,7 @@ import Profile from "./Profile";
 import Match from "./match/Match";
 import SharedLayout from "./SharedLayout";
 import Objection from "./Objection";
+import DueReports from "./DueReports";
 
 export {
   Home,
@@ -14,4 +15,5 @@ export {
   Match,
   SharedLayout,
   Objection,
+  DueReports,
 };
