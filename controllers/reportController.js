@@ -21,7 +21,7 @@ const dueReports = async (req, res) => {
     let away = element.Teams.away;
     let homeScore = element.Teams.homeScore;
     let awayScore = element.Teams.awayScore;
-    const entryexists = Report.findOne({ matchId: element.MatchID });
+    const entryexists = await Report.findOne({ matchId: element.MatchID });
     if (!entryexists) {
       const report = await Report.create({
         matchId: element.MatchID,
@@ -58,51 +58,4 @@ const dueReports = async (req, res) => {
   });
 };
 
-const editReport = async (req, res) => {
-  const { id, final_grade, accuracy, strictness, fairness, comments } =
-    req.body;
-  if (!id) {
-    throw new BadRequestError("Need report ID");
-  }
-  const filter = {
-    _id: id,
-  };
-  const report = await Report.findOne(filter);
-  report.final_grade = final_grade;
-  report.accuracy = accuracy;
-  report.strictness = strictness;
-  report.fairness = fairness;
-  report.comments = comments;
-
-  await report.save();
-  res.status(200).json(report);
-};
-
-const submitReport = async (req, res) => {
-  const { id } = req.params;
-  const { final_grade, accuracy, strictness, fairness, comments } = req.body;
-  if (
-    !id ||
-    !final_grade ||
-    !accuracy ||
-    !strictness ||
-    !fairness ||
-    !comments
-  ) {
-    throw new BadRequestError("Please provide all values");
-  }
-  const filter = {
-    _id: id,
-  };
-  const report = await Report.findOne(filter);
-  report.final_grade = final_grade;
-  report.accuracy = accuracy;
-  report.strictness = strictness;
-  report.fairness = fairness;
-  report.comments = comments;
-  report.isSubmitted = true;
-  await report.save();
-  res.status(200).json(report);
-};
-
-export { dueReports, editReport, submitReport };
+export { dueReports };

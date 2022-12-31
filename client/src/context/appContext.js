@@ -409,35 +409,6 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
-  const setEditReport = (id) => {
-    dispatch({ type: SET_EDIT_JOB, payload: { id } });
-  };
-
-  /*const editJob = async () => {
-    dispatch({ type: EDIT_REPORT_BEGIN });
-    try {
-      const {} = state;
-
-      await authFetch.patch(`/reports/edit-report/${state.editReportId}`, {
-        final_grade,
-        strictness,
-        accuracy,
-        fairness,
-        comments,
-      });
-      dispatch({
-        type: EDIT_REPORT_SUCCESS,
-      });
-    } catch (error) {
-      if (error.response.status === 401) return;
-      dispatch({
-        type: EDIT_REPORT_ERROR,
-        payload: { msg: error.response.data.msg },
-      });
-    }
-    clearAlert();
-  };*/
-
   return (
     <AppContext.Provider
       value={{
