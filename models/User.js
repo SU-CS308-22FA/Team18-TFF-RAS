@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
   // new columns
   type: {
     type: String,
-    required: [true, "Please provide type"],
+    // required: [true, "Please provide type"],
     enum: ["fan", "expert", "club", "observer", "assigner", "investigator"],
     default: "fan",
   },
