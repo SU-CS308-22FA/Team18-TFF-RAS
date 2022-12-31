@@ -43,6 +43,8 @@ import {
   GET_REFEREE_RATINGS_BEGIN,
   GET_REFEREE_RATINGS_SUCCESS,
   GET_REFEREE_RATINGS_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -200,20 +202,20 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-    }
+    };
   }
   if (action.type === UPDATE_OBJECTION_ERROR) {
     return {
       ...state,
       isLoading: false,
-    }
+    };
   }
   if (action.type === UPDATE_OBJECTION_SUCCESS) {
     return {
       ...state,
       isLoading: false,
-      alertText: "Updated"
-    }
+      alertText: "Updated",
+    };
   }
   if (action.type === CREATE_OBJECTION_ERROR) {
     return {
@@ -414,6 +416,22 @@ const reducer = (state, action) => {
     return {
       ...state,
       [action.payload.name]: action.payload.value,
+    };
+  }
+  if (action.type === GET_DUE_REPORTS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    };
+  }
+  if (action.type === GET_DUE_REPORTS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      dueReports: action.payload.dueReports,
+      numDueReports: action.payload.numDueReports,
+      numofDueReportPages: action.payload.numofDueReportPages,
     };
   }
 

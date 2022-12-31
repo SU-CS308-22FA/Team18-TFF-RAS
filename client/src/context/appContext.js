@@ -46,6 +46,8 @@ import {
   GET_REFEREE_RATINGS_BEGIN,
   GET_REFEREE_RATINGS_SUCCESS,
   GET_REFEREE_RATINGS_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -80,6 +82,10 @@ const initialState = {
   overallSentiment: "-",
   fanSentiment: "-",
   expertSentiment: "-",
+  dueReports: [],
+  numDueReports: 0,
+  DueReportPage: 1,
+  numofDueReportPages: 1,
 };
 
 const AppContext = React.createContext();
@@ -483,6 +489,20 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
+  const getDueReports = async () => {
+    dispatch({ type: GET_DUE_REPORTS_BEGIN });
+    try {
+      const { data } = await authFetch("/reports");
+      const { dueReports, numDueReports, numofDueReportPages } = data;
+      dispatch({
+        type: GET_DUE_REPORTS_SUCCESS,
+        payload: { dueReports, numDueReports, numofDueReportPages },
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+    clearAlert();
+  };
 
   return (
     <AppContext.Provider
@@ -498,6 +518,7 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
+        getDueReports,
         updateObjection,
         createRating,
         getRating,
