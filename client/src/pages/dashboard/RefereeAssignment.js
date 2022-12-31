@@ -8,10 +8,12 @@ const RefereeAssignment = () =>
   const [display, setDisplay] = useState({
     showRefs: false,
     showMathces: false,
+    showRefReview: false,
   }) 
 
   const [allRatings, setAllRatings] = useState([]);
   const [allMatches, setAllMatches] = useState([]);
+  const [reviews, setReviews] = useState([]);
   
   const getRatings = async () => {
     const response = await axios.get("/api/referees/get-refRatings/");
@@ -46,15 +48,20 @@ const RefereeAssignment = () =>
   // }
 
   const handleRefClick = () => {
-    setDisplay({ showRefs: true, showMathces: false});
+    setDisplay({ showRefs: true, showMathces: false, showRefReview: false});
   }
 
   const handleMatchClick = () => {
-    setDisplay({showRefs: false, showMathces: true});
+    setDisplay({showRefs: false, showMathces: true, showRefReview: false});
   }
 
   const handleHomeClick = () => {
-    setDisplay({showRefs: false, showMathces: false});
+    setDisplay({showRefs: false, showMathces: false,  showRefReview: false});
+  }
+
+  const handleReviewClick = (ref) => {
+    setReviews(ref.reviews);
+    setDisplay({showRefs: true, showMathces: false, showRefReview: true})
   }
 
   const PageSwap = () => {
@@ -69,24 +76,45 @@ const RefereeAssignment = () =>
     
     return (
       <Wrapper className="full-page">
-          <PageSwap/> 
+          {!display.showRefs? <PageSwap/> : null}
       <div>
-        {display.showRefs? <div> <PageSwap/> <div className="container-ref">{allRatings.map((ref) => {
-            return (
+        {display.showRefs? !display.showRefReview ?      
+              <div> <PageSwap/> <div className="container-ref">{allRatings.map((ref) => {
+            return ( // mapping referees
               <div key={ref._id} className="form-ref">
                 <h5>{ref.referee} </h5>
-                <button type="submit" className="btn">
+                <button type="submit" className="btn" onClick={() => handleReviewClick(ref)}>
               Reviews
             </button>
               </div>
             );
-          })}</div></div> 
+          })}</div></div>
           : 
-          display.showMathces? <div> <PageSwap/> <div className="container-ref"> 
+          reviews[0].review != false ? 
+          <div> <PageSwap/> <div className='container-ref'>{reviews.map((rev) => {
+            if (rev.review != false)
+            {
+              return ( 
+                <div key={rev._id} className="form-ref">
+                <h5>Type: {rev.reviewType} </h5>
+                <h5>Match ID: {rev.matchId} </h5>
+                <h5>Review: {rev.review} </h5>
+                </div>              
+              )
+            }
+          })} </div> </div> 
+          : 
+          <div>
+            <PageSwap/>
+              <h3 style={{marginLeft: "auto", marginRight: "auto", marginTop: "-20rem"}}>No reviews entered!!!</h3>
+          </div>
+          :
+          display.showMathces?
+          <div> <PageSwap/> <div className="container-ref"> 
             {allMatches.map((game) => {
               if(game.Teams.home != false)
               {
-                return (
+                return ( // mapping matches
                   <div key={game._id} className="form-ref">
                   <h4>Home: {game.Teams.home}</h4> 
                   <h4>Away: {game.Teams.away}</h4> 
@@ -96,7 +124,7 @@ const RefereeAssignment = () =>
               })}
             </div></div>
             :
-             <h1>Assingment</h1>}                
+             <h1>Assignment</h1>}                
       </div>
     </Wrapper>
     )
