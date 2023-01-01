@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Wrapper = styled.main`
   .row {
-    display: flex;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 3rem;
   }
