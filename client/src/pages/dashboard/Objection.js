@@ -10,6 +10,7 @@ import WrapperRef from "../../assets/wrappers/RefereesPage";
 const Objection = () => {
   const [sortedReferees, setSortedReferees] = useState([]);
   const [sortingValue, setSortingValue] = useState("alphabetic");
+  const [isInvestigator, setIsInvestigator] = useState(false);
   const [objection, setObjection] = useState({
     showError: false,
     referee: "",
@@ -24,6 +25,10 @@ const Objection = () => {
 
 
   const {createObjection, deleteObjection ,updateObjection, alertText} = useAppContext();
+  const { user } = useAppContext();
+  if (user.type == "investigator") {
+    setIsInvestigator(true);
+  }
 
   useEffect(() => {
     if (alertText === "Updated") {
@@ -128,12 +133,6 @@ const Objection = () => {
   const [showInput, setShowInput] = useState(true);
   const [error, setError] = useState(false);
 
-
-const handleInvestigationChange = (e) => {
-    // console.log(e.target.value);
-    setSearchId(e.target.value);
-  }
-
   useEffect(() => {
   if (sortingValue === "alphabetic") {
     let azReferees = [...referees];
@@ -193,15 +192,11 @@ const handleInvestigationChange = (e) => {
       updateObjection(obj);
     }
   // const [isInvestigator, setIsInvetigator] = useState(true);
-  const [isInvestigator, setIsInvestigator] = useState(false);
+  
 if(isInvestigator)
 {
   return (
     <WrapperRef>
-      <button type="submit" className="btn" onClick={handleView}>
-            Change View
-            </button>
-            {showInput? 
           <div className="card-css">
           <section>
             <div className="data-view-controls-container-css">
@@ -391,15 +386,11 @@ if(isInvestigator)
           </div>
           
           </div>
-          }
     </WrapperRef>
   )  
 }
   return (
       <Wrapper className="full-page">
-        <button type="submit" className="btn" onClick={handleView}>
-            Change View
-            </button>
           <form className="form">
             <div style={{"textAlign": "center"}}>
               <Logo/>
