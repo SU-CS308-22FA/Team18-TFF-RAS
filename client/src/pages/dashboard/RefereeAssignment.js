@@ -179,7 +179,7 @@ const RefereeAssignment = () =>
           : 
           <div>
             <PageSwap/>
-              <h3>No reviews entered!!!</h3>
+              <h3 style={{textAlign: "center", marginTop: "10rem"}}>No reviews entered</h3>
           </div>
           :
           display.showMathces?
@@ -220,7 +220,7 @@ const RefereeAssignment = () =>
                   <button type="submit" className='btn' onClick={handleResetButton}> Reset </button>                
                   </>
                   : 
-                  <p style={{margin: "auto", padding: "auto"}}> Please choose a referee from Referees!!! </p> }
+                  <p style={{margin: "auto", padding: "auto", textAlign: "center"}}> Please choose a referee from Referees </p> }
                   </div>
               <div className='form'>
                 {assignedMatch.Id !== 0 ? 
@@ -236,15 +236,15 @@ const RefereeAssignment = () =>
                 </p>
                 </>
                 :
-                <p>
-                  Please choose a match from Matches!!!
+                <p style={{textAlign: "center"}}>
+                  Please choose a match from Matches
                 </p>
                 }
               </div>
               </div>
             }                
       </div>
-      {console.log("refs: ", allRatings, "matches: ", allMatches)}
+      {console.log("refs: ", allRatings, "matches: ", allMatches)} {/* remove later */}
     </>
     )
 }
