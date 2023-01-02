@@ -8,6 +8,9 @@ import fs from 'fs';
 import {chromium} from 'playwright';
 
 import date from 'date-and-time';
+
+// import mongoose from 'mongoose';
+// mongoose.connect('mongodb+srv://cs308team18:BestTeamThereEverWasTeam18@tff-ras.q9epijv.mongodb.net/?retryWrites=true&w=majority');
 if (process.env.LOGGER === 'winston') {
     const winston = require('winston');
     const DailyRotateFile = require('winston-daily-rotate-file');
@@ -145,7 +148,7 @@ async function initializePage() {
     });
 
     const page = await context.newPage();
-    const preloadFile = fs.readFileSync('./headless-spoof.js', 'utf8');
+    const preloadFile = fs.readFileSync('./controllers/headless-spoof.js', 'utf8');
     await page.addInitScript(preloadFile);
 
     if (process.env.NODE_ENV === "production") {
@@ -261,7 +264,7 @@ async function getLastUrl(refid){
 }
 
 async function collectDataForRefresh(browser, page, leechUrl,refid) {
-    newMatches=[];
+    let newMatches=[];
     try {
         await page.goto(leechUrl, {waitUntil: 'networkidle'});
 
@@ -359,10 +362,11 @@ async function fillRefs() {
 }
 //this will be scheduled weekly for refreshing the matches that is made in that week
 async function refreshRefs() {
-    let refIDs=["20160"];
+    let refIDs=["20372","20160","1141865","1152086","1064324","1140355","1090884","21019","1144690","21156","19493","20668","1140611","18972","1091628","1092081","19445","1091799","1091989","20204","1144469","20554","1385054"];
     for (let i = 0; i < refIDs.length; i++) {
         console.log(refIDs[i]);
-        let newMatches =await leechForRefresh(refIDs[i]);
+        let newMatches = await leechForRefresh(refIDs[i]);
+        console.log(newMatches);
         //updating the matches ruled array newmatches need to be concatenated to the beginning
         if (newMatches.length!=0) {
             let arr = await Referee.find({refID: refIDs[i]}).select('matchesRuled -_id');
@@ -395,6 +399,4 @@ async function refreshRefs() {
     return refs;
 }
 
-let url = await getLastUrl("20160");
-console.log(url);
 export default { getReferees, getReferee, fillRefs, refreshRefs, searchBySubstr};

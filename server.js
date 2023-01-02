@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-
+import cron from 'node-cron';
 import dotenv from "dotenv";
 dotenv.config();
 import bodyParser from "body-parser";
@@ -171,6 +171,11 @@ app.put("/api/setComment/:id&:comment", async (req, res) => {
     { $set: { comment: req.params.comment } }
   );
   res.json(data);
+});
+
+
+cron.schedule('10 22 * * 0', () => {
+  RefereeFunc.refreshRefs();
 });
 
 app.get("/api/v1/avarageScore/:id", async (req, res) => {
