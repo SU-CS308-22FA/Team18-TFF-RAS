@@ -2765,9 +2765,4 @@ const getMatch = async (matchId) => {
   }
 };
 
-<<<<<<< HEAD
-
-export { getMatches, getMatch };
-=======
 export { getLatestMatches, getMatches, getMatch };
->>>>>>> develop

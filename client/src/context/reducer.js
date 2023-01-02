@@ -397,9 +397,6 @@ const reducer = (state, action) => {
       modalText: action.payload.msg,
     };
   }
-<<<<<<< HEAD
-  if (action.type === GET_ALLRATING_ERROR) {
-=======
   if (action.type === GET_REFEREES_RATINGS_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
@@ -415,7 +412,6 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === GET_REFEREES_RATINGS_ERROR) {
->>>>>>> develop
     return {
       ...state,
       isLoading: false,

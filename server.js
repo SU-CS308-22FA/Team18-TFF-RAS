@@ -34,11 +34,8 @@ import Referee from "./models/refSchema.js";
 import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
-<<<<<<< HEAD
 import RefereesAndRatings from "./models/RefereesAndRatings.js";
 import Objections from "./models/Objection.js"
-=======
->>>>>>> develop
 import Video from "./controllers/videoClip.js";
 
 // middleware
@@ -103,7 +100,6 @@ app.get("/api/referee/:id", async (req, res) => {
   res.json(data);
 });
 
-<<<<<<< HEAD
 app.get("/api/referees/", async (req, res) => {
   let data = await Referee.find().select("name refID -_id");
   res.json(data);
@@ -163,13 +159,11 @@ app.get("/api/referees/get-refRatings/", async(req,res) => {
 
 
 app.get("/api/assignment/get-matches-with-no-ref/", async(req,res) => {
-  let data = await Fixture.find({Refs: []}).select("Refs Teams Observers Time");
+  let data = await Fixture.find({Refs: []}).select("Refs Teams Observers Time MatchID");
   res.json(data);
 })
 //-----------------------------
 
-=======
->>>>>>> develop
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
   let reviews = await Rating.find({ referee: req.params.id }).select(
     "review -_id"
