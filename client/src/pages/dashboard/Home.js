@@ -1,7 +1,11 @@
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/HomePage";
 import { useEffect, useState } from "react";
-import { getLatestMatches, getUpcomingMatches } from "../../utils/api";
+import {
+  getLatestMatches,
+  getStandings,
+  getUpcomingMatches,
+} from "../../utils/api";
 import MatchItem from "../../components/MatchItem/MatchItem";
 import { referees } from "../../utils/constants";
 
@@ -9,6 +13,7 @@ const Home = () => {
   const [latestMatches, setLatestMatches] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
   const [topReferees, setTopReferees] = useState([]);
+  const [standings, setStandings] = useState(null);
 
   const { user, getRefereesRatings, refereesRatings } = useAppContext();
 
@@ -20,6 +25,9 @@ const Home = () => {
       setUpcomingMatches(results);
     });
     getRefereesRatings();
+    getStandings().then((results) => {
+      setStandings(results);
+    });
   }, []);
 
   useEffect(() => {
@@ -134,7 +142,7 @@ const Home = () => {
             }
           >
             {topReferees.length > 0 ? (
-              topReferees.map((referee, idx) => (
+              topReferees.slice(0, 3).map((referee, idx) => (
                 <div key={idx} className="referee-container">
                   <div className="referee-info-container">
                     <img
@@ -160,6 +168,115 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <section className="css-league-table-section">
+        <div className="card-css">
+          <div>
+            <h3 className="league-table-header">Super Lig 2022/2023</h3>
+            <section className="league-overview-table-css">
+              <div className="card-css">
+                <article className="league-table-container">
+                  <table className="css-league-table">
+                    <thead>
+                      <tr className="css-table-header-row">
+                        <th scope="col" className="css-header-item-1">
+                          #
+                        </th>
+                        <th scope="col" className="css-header-item-2">
+                          Team
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          PL
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          W
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          D
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          L
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          +/-
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          GD
+                        </th>
+                        <th scope="col" className="css-header-item-3">
+                          PTS
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {standings !== null
+                        ? standings.league.standings[0].map((team, index) => (
+                            <tr
+                              key={index}
+                              className={
+                                "table-team-row" +
+                                (team.description ===
+                                "Promotion - Champions League (Qualification)"
+                                  ? " table-team-row-clq"
+                                  : team.description ===
+                                    "Promotion - Europa Conference League (Qualification)"
+                                  ? " table-team-row-elq"
+                                  : team?.description?.includes("Relegation")
+                                  ? " table-team-row-relegation"
+                                  : "")
+                              }
+                            >
+                              <td className="css-cell">{team.rank}</td>
+                              <td className="css-cell-2">
+                                <div className="team-cell-content-css">
+                                  <a className="team-cell-content-link">
+                                    <img
+                                      alt=""
+                                      className="image team-icon"
+                                      width="22"
+                                      height="22"
+                                      src={team.team.logo}
+                                    />
+                                    <span className="css-team-name">
+                                      {team.team.name}
+                                    </span>
+                                  </a>
+                                </div>
+                              </td>
+                              <td className="css-cell">{team.all.played}</td>
+                              <td className="css-cell">{team.all.win}</td>
+                              <td className="css-cell">{team.all.draw}</td>
+                              <td className="css-cell">{team.all.lose}</td>
+                              <td className="css-cell">
+                                {team.all.goals.for}-{team.all.goals.against}
+                              </td>
+                              <td className="css-cell">{team.goalsDiff}</td>
+                              <td className="css-cell">{team.points}</td>
+                            </tr>
+                          ))
+                        : null}
+                    </tbody>
+                  </table>
+                  <div className="css-legend-wrapper">
+                    <ul className="css-qual-block">
+                      <li>
+                        <i className="css-qual-icon-1"></i>Champions League
+                        qualification
+                      </li>
+                      <li>
+                        <i className="css-qual-icon-2"></i>Europa Conference
+                        League Qualification
+                      </li>
+                      <li>
+                        <i className="css-qual-icon-3"></i>Relegation
+                      </li>
+                    </ul>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
     </Wrapper>
   );
 };
