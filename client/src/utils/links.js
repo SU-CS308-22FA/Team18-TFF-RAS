@@ -2,7 +2,8 @@ import { IoBarChartSharp } from "react-icons/io5";
 import { MdQueryStats } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
-import { AiFillExclamationCircle, AiTwotoneContainer } from "react-icons/ai";
+import { AiFillExclamationCircle } from "react-icons/ai";
+import { TbBook2 } from "react-icons/tb";
 
 
 const links = [
@@ -40,7 +41,7 @@ const links = [
     id: 6,
     text: "reports",
     path: "reports",
-    icon: <AiTwotoneContainer />,
+    icon: <TbBook2 />,
   },
 ];
 
