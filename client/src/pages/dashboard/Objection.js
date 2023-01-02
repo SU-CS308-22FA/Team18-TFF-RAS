@@ -11,6 +11,7 @@ const Objection = () => {
   const [sortedReferees, setSortedReferees] = useState([]);
   const [sortingValue, setSortingValue] = useState("alphabetic");
   const [isInvestigator, setIsInvestigator] = useState(false);
+  const [isClubOrExp, setIsClubOrExp] = useState(false);
   const [objection, setObjection] = useState({
     showError: false,
     referee: "",
@@ -28,6 +29,9 @@ const Objection = () => {
   const { user } = useAppContext();
   if (user.type == "investigator") {
     setIsInvestigator(true);
+  }
+  else if (user.type == "expert"||user.type == "club") {
+    setIsClubOrExp(true);
   }
 
   useEffect(() => {
@@ -389,6 +393,7 @@ if(isInvestigator)
     </WrapperRef>
   )  
 }
+else if(isClubOrExp){
   return (
       <Wrapper className="full-page">
           <form className="form">
@@ -423,7 +428,15 @@ if(isInvestigator)
           ) : null}
           </form>
       </Wrapper>
-    );  
+    );
+  } 
+  else{
+    return(
+      <Wrapper className="full-page">
+      <div>You are not authorized to enter this page.</div>
+  </Wrapper>
+    );
+  }
 };
 
 export default Objection;
