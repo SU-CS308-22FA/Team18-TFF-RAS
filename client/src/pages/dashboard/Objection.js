@@ -4,8 +4,12 @@ import { Logo, FormRow } from "../../components"
 import { useAppContext } from "../../context/appContext";
 import axios from 'axios';
 import {refToId, idToref} from "./refIds";
+import { referees } from "../../utils/constants";
+import WrapperRef from "../../assets/wrappers/RefereesPage";
 
 const Objection = () => {
+  const [sortedReferees, setSortedReferees] = useState([]);
+  const [sortingValue, setSortingValue] = useState("alphabetic");
   const [objection, setObjection] = useState({
     showError: false,
     referee: "",
@@ -130,16 +134,31 @@ const handleInvestigationChange = (e) => {
     setSearchId(e.target.value);
   }
 
+  useEffect(() => {
+  if (sortingValue === "alphabetic") {
+    let azReferees = [...referees];
+    azReferees.sort(function (a, b) {
+      var nameA = a.name.toLowerCase(),
+        nameB = b.name.toLowerCase();
+      if (nameA < nameB)
+        //sort string ascending
+        return -1;
+      if (nameA > nameB) return 1;
+      return 0; //default return value (no sorting)
+    });
+    setSortedReferees(
+      [...azReferees].map((referee) => ({ ...referee, displayValue: "" }))
+    );
+  }
+}, [sortingValue]);
 
-  const handleInvestigationSubmit = () => {
-    if(searchId !== "")
-    {
+  const handleInvestigationSubmit = (id) => {
+    console.log(id);
       setShowInput(false);
       setIsLoading(true);
       console.log(searchId);
-      getRefereeObjections(searchId);
+      getRefereeObjections(id);
       setSearchId("");
-    }
   }
 
     async function getRefereeObjections(id) { // API
@@ -170,55 +189,105 @@ const handleInvestigationChange = (e) => {
     setShowInput(true);
     }
   }
-// Commenting
-const [newComment, setNewComment] = useState("");
-  const handleComment = (e) => {
-    setNewComment(e.target.value);
-    }
-
-    const handleCommentClick = (obj) => {
-      updateObjection(obj);
-    }
-    const handleClose = async (obj) => {
-      let response = await axios.put('/api/makeSolved/'+ obj._id);
-      console.log(response);
-    }
     const handleSave = (obj) => {
       updateObjection(obj);
     }
-    const handlePost = async (obj) => {
-      console.log(typeof obj._id)
-      let response = await axios.put('/api/makeInReview/'+ obj._id);
-      console.log(response);
-    }
-// Commenting
-
   // const [isInvestigator, setIsInvetigator] = useState(true);
   const [isInvestigator, setIsInvestigator] = useState(false);
 if(isInvestigator)
 {
   return (
-    <Wrapper>
+    <WrapperRef>
       <button type="submit" className="btn" onClick={handleView}>
             Change View
             </button>
             {showInput? 
-          <form className="form">
-            <div style={{"textAlign": "center"}}>
-              <Logo/>
-              <h3>See Referee Objections</h3>
+          <div className="card-css">
+          <section>
+            <div className="data-view-controls-container-css">
+              <span className="css-league-span">Referees</span>
+              <div>
+                <div>
+                  <select
+                    className="select-applyMediumHover"
+                    width="115.2109375"
+                  >
+                    <option value="2022/2023">2022/2023</option>
+                    <span className="hidden-span">2022/2023</span>
+                  </select>
+                </div>
+              </div>
             </div>
-            <FormRow
-              type="text"
-              name="searchId"
-              value={searchId}
-              handleChange={handleInvestigationChange}
-              labelText="Referee Id:"
-              />
-            <button type="submit" className="btn" onClick={handleInvestigationSubmit}>
-              See Objections
-            </button>
-          </form>
+            <section className="league-season-stats-css">
+              <div className="mui-paper-root">
+                <div className="jss1">
+                  <div className="jss2">
+                    <div>
+                      <table className="mui-table-root jss3">
+                        <colgroup>
+                          <col className="col1" />
+                          <col className="col2" />
+                          <col className="col3" />
+                          <col className="col4" />
+                        </colgroup>
+                        <tbody className="mui-table-body-root">
+                          {sortedReferees.map((referee, index) => (
+                            <tr key={index} className="mui-table-row-root">
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                {index + 1}
+                              </td>
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss10 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                <div className="referee-icon-container">
+                                  <div
+                                    className="referee-icon  referee-icon-css"
+                                    width="42"
+                                    height="42"
+                                  >
+                                    <img
+                                      alt=""
+                                      className="image referee-image"
+                                      width="42"
+                                      height="42"
+                                      src={referee.image}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                <a
+                                  className="styled-link"
+                                  onClick={()=>{handleInvestigationSubmit(referee.id)}}
+                                >
+                                  {referee.name}
+                                </a>
+                              </td>
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss9 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                {referee.displayValue}
+                                
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+        </div>
             : 
           isLoading? <div>Loading...</div> : <div>
             
@@ -323,7 +392,7 @@ if(isInvestigator)
           
           </div>
           }
-    </Wrapper>
+    </WrapperRef>
   )  
 }
   return (
