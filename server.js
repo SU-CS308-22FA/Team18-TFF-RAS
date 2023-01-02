@@ -33,11 +33,8 @@ import Referee from "./models/refSchema.js";
 import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
-<<<<<<< HEAD
 import Objections from "./models/Objection.js"
-=======
 import Video from "./controllers/videoClip.js";
->>>>>>> develop
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";

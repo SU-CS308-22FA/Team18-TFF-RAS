@@ -9,7 +9,7 @@ import time
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome('/Users/alperenoznam/Desktop/project/testing/chromedriver')
+        self.driver = webdriver.Chrome('./chromedriver')
 
     def test_search_in_tff_ras(self):
         driver = self.driver
