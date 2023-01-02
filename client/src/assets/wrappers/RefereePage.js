@@ -167,6 +167,7 @@ const Wrapper = styled.main`
     width: 70px;
     aspect-ratio: auto 70 / 70;
     height: 70px;
+    border-radius: 50%;
   }
 
   .referee-page-name {

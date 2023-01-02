@@ -4,6 +4,7 @@ import Referees from "./Referees";
 import Referee from "./Referee";
 import Profile from "./Profile";
 import Match from "./match/Match";
+import DueReports from "./DueReports";
 import SharedLayout from "./SharedLayout";
 import Objection from "./Objection";
 import RefereeAssignment from "./RefereeAssignment"
@@ -15,6 +16,7 @@ export {
   Referee,
   Profile,
   Match,
+  DueReports,
   SharedLayout,
   Objection,
   RefereeAssignment

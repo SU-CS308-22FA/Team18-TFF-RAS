@@ -24,6 +24,7 @@ import authRouter from "./routes/authRoutes.js";
 import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
+import reportRouter from "./routes/reportRoutes.js";
 
 import sentiment from "./sentimentAnalysis.js";
 
@@ -33,8 +34,11 @@ import Referee from "./models/refSchema.js";
 import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
+<<<<<<< HEAD
 import RefereesAndRatings from "./models/RefereesAndRatings.js";
 import Objections from "./models/Objection.js"
+=======
+>>>>>>> develop
 import Video from "./controllers/videoClip.js";
 
 // middleware
@@ -44,7 +48,7 @@ import authenticateUser from "./middleware/auth.js";
 import {
   getObjection,
   deleteObjection,
-  getObjectionAndSet
+  getObjectionAndSet,
 } from "./controllers/objectionController.js";
 import { serialize } from "v8";
 import mongoose from "mongoose";
@@ -78,19 +82,20 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
-
-
+app.use("/api/v1/reports", reportRouter);
 app.get("/api/videoClipsOfMatch/:home&:away&:round", async (req, res) => {
-  let data = await Video.getMatchWithHighlights(req.params.home, req.params.away, req.params.round);
+  let data = await Video.getMatchWithHighlights(
+    req.params.home,
+    req.params.away,
+    req.params.round
+  );
   res.json(data);
 });
-
 
 app.get("/api/video/:url", async (req, res) => {
   let data = await Video.getVideoUrl(req.params.url);
   res.json(data);
 });
-
 
 //get referee from d with specified id
 app.get("/api/referee/:id", async (req, res) => {
@@ -98,6 +103,7 @@ app.get("/api/referee/:id", async (req, res) => {
   res.json(data);
 });
 
+<<<<<<< HEAD
 app.get("/api/referees/", async (req, res) => {
   let data = await Referee.find().select("name refID -_id");
   res.json(data);
@@ -162,6 +168,8 @@ app.get("/api/assignment/get-matches-with-no-ref/", async(req,res) => {
 })
 //-----------------------------
 
+=======
+>>>>>>> develop
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
   let reviews = await Rating.find({ referee: req.params.id }).select(
     "review -_id"
@@ -183,35 +191,59 @@ app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
 });
 
 app.get("/api/objection/:id", async (req, res) => {
-  let noDecisions = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: false});
-  let inReview = await Objection.find({refereeId:req.params.id, isInProcess: true, isResolved: false});
-  let end = await Objection.find({refereeId:req.params.id, isInProcess: false, isResolved: true});
+  let noDecisions = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: false,
+    isResolved: false,
+  });
+  let inReview = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: true,
+    isResolved: false,
+  });
+  let end = await Objection.find({
+    refereeId: req.params.id,
+    isInProcess: false,
+    isResolved: true,
+  });
   // console.log(data);
   // console.log(data);
-  res.json({NoDecisions: noDecisions, InReview: inReview, End: end});
+  res.json({ NoDecisions: noDecisions, InReview: inReview, End: end });
 });
 
 app.put("/api/setInReview/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isInProcess: true, isResolved: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isInProcess: true, isResolved: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setSolved/:id", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: true, isInProcess: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isResolved: true, isInProcess: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setInvestigate/:id", async (req, res) => {
   console.log("here");
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {isResolved: false, isInProcess: false}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { isResolved: false, isInProcess: false } }
+  );
   console.log(data);
   res.json(data);
 });
 
 app.put("/api/setComment/:id&:comment", async (req, res) => {
-  const data = await Objection.updateOne({_id: req.params.id}, {$set: {comment: req.params.comment}});
+  const data = await Objection.updateOne(
+    { _id: req.params.id },
+    { $set: { comment: req.params.comment } }
+  );
   res.json(data);
 });
 
@@ -227,6 +259,68 @@ app.get("/api/v1/avarageScore/:id", async (req, res) => {
   let avrg = sum / reviews.length;
   console.log(avrg);
   res.json(avrg);
+});
+
+app.get("/api/v1/averageScoresAndSentiment", async (req, res) => {
+  let ratings = await Rating.find({});
+
+  let referees = {};
+
+  for (let i = 0; i < ratings.length; i++) {
+    const element = ratings[i];
+
+    // add rating
+    if (!Object.keys(referees).includes(element.referee)) {
+      referees[element.referee] = {
+        rating: { count: 0, rating: 0 },
+        fanRating: { count: 0, rating: 0 },
+        expertRating: { count: 0, rating: 0 },
+        sentiment: { score: "-", reviews: "" },
+      };
+    }
+    referees[element.referee].rating.count++;
+    referees[element.referee].rating.rating += element.rating;
+
+    if (element.ratingType === "fan") {
+      referees[element.referee].fanRating.count++;
+      referees[element.referee].fanRating.rating += element.rating;
+    } else {
+      referees[element.referee].expertRating.count++;
+      referees[element.referee].expertRating.rating += element.rating;
+    }
+
+    // add review
+    referees[element.referee].sentiment.reviews += element.review + ". ";
+  }
+
+  for (let referee in referees) {
+    referees[referee].rating.rating /= referees[referee].rating.count;
+    referees[referee].rating.rating =
+      referees[referee].rating.rating.toFixed(2);
+    if (referees[referee].fanRating.count !== 0) {
+      referees[referee].fanRating.rating /= referees[referee].fanRating.count;
+      referees[referee].fanRating.rating =
+        referees[referee].fanRating.rating.toFixed(2);
+    }
+    if (referees[referee].expertRating.count !== 0) {
+      referees[referee].expertRating.rating /=
+        referees[referee].expertRating.count;
+      referees[referee].expertRating.rating =
+        referees[referee].expertRating.rating.toFixed(2);
+    }
+
+    if (referees[referee].sentiment.reviews !== "") {
+      referees[referee].sentiment.score = await sentiment.getSentimentScore(
+        referees[referee].sentiment.reviews
+      );
+      referees[referee].sentiment.score *= 2.5;
+      referees[referee].sentiment.score += 2.5;
+      referees[referee].sentiment.score =
+        referees[referee].sentiment.score.toFixed(2);
+    }
+  }
+
+  res.json({ referees });
 });
 
 app.get("/api/v1/sentimentAnalysisForExp/:id", async (req, res) => {

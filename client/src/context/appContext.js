@@ -48,7 +48,12 @@ import {
   GET_REFEREE_RATINGS_ERROR,
   GET_ALLRATING_BEGIN,
   GET_ALLRATING_SUCCESS,
-  GET_ALLRATING_ERROR
+  GET_ALLRATING_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
+  GET_REFEREES_RATINGS_BEGIN,
+  GET_REFEREES_RATINGS_SUCCESS,
+  GET_REFEREES_RATINGS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -76,6 +81,7 @@ const initialState = {
   review: "",
   eventReviews: [],
   referees: [],
+  refereesRatings: {},
   referee: null,
   overallRating: "-",
   fanRating: "-",
@@ -84,6 +90,10 @@ const initialState = {
   fanSentiment: "-",
   expertSentiment: "-",
   ratings: [],
+  dueReports: [],
+  numDueReports: 0,
+  DueReportPage: 1,
+  numofDueReportPages: 1,
 };
 
 const AppContext = React.createContext();
@@ -463,6 +473,28 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getRefereesRatings = async () => {
+    dispatch({ type: GET_REFEREES_RATINGS_BEGIN });
+    try {
+      const { data } = await authFetch.get("/averageScoresAndSentiment");
+
+      dispatch({
+        type: GET_REFEREES_RATINGS_SUCCESS,
+        payload: {
+          referees: data,
+        },
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREES_RATINGS_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -508,6 +540,20 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
+  const getDueReports = async () => {
+    dispatch({ type: GET_DUE_REPORTS_BEGIN });
+    try {
+      const { data } = await authFetch("/reports");
+      const { dueReports, numDueReports, numofDueReportPages } = data;
+      dispatch({
+        type: GET_DUE_REPORTS_SUCCESS,
+        payload: { dueReports, numDueReports, numofDueReportPages },
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+    clearAlert();
+  };
 
   return (
     <AppContext.Provider
@@ -523,6 +569,7 @@ const AppProvider = ({ children }) => {
         createObjection,
         deleteObjection,
         getObjections,
+        getDueReports,
         updateObjection,
         createRating,
         getRating,
@@ -532,6 +579,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         getRefereeRatings,
         getAllRefRatings,
+        getRefereesRatings,
       }}
     >
       {children}

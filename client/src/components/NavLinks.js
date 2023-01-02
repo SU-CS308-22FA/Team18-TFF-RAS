@@ -1,11 +1,21 @@
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
 import links from "../utils/links";
 
 // eslint-disable-next-line react/prop-types
 const NavLinks = ({ toggleSidebar }) => {
+  const { user } = useAppContext();
+  let newLinks = [...links];
+
+  if (user.type === "expert") {
+    newLinks = links.filter(
+      (link) => link.path !== "objection" && link.path !== "reports"
+    );
+  }
+
   return (
     <div className="nav-links">
-      {links.map((link) => {
+      {newLinks.map((link) => {
         const { text, path, id, icon } = link;
 
         return (
