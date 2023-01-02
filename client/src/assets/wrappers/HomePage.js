@@ -44,6 +44,58 @@ const Wrapper = styled.main`
     font-size: 20px;
   }
 
+  .title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .title-container h3 {
+    display: inline;
+  }
+
+  .title-container a {
+    color: var(--primary-500);
+  }
+
+  .title-container a:hover {
+    color: var(--primary-800);
+  }
+
+  .referees-title {
+    margin-top: 15px;
+  }
+
+  .referee-container {
+    padding: 0px 20px !important;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+  }
+
+  .referee-info-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .referee-image {
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .styled-link:hover {
+    color: var(--primary-500);
+  }
+
+  .referee-rating-span {
+    /* color: var(--primary-600); */
+  }
+
   //////////////////////////////////
 
   nav {
