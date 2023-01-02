@@ -40,7 +40,7 @@ const links = [
     id: 6,
     text: "reports",
     path: "reports",
-    //icon: <AiTwotoneContainer />,
+    icon: <AiFillExclamationCircle />,
   },
 ];
 
