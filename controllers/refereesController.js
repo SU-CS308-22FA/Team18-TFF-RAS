@@ -256,14 +256,13 @@ async function leechWithRefID(refid) {
 
 //retreive the last match unique url for stopping when the match is reached
 async function getLastUrl(refid){
-    let arr = await Referee.find({refID: refid}).select('matchesRuled -_id');
+    let arr = await Referee.find({refID: refid}).select('matchesRuled -_id').catch(e => {console.log(e)});
 	return arr[0].matchesRuled[0].MatchUrl;
 }
 
 async function collectDataForRefresh(browser, page, leechUrl,refid) {
     newMatches=[];
     try {
-        //open up the page
         await page.goto(leechUrl, {waitUntil: 'networkidle'});
 
         try {
@@ -272,15 +271,10 @@ async function collectDataForRefresh(browser, page, leechUrl,refid) {
                 // timeout: 2000,
                 state: "visible"
             });
-            // let rows = await page.locator("table.MasterTable_TFF_Contents tbody td").elementHandles();
-            // console.log(rows.length);
-
 
             await page.waitForSelector("table.MasterTable_TFF_Contents", { //find the cell that holds the details for the game and wait until it is visible
-            // timeout: 2000,
             state: "visible"
             });
-                
 
             let tbody = await page.$("table.MasterTable_TFF_Contents tbody");
             let matchRows = await tbody.$$("tr");
@@ -336,7 +330,7 @@ async function leechForRefresh(refid) {
 
 //fill the database with this function by only invoking it one time no other invokation is needed
 async function fillRefs() {
-    refIDs=["1140611"]; //,"21019","1144690","1140611","20554"
+    let refIDs=["21019"]; //,"21019","1144690","1140611","20554"
     for (let i = 0; i < refIDs.length; i++) {
         
         console.log(refIDs[i]);
@@ -365,7 +359,7 @@ async function fillRefs() {
 }
 //this will be scheduled weekly for refreshing the matches that is made in that week
 async function refreshRefs() {
-    refIDs=["959285","2100056","1621805"];
+    let refIDs=["20160"];
     for (let i = 0; i < refIDs.length; i++) {
         console.log(refIDs[i]);
         let newMatches =await leechForRefresh(refIDs[i]);
@@ -401,4 +395,6 @@ async function refreshRefs() {
     return refs;
 }
 
+let url = await getLastUrl("20160");
+console.log(url);
 export default { getReferees, getReferee, fillRefs, refreshRefs, searchBySubstr};
