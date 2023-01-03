@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
+
+
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
@@ -15,8 +17,7 @@ class PythonOrgSearch(unittest.TestCase):
         driver = self.driver
         time.sleep(2)
 
-
-        ###this part is essential for every test case we need to login
+        # this part is essential for every test case we need to login
         driver.get("http://localhost:3000/register")
         self.assertIn("TFF RAS", driver.title)
         email = driver.find_element(By.NAME, "email")
@@ -26,18 +27,20 @@ class PythonOrgSearch(unittest.TestCase):
         password.send_keys("investigator")
         time.sleep(2)
         password.send_keys(Keys.RETURN)
-        element_present = EC.presence_of_element_located((By.CLASS_NAME, "text-field"))
+        element_present = EC.presence_of_element_located(
+            (By.CLASS_NAME, "text-field"))
         WebDriverWait(driver, 5).until(element_present)
         ###
 
-        objection = driver.find_element(By.XPATH, "//*[@id='root']/section/main/aside[2]/div/div/div/a[5]")
+        objection = driver.find_element(
+            By.XPATH, "//*[@id='root']/section/main/aside[2]/div/div/div/a[5]")
         objection.click()
         time.sleep(2)
         self.assertIn("Referees", driver.page_source)
 
-
     def tearDown(self):
         self.driver.close()
+
 
 if __name__ == "__main__":
     unittest.main()
