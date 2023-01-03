@@ -25,6 +25,7 @@ const Report = ({
   accuracy,
   comments,
 }) => {
+  const { setEditReport } = useAppContext();
   let date = moment([matchyear, matchMonth, matchDay, matchHour, matchMinute]);
   let day = date.format("MMM Do, YYYY");
   let time = date.format("HH:mm");
@@ -43,7 +44,7 @@ const Report = ({
         <footer>
           <div className="actions">
             <Link
-              to="/add-report"
+              to="/edit-report"
               className="btn edit-btn"
               onClick={() => setEditReport(_id)}
             >
