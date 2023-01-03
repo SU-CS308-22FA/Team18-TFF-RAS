@@ -24,6 +24,7 @@ import { referees } from "../../../utils/constants";
 import { useAppContext } from "../../../context/appContext";
 
 import "react-modal-video/scss/modal-video.scss";
+import VideosContainer from "../../../components/VideosContainer";
 
 const Match = () => {
   const { id } = useParams();
@@ -407,16 +408,26 @@ const Match = () => {
               refereeImage={refereeImage}
               loading={loading}
               refID={refID}
+              videos={videos}
+              setIsVideoOpen={setIsVideoOpen}
+              setVideoURL={setVideoURL}
             />
           ) : (
-            <div className="not-a-fan-container">
-              {!["fan", "expert"].includes(user?.type)
-                ? "Only fans and experts can rate and leave reviews on referees' performances."
-                : `Rating and review for ${
-                    matchData?.fixture?.referee !== null
-                      ? matchData.fixture.referee
-                      : "the referee"
-                  }'s performance in this match will be opened once match is finished.`}
+            <div>
+              <div className="not-a-fan-container">
+                {!["fan", "expert"].includes(user?.type)
+                  ? "Only fans and experts can rate and leave reviews on referees' performances."
+                  : `Rating and review for ${
+                      matchData?.fixture?.referee !== null
+                        ? matchData.fixture.referee
+                        : "the referee"
+                    }'s performance in this match will be opened once match is finished.`}
+              </div>
+              <VideosContainer
+                videos={videos}
+                setIsVideoOpen={setIsVideoOpen}
+                setVideoURL={setVideoURL}
+              />
             </div>
           )}
         </div>

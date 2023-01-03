@@ -349,6 +349,7 @@ const Wrapper = styled.main`
   .not-a-fan-container {
     background: white;
     border-radius: 20px;
+    margin-bottom: 20px;
     width: 100%;
     height: 500px;
     padding: 0 20px;
@@ -367,6 +368,44 @@ const Wrapper = styled.main`
     border-radius: 20px;
     color: white;
     margin: 0;
+  }
+
+  .videos-container {
+    background-color: red;
+  }
+
+  .videos-container {
+    border-radius: 20px;
+    background-color: white;
+    padding: 10px 20px;
+  }
+
+  .videos-header {
+    margin: 0;
+    padding: 0;
+    margin: 10px 0;
+  }
+
+  .highlight-container {
+    width: 100%;
+  }
+
+  .thumbnail-container {
+    position: relative;
+    width: 260px !important;
+    height: 146.25px !important;
+    background-color: grey;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .play-icon {
+    position: absolute;
+    top: 43.125px;
+    left: 100px;
+    width: 60px;
+    height: 60px;
   }
 `;
 
