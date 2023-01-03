@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
+
+
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
@@ -14,9 +16,7 @@ class PythonOrgSearch(unittest.TestCase):
     def test_search_in_tff_ras(self):
         driver = self.driver
         time.sleep(2)
-
-
-        ###this part is essential for every test case we need to login
+        # this part is essential for every test case we need to login
         driver.get("http://localhost:3000/register")
         self.assertIn("TFF RAS", driver.title)
         email = driver.find_element(By.NAME, "email")
@@ -26,12 +26,13 @@ class PythonOrgSearch(unittest.TestCase):
         password.send_keys("fanfan")
         time.sleep(2)
         password.send_keys(Keys.RETURN)
-        element_present = EC.presence_of_element_located((By.CLASS_NAME, "text-field"))
+        element_present = EC.presence_of_element_located(
+            (By.CLASS_NAME, "text-field"))
         WebDriverWait(driver, 5).until(element_present)
         ###
 
-        #continue with what you want
-        elem = driver.find_element(By.CLASS_NAME, "text-field")
+        # continue with what you want
+        elem = driver.find_element(By.Xpath, "text-field")
         elem.send_keys("al")
         time.sleep(0.6)
         # elem.send_keys(Keys.RETURN)
@@ -43,9 +44,9 @@ class PythonOrgSearch(unittest.TestCase):
         time.sleep(2)
         self.assertIn("No Result for Matches", driver.page_source)
 
-
     def tearDown(self):
         self.driver.close()
+
 
 if __name__ == "__main__":
     unittest.main()
