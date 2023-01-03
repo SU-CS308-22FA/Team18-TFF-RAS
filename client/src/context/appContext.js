@@ -478,7 +478,6 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(JSON.stringify(error));
       if (error.response.status !== 401) {
         dispatch({
           type: GET_REFEREE_RATINGS_ERROR,
@@ -500,7 +499,6 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(JSON.stringify(error));
       if (error.response.status !== 401) {
         dispatch({
           type: GET_REFEREES_RATINGS_ERROR,
@@ -517,7 +515,6 @@ const AppProvider = ({ children }) => {
 
       // no token
       const { user, location } = data;
-      console.log(token);
 
       dispatch({
         type: UPDATE_USER_SUCCESS,
