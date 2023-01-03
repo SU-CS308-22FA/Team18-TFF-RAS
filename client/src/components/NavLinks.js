@@ -15,6 +15,10 @@ const NavLinks = ({ toggleSidebar }) => {
     newLinks = newLinks.filter((link) => link.path !== "reports");
   }
 
+  if (!["assigner"].includes(user?.type)) {
+    newLinks = newLinks.filter((link) => link.path !== "referee-assignment");
+  }
+
   return (
     <div className="nav-links">
       {newLinks.map((link) => {
