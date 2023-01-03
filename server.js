@@ -25,7 +25,7 @@ import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
 import reportRouter from "./routes/reportRoutes.js";
-
+import verifyRouter from "./routes/verifyRoutes.js";
 import sentiment from "./sentimentAnalysis.js";
 
 //web-scrape stuff
@@ -76,6 +76,7 @@ app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
 app.use("/api/v1/reports", reportRouter);
+app.use("/api/v1/verify", verifyRouter);
 app.get("/api/videoClipsOfMatch/:home&:away&:round", async (req, res) => {
   let data = await Video.getMatchWithHighlights(
     req.params.home,
