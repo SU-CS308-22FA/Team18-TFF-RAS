@@ -8,11 +8,7 @@ const verify = async (req, res) => {
   const user = await User.findOne({ _id: req.user.userId });
   const email = user.email;
   console.log(email);
-  const official = await officialEmail.findOne({ email: email });
-  if (!official) {
-    res.status(400);
-    throw new BadRequestError("Not a registered official TFF email");
-  }
+
   const code = crypto.randomBytes(32).toString("hex");
   const existingToken = await verificationToken.findOne({ email });
   if (existingToken) {
