@@ -44,6 +44,15 @@ const UserSchema = new mongoose.Schema({
     enum: ["fan", "expert", "club", "observer", "assigner", "investigator"],
     default: "fan",
   },
+  clubName: {
+    name: String,
+    default: "",
+  },
+  clubImage: {
+    type: String,
+    default:
+      "",
+  },
   image: {
     type: String,
     default:
