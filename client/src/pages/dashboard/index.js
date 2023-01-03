@@ -5,6 +5,7 @@ import Referee from "./Referee";
 import Profile from "./Profile";
 import Match from "./match/Match";
 import DueReports from "./DueReports";
+import EditReport from "./EditReport";
 import SharedLayout from "./SharedLayout";
 import Objection from "./Objection";
 
@@ -16,6 +17,7 @@ export {
   Profile,
   Match,
   DueReports,
+  EditReport,
   SharedLayout,
   Objection,
 };

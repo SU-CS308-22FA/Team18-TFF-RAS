@@ -1,5 +1,7 @@
 import e from "express";
 import BadRequestError from "../errors/bad-request.js";
+import NotFoundError from "../errors/not-found.js";
+
 import fixtures from "../models/fixtures.js";
 import Report from "../models/Report.js";
 import User from "../models/User.js";
@@ -58,4 +60,43 @@ const dueReports = async (req, res) => {
   });
 };
 
-export { dueReports };
+const submitReport = async (req, res) => {
+  const { id } = req.params;
+
+  const { fairness, accuracy, strictness, final_grade, comments } = req.body;
+
+  if (!final_grade || !strictness || !accuracy || !fairness || !comments) {
+    throw new BadRequestError("Please Provide All Values");
+  }
+
+  const report = await Report.findOne({ _id: id });
+
+  if (!report) {
+    throw new NotFoundError(`No report with id ${id}`);
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+  const firstname = user.name;
+  const lastName = user.lastName;
+  const name = firstname + " " + lastName;
+  if (name.toUpperCase() !== report.observer.toUpperCase()) {
+    throw new BadRequestError("Unauthorized");
+  }
+  if (report.isSubmitted !== false) {
+    throw new BadRequestError("Report already submitted");
+  }
+  const submittedReport = await Report.findOneAndUpdate(
+    { _id: id },
+    {
+      fairness: fairness,
+      final_grade: final_grade,
+      strictness: strictness,
+      comments: comments,
+      accuracy: accuracy,
+      isSubmitted: true,
+    }
+  );
+  res.status(200).json({ submittedReport });
+};
+
+export { dueReports, submitReport };
