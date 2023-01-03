@@ -46,6 +46,9 @@ import {
   GET_REFEREE_RATINGS_ERROR,
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
+  GET_REFEREES_RATINGS_BEGIN,
+  GET_REFEREES_RATINGS_SUCCESS,
+  GET_REFEREES_RATINGS_ERROR,
   SET_EDIT_REPORT,
   EDIT_REPORT_BEGIN,
   EDIT_REPORT_SUCCESS,
@@ -374,6 +377,29 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === GET_REFEREE_RATINGS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_REFEREES_RATINGS_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREES_RATINGS_SUCCESS) {
+    const { referees } = action.payload;
+
+    console.log(JSON.stringify(action.payload));
+
+    return {
+      ...state,
+      isLoading: false,
+      refereesRatings: referees.referees,
+    };
+  }
+  if (action.type === GET_REFEREES_RATINGS_ERROR) {
     return {
       ...state,
       isLoading: false,

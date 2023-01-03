@@ -49,6 +49,9 @@ import {
   GET_REFEREE_RATINGS_ERROR,
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
+  GET_REFEREES_RATINGS_BEGIN,
+  GET_REFEREES_RATINGS_SUCCESS,
+  GET_REFEREES_RATINGS_ERROR,
   SET_EDIT_REPORT,
   EDIT_REPORT_SUCCESS,
   EDIT_REPORT_BEGIN,
@@ -81,6 +84,7 @@ const initialState = {
   review: "",
   eventReviews: [],
   referees: [],
+  refereesRatings: {},
   referee: null,
   overallRating: "-",
   fanRating: "-",
@@ -459,6 +463,28 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getRefereesRatings = async () => {
+    dispatch({ type: GET_REFEREES_RATINGS_BEGIN });
+    try {
+      const { data } = await authFetch.get("/averageScoresAndSentiment");
+
+      dispatch({
+        type: GET_REFEREES_RATINGS_SUCCESS,
+        payload: {
+          referees: data,
+        },
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_REFEREES_RATINGS_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
@@ -569,6 +595,7 @@ const AppProvider = ({ children }) => {
         clearModal,
         handleChange,
         getRefereeRatings,
+        getRefereesRatings,
         editReport,
         setEditReport,
       }}

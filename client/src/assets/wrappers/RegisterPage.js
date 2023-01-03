@@ -3,6 +3,8 @@ import styled from "styled-components";
 const Wrapper = styled.section`
   display: grid;
   align-items: center;
+  background-image: url("/tff-background.jpeg");
+  background-size: cover;
   .logo {
     display: block;
     margin: 0 auto;
