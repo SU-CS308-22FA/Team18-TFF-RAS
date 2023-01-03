@@ -2,6 +2,19 @@
 /* eslint-disable no-unreachable */
 import axios from "axios";
 
+const getVideos = async (home, away, round) => {
+  try {
+    const { data } = await axios.get(
+      `/api/videoClipsOfMatch/${home}&${away}&${round}`
+    );
+    console.log("RESULTS: " + JSON.stringify(data));
+    return data;
+  } catch (error) {
+    console.log("ERROR");
+    return [];
+  }
+};
+
 const getStandings = async () => {
   try {
     const { data } = await axios.get(
@@ -2815,4 +2828,5 @@ export {
   getMatch,
   getUpcomingMatches,
   getStandings,
+  getVideos,
 };

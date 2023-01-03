@@ -358,6 +358,16 @@ const Wrapper = styled.main`
     color: black;
     text-align: center;
   }
+
+  .show-video-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 20px;
+    color: white;
+    margin: 0;
+  }
 `;
 
 export default Wrapper;

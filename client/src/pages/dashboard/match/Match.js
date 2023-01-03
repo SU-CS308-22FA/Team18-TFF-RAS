@@ -5,6 +5,7 @@ import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralI
 import MatchEventsInfo from "../../../components/MatchEventsInfo/MatchEventsInfo";
 import MatchSubsInfo from "../../../components/MatchSubsInfo/MatchSubsInfo";
 import MatchStatsInfo from "../../../components/MatchStatsInfo/MatchStatsInfo";
+import ModalVideo from "react-modal-video";
 
 import DefaultReferee from "../../../assets/images/default_referee.jpeg";
 
@@ -16,11 +17,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
-import { getMatch } from "../../../utils/api";
+import { getMatch, getVideos } from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import MatchRefRatingColumn from "../../../components/MatchRefRatingColumn/MatchRefRatingColumn";
 import { referees } from "../../../utils/constants";
 import { useAppContext } from "../../../context/appContext";
+
+import "react-modal-video/scss/modal-video.scss";
 
 const Match = () => {
   const { id } = useParams();
@@ -54,6 +57,12 @@ const Match = () => {
   const [refereeName, setRefereeName] = useState("");
   const [refereeImage, setRefereeImage] = useState(DefaultReferee);
   const [currentTime, setCurrentTime] = useState("");
+  const [videos, setVideos] = useState([]);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [videoURL, setVideoURL] = useState("");
+
+  console.log(videos);
+
   const intervalIdRef = useRef(null);
 
   // sort and filter events
@@ -143,6 +152,17 @@ const Match = () => {
     getMatch(id).then((data) => {
       setMatchData(data);
 
+      // get videos
+      getVideos(
+        data.teams.home.name,
+        data.teams.away.name,
+        data.league.round.slice(data.league.round.length - 2)
+      ).then((results) => {
+        if (results?.events) {
+          setVideos(results.events);
+        }
+      });
+
       // set referee
       if (data?.fixture?.referee !== null) {
         const currentReferee = referees.find((refereeObject) =>
@@ -198,6 +218,17 @@ const Match = () => {
       () =>
         getMatch(id).then((data) => {
           setMatchData(data);
+
+          // get videos
+          getVideos(
+            data.teams.home.name,
+            data.teams.away.name,
+            data.league.round.slice(data.league.round.length - 2)
+          ).then((results) => {
+            if (results?.events) {
+              setVideos(results.events);
+            }
+          });
 
           // set referee
           if (data?.fixture?.referee !== null) {
@@ -275,6 +306,12 @@ const Match = () => {
 
   return (
     <MatchPageWrapper>
+      <ModalVideo
+        channel="custom"
+        url={videoURL}
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
+      />
       <Dialog open={showModal} onClose={clearModal}>
         {/* <DialogTitle>{"Delete this event review?"}</DialogTitle> */}
         <DialogContent>
@@ -328,6 +365,9 @@ const Match = () => {
                 isChoosingEvent={isChoosingEvent}
                 chosenEvents={reviewEvents}
                 addEventToReview={addEventToReview}
+                videos={videos}
+                setVideoURL={setVideoURL}
+                setIsVideoOpen={setIsVideoOpen}
               />
             ) : null}
             {matchData?.lineups.length > 0 &&
