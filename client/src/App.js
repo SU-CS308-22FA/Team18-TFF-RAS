@@ -7,6 +7,7 @@ import {
   SharedLayout,
   Objection,
   Match,
+  RefereeAssignment,
   Referee,
   Referees,
   DueReports,
@@ -45,6 +46,8 @@ function App() {
             <Route path="referees" element={<Referees />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/objection" element={<Objection />} />
+          <Route path="/referee-assignment" element={<RefereeAssignment />} />
+
             <Route path="reports" element={<DueReports />} />
             <Route path="/edit-report" element={<EditReport />} />
           </Route>
