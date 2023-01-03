@@ -8,6 +8,9 @@ import User from "../models/User.js";
 
 const dueReports = async (req, res) => {
   const user = await User.findOne({ _id: req.user.userId });
+  if (user.type !== "observer") {
+    throw new BadRequestError("Unauthorized");
+  }
   const firstname = user.name;
   const lastName = user.lastName;
   const name = firstname + " " + lastName;
@@ -76,6 +79,9 @@ const submitReport = async (req, res) => {
   }
 
   const user = await User.findOne({ _id: req.user.userId });
+  if (user.type !== "observer") {
+    throw new BadRequestError("Unauthorized");
+  }
   const firstname = user.name;
   const lastName = user.lastName;
   const name = firstname + " " + lastName;
