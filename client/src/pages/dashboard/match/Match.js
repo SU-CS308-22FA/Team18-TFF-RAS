@@ -147,18 +147,25 @@ const Match = () => {
     const matchIntervalID = setInterval(
       getMatch(id).then((data) => {
         setMatchData(data);
-        const currentReferee = referees.find((refereeObject) =>
-          refereeObject?.apiName.includes(
-            data.fixture.referee.indexOf(",") === -1
-              ? data.fixture.referee
-              : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
-          )
-        );
-        // getReferee(currentReferee.id);
-        setRefID(currentReferee.id);
-        setRefereeName(currentReferee.name);
-        if (currentReferee?.image) {
-          setRefereeImage(currentReferee?.image);
+
+        // set referee
+        if (data?.fixture?.referee !== null) {
+          const currentReferee = referees.find((refereeObject) =>
+            refereeObject?.apiName.includes(
+              data.fixture.referee.indexOf(",") === -1
+                ? data.fixture.referee
+                : data.fixture.referee.slice(
+                    0,
+                    data.fixture.referee.indexOf(",")
+                  )
+            )
+          );
+          // getReferee(currentReferee.id);
+          setRefID(currentReferee.id);
+          setRefereeName(currentReferee.name);
+          if (currentReferee?.image) {
+            setRefereeImage(currentReferee?.image);
+          }
         }
 
         // get rating
@@ -256,7 +263,8 @@ const Match = () => {
               <MatchStatsInfo data={matchData.statistics} />
             ) : null}
           </div>
-          {["fan", "expert"].includes(user?.type) ? (
+          {["fan", "expert"].includes(user?.type) &&
+          ["FT", "PEN", "AET"].includes(matchData?.fixture?.status) ? (
             <MatchRefRatingColumn
               setRating={setRating}
               rating={rating}
@@ -287,8 +295,13 @@ const Match = () => {
             />
           ) : (
             <div className="not-a-fan-container">
-              Only fans and experts can rate and leave reviews on referees'
-              performances
+              {!["fan", "expert"].includes(user?.type)
+                ? "Only fans and experts can rate and leave reviews on referees' performances."
+                : `Rating and review for ${
+                    matchData?.fixture?.referee !== null
+                      ? matchData.fixture.referee
+                      : "the referee"
+                  }'s performance in this match will be opened once match is finished.`}
             </div>
           )}
         </div>

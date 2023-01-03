@@ -77,7 +77,7 @@ const referees = [
   },
   {
     name: "Kadir Sağlam",
-    apiName: ["K. Sağlam"],
+    apiName: ["K. Sağlam", "Kadir Saglam"],
     id: "20668",
     image: "http://kayserispor.gen.tr/uploads/kadir-saglam.jpg",
   },
