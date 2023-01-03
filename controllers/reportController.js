@@ -79,14 +79,12 @@ const submitReport = async (req, res) => {
   const firstname = user.name;
   const lastName = user.lastName;
   const name = firstname + " " + lastName;
-  let observername = new RegExp("\\b" + name + "\\b", "i");
-  if (name !== report.observer) {
+  if (name.toUpperCase() !== report.observer.toUpperCase()) {
     throw new BadRequestError("Unauthorized");
   }
   if (report.isSubmitted !== false) {
     throw new BadRequestError("Report already submitted");
   }
-  console.log(req.body);
   const submittedReport = await Report.findOneAndUpdate(
     { _id: id },
     {
