@@ -44,6 +44,9 @@ import {
   GET_REFEREE_RATINGS_BEGIN,
   GET_REFEREE_RATINGS_SUCCESS,
   GET_REFEREE_RATINGS_ERROR,
+  GET_ALLRATING_BEGIN,
+  GET_ALLRATING_SUCCESS,
+  GET_ALLRATING_ERROR,
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
   GET_REFEREES_RATINGS_BEGIN,
@@ -353,6 +356,9 @@ const reducer = (state, action) => {
   if (action.type === GET_REFEREE_RATINGS_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
+  if (action.type === GET_ALLRATING_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
   if (action.type === GET_REFEREE_RATINGS_SUCCESS) {
     const {
       overallRating,
@@ -372,6 +378,17 @@ const reducer = (state, action) => {
       overallSentiment,
       fanSentiment,
       expertSentiment,
+    };
+  }
+  if (action.type === GET_ALLRATING_SUCCESS) {
+    const ratings = action.payload;
+
+    console.log(JSON.stringify(action.payload));
+
+    return {
+      ...state,
+      isLoading: false,
+      ratings,
     };
   }
   if (action.type === GET_REFEREE_RATINGS_ERROR) {
