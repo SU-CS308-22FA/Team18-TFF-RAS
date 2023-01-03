@@ -11,12 +11,10 @@ const NavLinks = ({ toggleSidebar }) => {
     newLinks = newLinks.filter((link) => link.path !== "objection");
   }
 
-  if (!["observer"].includes(user?.type)) {
+  if (!["observer", "expert"].includes(user?.type)) {
     newLinks = newLinks.filter((link) => link.path !== "reports");
   }
-  if (user.type !== "observer" && user.type !== "expert") {
-    newLinks = links.filter((link) => link.path !== "reports");
-  }
+
   return (
     <div className="nav-links">
       {newLinks.map((link) => {
