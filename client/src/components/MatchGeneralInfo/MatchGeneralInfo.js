@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 const MatchGeneralInfo = ({ showHeader, data, currentTime }) => {
   const status = data?.fixture?.status?.short;
-  console.log("STATUS:" + status);
 
   return (
     <div className="container card-css">

@@ -10,7 +10,6 @@ const Matches = () => {
   const [matches, setMatches] = useState([]);
 
   const onDateSelect = (newDate) => {
-    console.log(moment(newDate).format("YYYY-MM-DD"));
     setCurrentDate(newDate);
   };
 

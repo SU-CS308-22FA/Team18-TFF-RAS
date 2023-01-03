@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
@@ -39,10 +39,6 @@ const Match = () => {
     loading,
     user,
   } = useAppContext();
-  console.log(storedRating);
-  console.log(storedReview);
-  console.log(storedEventReviews);
-  console.log("ENDD");
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
@@ -58,7 +54,7 @@ const Match = () => {
   const [refereeName, setRefereeName] = useState("");
   const [refereeImage, setRefereeImage] = useState(DefaultReferee);
   const [currentTime, setCurrentTime] = useState("");
-  const [intervalID, setIntervalID] = useState(null);
+  const intervalIdRef = useRef(null);
 
   // sort and filter events
   const newData = [];
@@ -144,50 +140,129 @@ const Match = () => {
   }, []);
 
   useEffect(() => {
+    getMatch(id).then((data) => {
+      setMatchData(data);
+
+      // set referee
+      if (data?.fixture?.referee !== null) {
+        const currentReferee = referees.find((refereeObject) =>
+          refereeObject?.apiName.includes(
+            data.fixture.referee.indexOf(",") === -1
+              ? data.fixture.referee
+              : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
+          )
+        );
+        // getReferee(currentReferee.id);
+        setRefID(currentReferee.id);
+        setRefereeName(currentReferee.name);
+        if (currentReferee?.image) {
+          setRefereeImage(currentReferee?.image);
+        }
+      }
+
+      // get rating
+      getRating(data.fixture.id);
+
+      // handle current time
+      if (["1H", "2H", "ET"].includes(data.fixture.status.short)) {
+        const { timestamp } = data.fixture;
+        let seconds = new Date().getTime() - timestamp * 1000;
+        seconds = Math.floor(seconds / 1000);
+        let minutes =
+          data.fixture.status.elapsed !== 45
+            ? Math.max(0, data.fixture.status.elapsed - 1)
+            : Math.floor(seconds / 60) - 3;
+        const delay = Math.floor(seconds / 60) - minutes;
+        seconds %= 60;
+        setCurrentTime(
+          `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+            seconds >= 10 ? seconds : "0" + seconds.toString()
+          }`
+        );
+        intervalIdRef.current = setInterval(() => {
+          const { timestamp } = data.fixture;
+          let seconds = new Date().getTime() - timestamp * 1000;
+          seconds = Math.floor(seconds / 1000);
+          let minutes = Math.floor(seconds / 60) - delay;
+          // minutes = Math.max(0, data.fixture.status.elapsed - 1);
+          seconds %= 60;
+          setCurrentTime(
+            `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+              seconds >= 10 ? seconds : "0" + seconds.toString()
+            }`
+          );
+        }, 1000);
+      }
+    });
     const matchIntervalID = setInterval(
-      getMatch(id).then((data) => {
-        setMatchData(data);
+      () =>
+        getMatch(id).then((data) => {
+          setMatchData(data);
 
-        // set referee
-        if (data?.fixture?.referee !== null) {
-          const currentReferee = referees.find((refereeObject) =>
-            refereeObject?.apiName.includes(
-              data.fixture.referee.indexOf(",") === -1
-                ? data.fixture.referee
-                : data.fixture.referee.slice(
-                    0,
-                    data.fixture.referee.indexOf(",")
-                  )
-            )
-          );
-          // getReferee(currentReferee.id);
-          setRefID(currentReferee.id);
-          setRefereeName(currentReferee.name);
-          if (currentReferee?.image) {
-            setRefereeImage(currentReferee?.image);
+          // set referee
+          if (data?.fixture?.referee !== null) {
+            const currentReferee = referees.find((refereeObject) =>
+              refereeObject?.apiName.includes(
+                data.fixture.referee.indexOf(",") === -1
+                  ? data.fixture.referee
+                  : data.fixture.referee.slice(
+                      0,
+                      data.fixture.referee.indexOf(",")
+                    )
+              )
+            );
+            // getReferee(currentReferee.id);
+            setRefID(currentReferee.id);
+            setRefereeName(currentReferee.name);
+            if (currentReferee?.image) {
+              setRefereeImage(currentReferee?.image);
+            }
           }
-        }
 
-        // get rating
-        getRating(data.fixture.id);
+          // get rating
+          getRating(data.fixture.id);
 
-        // handle current time
-        if (["1H", "2H", "ET"].includes(data.fixture.status.short)) {
-          setIntervalID(
-            setInterval(() => {
+          // handle current time
+          console.log(intervalIdRef.current);
+          if (
+            ["1H", "2H", "ET"].includes(data.fixture.status.short) &&
+            intervalIdRef.current === null
+          ) {
+            const { timestamp } = data.fixture;
+            let seconds = new Date().getTime() - timestamp * 1000;
+            seconds = Math.floor(seconds / 1000);
+            let minutes =
+              data.fixture.status.elapsed !== 45
+                ? Math.max(0, data.fixture.status.elapsed - 1)
+                : Math.floor(seconds / 60) - 3;
+            const delay = Math.floor(seconds / 60) - minutes;
+            seconds %= 60;
+            setCurrentTime(
+              `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+                seconds >= 10 ? seconds : "0" + seconds.toString()
+              }`
+            );
+            intervalIdRef.current = setInterval(() => {
               const { timestamp } = data.fixture;
-              let seconds = new Date().getTime() - timestamp;
+              let seconds = new Date().getTime() - timestamp * 1000;
               seconds = Math.floor(seconds / 1000);
-              let minutes = Math.floor(seconds / 60);
+              let minutes = Math.floor(seconds / 60) - delay;
+              // minutes = Math.max(0, data.fixture.status.elapsed - 1);
               seconds %= 60;
-              setCurrentTime(`${minutes}:${seconds}`);
-            }, 1000)
-          );
-        } else if (intervalID !== null) {
-          clearInterval(intervalID);
-          setIntervalID(null);
-        }
-      }),
+              setCurrentTime(
+                `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+                  seconds >= 10 ? seconds : "0" + seconds.toString()
+                }`
+              );
+            }, 1000);
+          } else if (
+            !["1H", "2H", "ET"].includes(data.fixture.status.short) &&
+            intervalIdRef.current !== null
+          ) {
+            clearInterval(intervalIdRef.current);
+            intervalIdRef.current = null;
+          }
+        }),
       30000
     );
 

@@ -10,8 +10,6 @@ const Referees = () => {
   const [sortedReferees, setSortedReferees] = useState([]);
   const [sortingValue, setSortingValue] = useState("alphabetic");
 
-  console.log(JSON.stringify(refereesRatings));
-
   useEffect(() => {
     getRefereesRatings();
   }, []);

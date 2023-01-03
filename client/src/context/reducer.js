@@ -363,8 +363,6 @@ const reducer = (state, action) => {
       expertSentiment,
     } = action.payload;
 
-    console.log(JSON.stringify(action.payload));
-
     return {
       ...state,
       isLoading: false,
@@ -390,8 +388,6 @@ const reducer = (state, action) => {
   }
   if (action.type === GET_REFEREES_RATINGS_SUCCESS) {
     const { referees } = action.payload;
-
-    console.log(JSON.stringify(action.payload));
 
     return {
       ...state,
@@ -443,7 +439,6 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === HANDLE_CHANGE) {
-    console.log({ [action.payload.name]: action.payload.value });
     return {
       ...state,
       [action.payload.name]: action.payload.value,
