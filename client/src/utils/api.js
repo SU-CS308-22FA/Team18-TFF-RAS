@@ -2,6 +2,72 @@
 /* eslint-disable no-unreachable */
 import axios from "axios";
 
+const getStandings = async () => {
+  try {
+    const { data } = await axios.get(
+      "https://api-football-v1.p.rapidapi.com/v3/standings",
+      {
+        params: { season: "2022", league: "203" },
+        headers: {
+          "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
+          "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
+        },
+      }
+    );
+    const standings = data.response;
+
+    console.log(JSON.stringify(standings));
+    return standings[0];
+  } catch (error) {
+    console.log("ERROR");
+    return [];
+  }
+};
+
+const getUpcomingMatches = async () => {
+  try {
+    const { data } = await axios.get(
+      "https://api-football-v1.p.rapidapi.com/v3/fixtures",
+      {
+        params: { next: "3", league: "203", season: "2022" },
+        headers: {
+          "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
+          "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
+        },
+      }
+    );
+    const matches = data.response;
+
+    console.log(JSON.stringify(matches));
+    return matches;
+  } catch (error) {
+    console.log("ERROR");
+    return [];
+  }
+};
+
+const getLatestMatches = async (numMatches = 7) => {
+  try {
+    const { data } = await axios.get(
+      "https://api-football-v1.p.rapidapi.com/v3/fixtures",
+      {
+        params: { last: numMatches.toString(), league: "203", season: "2022" },
+        headers: {
+          "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
+          "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
+        },
+      }
+    );
+    const matches = data.response;
+
+    console.log(JSON.stringify(matches));
+    return matches;
+  } catch (error) {
+    console.log("ERROR");
+    return [];
+  }
+};
+
 const getMatches = async (date) => {
   try {
     const { data } = await axios.get(
@@ -2743,4 +2809,10 @@ const getMatch = async (matchId) => {
   }
 };
 
-export { getMatches, getMatch };
+export {
+  getLatestMatches,
+  getMatches,
+  getMatch,
+  getUpcomingMatches,
+  getStandings,
+};

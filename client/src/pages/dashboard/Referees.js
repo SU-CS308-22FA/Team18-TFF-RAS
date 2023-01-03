@@ -1,108 +1,249 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
-import Wrapper from "../../assets/wrappers/RegisterPage";
-import axios from "axios";
+import Wrapper from "../../assets/wrappers/RefereesPage";
 import { referees } from "../../utils/constants";
-import { Link } from "react-router-dom";
+import { useAppContext } from "../../context/appContext";
 
 const Referees = () => {
-  const [refName, setRefName] = useState("");
-  const [license, setLicense] = useState("");
-  const [games, setGames] = useState([]);
-  const [classification, setClassification] = useState("");
-  const [region, setRegion] = useState("");
-  const [showAll, setShowAll] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const { getRefereesRatings, refereesRatings } = useAppContext();
 
-  const baseURL = "/api/referee/";
+  const [sortedReferees, setSortedReferees] = useState([]);
+  const [sortingValue, setSortingValue] = useState("alphabetic");
 
-  async function getRefereeData(id) {
-    try {
-      const response = await axios.get(`${baseURL + id}`);
-      const data = response.data;
-      setRefName(data["name"]);
-      setGames(data["matchesRuled"]);
-      setClassification(data["classification"]);
-      setRegion(data["region"]);
-      setLicense(data["lisenceNumber"]);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
+  console.log(JSON.stringify(refereesRatings));
+
+  useEffect(() => {
+    getRefereesRatings();
+  }, []);
+
+  useEffect(() => {
+    if (sortingValue === "alphabetic") {
+      let azReferees = [...referees];
+      azReferees.sort(function (a, b) {
+        var nameA = a.name.toLowerCase(),
+          nameB = b.name.toLowerCase();
+        if (nameA < nameB)
+          //sort string ascending
+          return -1;
+        if (nameA > nameB) return 1;
+        return 0; //default return value (no sorting)
+      });
+      setSortedReferees(
+        [...azReferees].map((referee) => ({ ...referee, displayValue: "" }))
+      );
+    } else if (sortingValue === "overall_rating") {
+      let temp = [...referees].map((referee) => ({
+        ...referee,
+        displayValue: Object.keys(refereesRatings).includes(referee.id)
+          ? refereesRatings[referee.id].rating.rating
+          : "-",
+      }));
+      temp.sort((a, b) => {
+        let numberA = a.displayValue === "-" ? 0 : parseFloat(a.displayValue);
+        let numberB = b.displayValue === "-" ? 0 : parseFloat(b.displayValue);
+        if (numberA !== numberB) {
+          return numberB - numberA;
+        } else {
+          var nameA = a.name.toLowerCase(),
+            nameB = b.name.toLowerCase();
+          if (nameA < nameB)
+            //sort string ascending
+            return -1;
+          if (nameA > nameB) return 1;
+          return 0; //default return value (no sorting)
+        }
+      });
+      setSortedReferees([...temp]);
+    } else if (sortingValue === "fan_rating") {
+      let temp = [...referees].map((referee) => ({
+        ...referee,
+        displayValue:
+          Object.keys(refereesRatings).includes(referee.id) &&
+          refereesRatings[referee.id].fanRating.count !== 0
+            ? refereesRatings[referee.id].fanRating.rating
+            : "-",
+      }));
+      temp.sort((a, b) => {
+        let numberA = a.displayValue === "-" ? 0 : parseFloat(a.displayValue);
+        let numberB = b.displayValue === "-" ? 0 : parseFloat(b.displayValue);
+        if (numberA !== numberB) {
+          return numberB - numberA;
+        } else {
+          var nameA = a.name.toLowerCase(),
+            nameB = b.name.toLowerCase();
+          if (nameA < nameB)
+            //sort string ascending
+            return -1;
+          if (nameA > nameB) return 1;
+          return 0; //default return value (no sorting)
+        }
+      });
+      setSortedReferees([...temp]);
+    } else if (sortingValue === "expert_rating") {
+      let temp = [...referees].map((referee) => ({
+        ...referee,
+        displayValue:
+          Object.keys(refereesRatings).includes(referee.id) &&
+          refereesRatings[referee.id].expertRating.count !== 0
+            ? refereesRatings[referee.id].expertRating.rating
+            : "-",
+      }));
+      temp.sort((a, b) => {
+        let numberA = a.displayValue === "-" ? 0 : parseFloat(a.displayValue);
+        let numberB = b.displayValue === "-" ? 0 : parseFloat(b.displayValue);
+        if (numberA !== numberB) {
+          return numberB - numberA;
+        } else {
+          var nameA = a.name.toLowerCase(),
+            nameB = b.name.toLowerCase();
+          if (nameA < nameB)
+            //sort string ascending
+            return -1;
+          if (nameA > nameB) return 1;
+          return 0; //default return value (no sorting)
+        }
+      });
+      setSortedReferees([...temp]);
+    } else if (sortingValue === "overall_sentiment") {
+      let temp = [...referees].map((referee) => ({
+        ...referee,
+        displayValue: Object.keys(refereesRatings).includes(referee.id)
+          ? refereesRatings[referee.id].sentiment.score
+          : "-",
+      }));
+      temp.sort((a, b) => {
+        let numberA = a.displayValue === "-" ? 0 : parseFloat(a.displayValue);
+        let numberB = b.displayValue === "-" ? 0 : parseFloat(b.displayValue);
+        if (numberA !== numberB) {
+          return numberB - numberA;
+        } else {
+          var nameA = a.name.toLowerCase(),
+            nameB = b.name.toLowerCase();
+          if (nameA < nameB)
+            //sort string ascending
+            return -1;
+          if (nameA > nameB) return 1;
+          return 0; //default return value (no sorting)
+        }
+      });
+      setSortedReferees([...temp]);
     }
-  }
-
-  const handleClick = (refId) => {
-    setShowAll(false);
-    setIsLoading(true);
-    getRefereeData(refId);
-  };
-
-  const handleGoBack = () => {
-    setShowAll(true);
-    setIsLoading(false);
-  };
+  }, [sortingValue]);
 
   return (
     <Wrapper className="full-page">
-      <div className="container-ref">
-        {showAll ? (
-          referees.map((ref) => {
-            return (
-              <div key={ref.Id} className="form-ref">
-                <h5>Name: {ref.name} </h5>
-                <Link className="btn" to={"/referees/" + ref.id}>
-                  Click to see more
-                </Link>
+      <div className="stats-container">
+        <div className="card-css">
+          <section>
+            <div className="data-view-controls-container-css">
+              <span className="css-league-span">Referees</span>
+              <div>
+                <div>
+                  <select
+                    className="select-applyMediumHover"
+                    width="115.2109375"
+                  >
+                    <option value="2022/2023">2022/2023</option>
+                    <span className="hidden-span">2022/2023</span>
+                  </select>
+                </div>
               </div>
-            );
-          })
-        ) : isLoading ? (
-          <div className="form">
-            <h4>Referee Information Is Loading...</h4>
-          </div>
-        ) : (
-          <div className="form">
-            <button className="btn" onClick={handleGoBack}>
-              Go Back
-            </button>
-            <h5>Name: {refName} </h5>
-            <h5>License: {license} </h5>
-            <h5>Classification: {classification} </h5>
-            <h5>Region: {region} </h5>
-            <h5>
-              games:{" "}
-              {games.map((game, idx) => {
-                return (
-                  <div key={idx} className="form">
-                    <h5>Home: {game.home} </h5> <h5> Away: {game.away} </h5>{" "}
-                    <h5> Score: {game.score}</h5>
-                    <h5>Date: {game.date} </h5>
-                    <h5>League: {game.organisation}</h5>
+              <div>
+                <div>
+                  <select
+                    className="select-applyMediumHover-right"
+                    width="109.09375"
+                    value={sortingValue}
+                    onChange={(e) => setSortingValue(e.target.value)}
+                  >
+                    <option value="alphabetic">A-Z</option>
+                    <option value="overall_rating">Overall rating</option>
+                    <option value="fan_rating">Fan rating</option>
+                    <option value="expert_rating">Expert rating</option>
+                    <option value="overall_sentiment">Overall sentiment</option>
+                    {/* <option value="fan_sentiment">Fan sentiment</option>
+                    <option value="expert_sentiment">Expert sentiment</option> */}
+                  </select>
+                  <span className="hidden-span">Top scorer</span>
+                </div>
+              </div>
+            </div>
+            <section className="league-season-stats-css">
+              <div className="mui-paper-root">
+                <div className="jss1">
+                  <div className="jss2">
+                    <div>
+                      <table className="mui-table-root jss3">
+                        <colgroup>
+                          <col className="col1" />
+                          <col className="col2" />
+                          <col className="col3" />
+                          <col className="col4" />
+                        </colgroup>
+                        <tbody className="mui-table-body-root">
+                          {sortedReferees.map((referee, index) => (
+                            <tr key={index} className="mui-table-row-root">
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                {index + 1}
+                              </td>
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss10 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                <div className="referee-icon-container">
+                                  <div
+                                    className="referee-icon  referee-icon-css"
+                                    width="42"
+                                    height="42"
+                                  >
+                                    <img
+                                      alt=""
+                                      className="image referee-image"
+                                      width="42"
+                                      height="42"
+                                      src={referee.image}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                <a
+                                  href={"/referees/" + referee.id}
+                                  className="styled-link"
+                                >
+                                  {referee.name}
+                                </a>
+                              </td>
+                              <td
+                                className="mui-table-cell-root mui-table-cell-body jss7 jss9 jss11 css-table-cell"
+                                colSpan="1"
+                              >
+                                {referee.displayValue}
+                                {sortingValue !== "alphabetic" &&
+                                referee.displayValue !== "-"
+                                  ? "/5.00"
+                                  : ""}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                );
-              })}{" "}
-            </h5>
-          </div>
-        )}
+                </div>
+              </div>
+            </section>
+          </section>
+        </div>
       </div>
     </Wrapper>
   );
 };
 
 export default Referees;
-
-// <div>
-//         <h1>Referee Name:</h1> <p>{refName}</p>
-//         <h2>Region: </h2> <p>{region} </p>
-//         <h3>License: </h3> <p>{license}</p>
-//         <h4>Classification: </h4> <p>{classification}</p>
-//         <h1>Games: {games.map((game) => {
-//           return (
-//             <div>
-//               <h1>Home: {game["home"]} --- Away: {game["away"]}</h1>
-//               <h2>Score: {game["score"]}</h2>
-//               <p>----------------------------------------------</p>
-//             </div>
-//           )
-//         })}</h1>
-//         </div>

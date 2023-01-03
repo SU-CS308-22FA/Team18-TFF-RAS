@@ -1,6 +1,7 @@
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
+  CLEAR_VALUES,
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -43,6 +44,15 @@ import {
   GET_REFEREE_RATINGS_BEGIN,
   GET_REFEREE_RATINGS_SUCCESS,
   GET_REFEREE_RATINGS_ERROR,
+  GET_DUE_REPORTS_BEGIN,
+  GET_DUE_REPORTS_SUCCESS,
+  GET_REFEREES_RATINGS_BEGIN,
+  GET_REFEREES_RATINGS_SUCCESS,
+  GET_REFEREES_RATINGS_ERROR,
+  SET_EDIT_REPORT,
+  EDIT_REPORT_BEGIN,
+  EDIT_REPORT_SUCCESS,
+  EDIT_REPORT_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -200,20 +210,20 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-    }
+    };
   }
   if (action.type === UPDATE_OBJECTION_ERROR) {
     return {
       ...state,
       isLoading: false,
-    }
+    };
   }
   if (action.type === UPDATE_OBJECTION_SUCCESS) {
     return {
       ...state,
       isLoading: false,
-      alertText: "Updated"
-    }
+      alertText: "Updated",
+    };
   }
   if (action.type === CREATE_OBJECTION_ERROR) {
     return {
@@ -375,6 +385,29 @@ const reducer = (state, action) => {
       modalText: action.payload.msg,
     };
   }
+  if (action.type === GET_REFEREES_RATINGS_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_REFEREES_RATINGS_SUCCESS) {
+    const { referees } = action.payload;
+
+    console.log(JSON.stringify(action.payload));
+
+    return {
+      ...state,
+      isLoading: false,
+      refereesRatings: referees.referees,
+    };
+  }
+  if (action.type === GET_REFEREES_RATINGS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showModal: true,
+      modalType: "danger",
+      modalText: action.payload.msg,
+    };
+  }
   if (action.type === GET_RATING_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
@@ -414,6 +447,77 @@ const reducer = (state, action) => {
     return {
       ...state,
       [action.payload.name]: action.payload.value,
+    };
+  }
+  if (action.type === GET_DUE_REPORTS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    };
+  }
+  if (action.type === GET_DUE_REPORTS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      dueReports: action.payload.dueReports,
+      numDueReports: action.payload.numDueReports,
+      numofDueReportPages: action.payload.numofDueReportPages,
+    };
+  }
+  if (action.type === SET_EDIT_REPORT) {
+    const report = state.dueReports.find(
+      (report) => report._id === action.payload.id
+    );
+    const { _id, final_grade, strictness, accuracy, fairness, comment } =
+      report;
+    return {
+      ...state,
+      isEditingReport: true,
+      editReportId: _id,
+      final_grade,
+      strictness,
+      accuracy,
+      fairness,
+      comment,
+    };
+  }
+  if (action.type === CLEAR_VALUES) {
+    const initialState = {
+      isEditingReport: false,
+      editReportId: "",
+      final_grade: 0,
+      strictness: 0,
+      accuracy: 0,
+      fairness: 0,
+      comment: "",
+    };
+
+    return {
+      ...state,
+      ...initialState,
+    };
+  }
+  if (action.type === EDIT_REPORT_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === EDIT_REPORT_SUCCESS) {
+    return {
+      ...state,
+      isEditingReport: false,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Report Submitted!",
+    };
+  }
+  if (action.type === EDIT_REPORT_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
     };
   }
 
