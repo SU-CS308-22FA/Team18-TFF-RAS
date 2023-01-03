@@ -21,27 +21,15 @@ class PythonOrgSearch(unittest.TestCase):
         self.assertIn("TFF RAS", driver.title)
         email = driver.find_element(By.NAME, "email")
         password = driver.find_element(By.NAME, "password")
-        email.send_keys("alperenoznam02@icloud.comm")
+        email.send_keys("fan@gmail.com")
         time.sleep(2)
-        password.send_keys("fuckthıscourse")
+        password.send_keys("fanfan")
         time.sleep(2)
         password.send_keys(Keys.RETURN)
         element_present = EC.presence_of_element_located((By.CLASS_NAME, "text-field"))
         WebDriverWait(driver, 5).until(element_present)
-        ###
-
-        #continue with what you want
-        elem = driver.find_element(By.CLASS_NAME, "text-field")
-        elem.send_keys("al")
-        time.sleep(0.6)
-        # elem.send_keys(Keys.RETURN)
         time.sleep(2)
-        self.assertNotIn("No Result for Matches", driver.page_source)
-        time.sleep(2)
-        elem.send_keys("p")
-        time.sleep(0.6)
-        time.sleep(2)
-        self.assertIn("No Result for Matches", driver.page_source)
+        self.assertNotIn("Objections", driver.page_source)
 
 
     def tearDown(self):
