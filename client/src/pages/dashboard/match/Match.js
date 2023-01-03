@@ -5,6 +5,7 @@ import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralI
 import MatchEventsInfo from "../../../components/MatchEventsInfo/MatchEventsInfo";
 import MatchSubsInfo from "../../../components/MatchSubsInfo/MatchSubsInfo";
 import MatchStatsInfo from "../../../components/MatchStatsInfo/MatchStatsInfo";
+import ModalVideo from "react-modal-video";
 
 import DefaultReferee from "../../../assets/images/default_referee.jpeg";
 
@@ -16,11 +17,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
-import { getMatch } from "../../../utils/api";
+import { getMatch, getVideos } from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import MatchRefRatingColumn from "../../../components/MatchRefRatingColumn/MatchRefRatingColumn";
 import { referees } from "../../../utils/constants";
 import { useAppContext } from "../../../context/appContext";
+
+import "react-modal-video/scss/modal-video.scss";
+import VideosContainer from "../../../components/VideosContainer";
 
 const Match = () => {
   const { id } = useParams();
@@ -54,6 +58,12 @@ const Match = () => {
   const [refereeName, setRefereeName] = useState("");
   const [refereeImage, setRefereeImage] = useState(DefaultReferee);
   const [currentTime, setCurrentTime] = useState("");
+  const [videos, setVideos] = useState([]);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [videoURL, setVideoURL] = useState("");
+
+  console.log(videos);
+
   const intervalIdRef = useRef(null);
 
   // sort and filter events
@@ -143,6 +153,17 @@ const Match = () => {
     getMatch(id).then((data) => {
       setMatchData(data);
 
+      // get videos
+      getVideos(
+        data.teams.home.name,
+        data.teams.away.name,
+        data.league.round.slice(data.league.round.length - 2)
+      ).then((results) => {
+        if (results?.events) {
+          setVideos(results.events);
+        }
+      });
+
       // set referee
       if (data?.fixture?.referee !== null) {
         const currentReferee = referees.find((refereeObject) =>
@@ -198,6 +219,17 @@ const Match = () => {
       () =>
         getMatch(id).then((data) => {
           setMatchData(data);
+
+          // get videos
+          getVideos(
+            data.teams.home.name,
+            data.teams.away.name,
+            data.league.round.slice(data.league.round.length - 2)
+          ).then((results) => {
+            if (results?.events) {
+              setVideos(results.events);
+            }
+          });
 
           // set referee
           if (data?.fixture?.referee !== null) {
@@ -275,6 +307,12 @@ const Match = () => {
 
   return (
     <MatchPageWrapper>
+      <ModalVideo
+        channel="custom"
+        url={videoURL}
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
+      />
       <Dialog open={showModal} onClose={clearModal}>
         {/* <DialogTitle>{"Delete this event review?"}</DialogTitle> */}
         <DialogContent>
@@ -328,6 +366,9 @@ const Match = () => {
                 isChoosingEvent={isChoosingEvent}
                 chosenEvents={reviewEvents}
                 addEventToReview={addEventToReview}
+                videos={videos}
+                setVideoURL={setVideoURL}
+                setIsVideoOpen={setIsVideoOpen}
               />
             ) : null}
             {matchData?.lineups.length > 0 &&
@@ -367,16 +408,26 @@ const Match = () => {
               refereeImage={refereeImage}
               loading={loading}
               refID={refID}
+              videos={videos}
+              setIsVideoOpen={setIsVideoOpen}
+              setVideoURL={setVideoURL}
             />
           ) : (
-            <div className="not-a-fan-container">
-              {!["fan", "expert"].includes(user?.type)
-                ? "Only fans and experts can rate and leave reviews on referees' performances."
-                : `Rating and review for ${
-                    matchData?.fixture?.referee !== null
-                      ? matchData.fixture.referee
-                      : "the referee"
-                  }'s performance in this match will be opened once match is finished.`}
+            <div>
+              <div className="not-a-fan-container">
+                {!["fan", "expert"].includes(user?.type)
+                  ? "Only fans and experts can rate and leave reviews on referees' performances."
+                  : `Rating and review for ${
+                      matchData?.fixture?.referee !== null
+                        ? matchData.fixture.referee
+                        : "the referee"
+                    }'s performance in this match will be opened once match is finished.`}
+              </div>
+              <VideosContainer
+                videos={videos}
+                setIsVideoOpen={setIsVideoOpen}
+                setVideoURL={setVideoURL}
+              />
             </div>
           )}
         </div>
