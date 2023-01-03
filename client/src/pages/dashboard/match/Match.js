@@ -140,12 +140,12 @@ const Match = () => {
   useEffect(() => {
     getMatch(id).then((data) => {
       setMatchData(data);
-      const currentReferee = referees.find(
-        (refereeObject) =>
-          refereeObject?.apiName ===
-          (data.fixture.referee.indexOf(",") === -1
+      const currentReferee = referees.find((refereeObject) =>
+        refereeObject?.apiName.includes(
+          data.fixture.referee.indexOf(",") === -1
             ? data.fixture.referee
-            : data.fixture.referee.slice(0, data.fixture.referee.indexOf(",")))
+            : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
+        )
       );
       // getReferee(currentReferee.id);
       setRefID(currentReferee.id);

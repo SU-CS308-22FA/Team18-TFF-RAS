@@ -187,6 +187,68 @@ app.get("/api/v1/avarageScore/:id", async (req, res) => {
   res.json(avrg);
 });
 
+app.get("/api/v1/averageScoresAndSentiment", async (req, res) => {
+  let ratings = await Rating.find({});
+
+  let referees = {};
+
+  for (let i = 0; i < ratings.length; i++) {
+    const element = ratings[i];
+
+    // add rating
+    if (!Object.keys(referees).includes(element.referee)) {
+      referees[element.referee] = {
+        rating: { count: 0, rating: 0 },
+        fanRating: { count: 0, rating: 0 },
+        expertRating: { count: 0, rating: 0 },
+        sentiment: { score: "-", reviews: "" },
+      };
+    }
+    referees[element.referee].rating.count++;
+    referees[element.referee].rating.rating += element.rating;
+
+    if (element.ratingType === "fan") {
+      referees[element.referee].fanRating.count++;
+      referees[element.referee].fanRating.rating += element.rating;
+    } else {
+      referees[element.referee].expertRating.count++;
+      referees[element.referee].expertRating.rating += element.rating;
+    }
+
+    // add review
+    referees[element.referee].sentiment.reviews += element.review + ". ";
+  }
+
+  for (let referee in referees) {
+    referees[referee].rating.rating /= referees[referee].rating.count;
+    referees[referee].rating.rating =
+      referees[referee].rating.rating.toFixed(2);
+    if (referees[referee].fanRating.count !== 0) {
+      referees[referee].fanRating.rating /= referees[referee].fanRating.count;
+      referees[referee].fanRating.rating =
+        referees[referee].fanRating.rating.toFixed(2);
+    }
+    if (referees[referee].expertRating.count !== 0) {
+      referees[referee].expertRating.rating /=
+        referees[referee].expertRating.count;
+      referees[referee].expertRating.rating =
+        referees[referee].expertRating.rating.toFixed(2);
+    }
+
+    if (referees[referee].sentiment.reviews !== "") {
+      referees[referee].sentiment.score = await sentiment.getSentimentScore(
+        referees[referee].sentiment.reviews
+      );
+      referees[referee].sentiment.score *= 2.5;
+      referees[referee].sentiment.score += 2.5;
+      referees[referee].sentiment.score =
+        referees[referee].sentiment.score.toFixed(2);
+    }
+  }
+
+  res.json({ referees });
+});
+
 app.get("/api/v1/sentimentAnalysisForExp/:id", async (req, res) => {
   let reviews = await Rating.find({
     referee: req.params.id,
