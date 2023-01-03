@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.6fbafc0e.css",
-    "main.js": "/static/js/main.214892ff.js",
+    "main.css": "/static/css/main.3d10d504.css",
+    "main.js": "/static/js/main.bd0f2ab7.js",
     "static/media/tffLogo.png": "/static/media/tffLogo.30357abfff30f0998400.png",
     "static/media/roboto-all-500-normal.woff": "/static/media/roboto-all-500-normal.0ab669b7a0d19b178f57.woff",
     "static/media/roboto-all-700-normal.woff": "/static/media/roboto-all-700-normal.a457fde362a540fcadff.woff",
@@ -59,11 +59,8 @@
     "static/media/referee-stats-red-card-icon.svg": "/static/media/referee-stats-red-card-icon.ad0d349297c32f9c015a3823b7c4e70b.svg",
     "static/media/lineup-card-yellow.svg": "/static/media/lineup-card-yellow.ed52e54e9b945d49547efaf4bf556aeb.svg",
     "static/media/referee-stats-penalty-icon.svg": "/static/media/referee-stats-penalty-icon.349986ba66d2bf67ae6dd4fe4779f861.svg",
-    "main.6fbafc0e.css.map": "/static/css/main.6fbafc0e.css.map",
-    "main.214892ff.js.map": "/static/js/main.214892ff.js.map"
+    "main.3d10d504.css.map": "/static/css/main.3d10d504.css.map",
+    "main.bd0f2ab7.js.map": "/static/js/main.bd0f2ab7.js.map"
   },
-  "entrypoints": [
-    "static/css/main.6fbafc0e.css",
-    "static/js/main.214892ff.js"
-  ]
+  "entrypoints": ["static/css/main.3d10d504.css", "static/js/main.bd0f2ab7.js"]
 }
