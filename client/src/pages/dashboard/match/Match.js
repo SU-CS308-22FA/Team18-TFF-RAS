@@ -57,6 +57,8 @@ const Match = () => {
   const [showError, setShowError] = useState(false);
   const [refereeName, setRefereeName] = useState("");
   const [refereeImage, setRefereeImage] = useState(DefaultReferee);
+  const [currentTime, setCurrentTime] = useState("");
+  const [intervalID, setIntervalID] = useState(null);
 
   // sort and filter events
   const newData = [];
@@ -83,7 +85,9 @@ const Match = () => {
       }
       newData.push(currentEvent);
     }
-    newData.push({ type: "full-time" });
+    if (["FT", "PEN", "AET"].includes(matchData.fixture.status.short)) {
+      newData.push({ type: "full-time" });
+    }
   }
 
   const addEventToReview = (idx) => {
@@ -140,29 +144,48 @@ const Match = () => {
   }, []);
 
   useEffect(() => {
-    getMatch(id).then((data) => {
-      setMatchData(data);
-      const currentReferee = referees.find((refereeObject) =>
-        refereeObject?.apiName.includes(
-          data.fixture.referee.indexOf(",") === -1
-            ? data.fixture.referee
-            : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
-        )
-      );
-      // getReferee(currentReferee.id);
-      setRefID(currentReferee.id);
-      setRefereeName(currentReferee.name);
-      if (currentReferee?.image) {
-        setRefereeImage(currentReferee?.image);
-      }
-    });
-  }, []);
+    const matchIntervalID = setInterval(
+      getMatch(id).then((data) => {
+        setMatchData(data);
+        const currentReferee = referees.find((refereeObject) =>
+          refereeObject?.apiName.includes(
+            data.fixture.referee.indexOf(",") === -1
+              ? data.fixture.referee
+              : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
+          )
+        );
+        // getReferee(currentReferee.id);
+        setRefID(currentReferee.id);
+        setRefereeName(currentReferee.name);
+        if (currentReferee?.image) {
+          setRefereeImage(currentReferee?.image);
+        }
 
-  useEffect(() => {
-    if (matchData != null) {
-      getRating(matchData.fixture.id);
-    }
-  }, [matchData]);
+        // get rating
+        getRating(data.fixture.id);
+
+        // handle current time
+        if (["1H", "2H", "ET"].includes(data.fixture.status.short)) {
+          setIntervalID(
+            setInterval(() => {
+              const { timestamp } = data.fixture;
+              let seconds = new Date().getTime() - timestamp;
+              seconds = Math.floor(seconds / 1000);
+              let minutes = Math.floor(seconds / 60);
+              seconds %= 60;
+              setCurrentTime(`${minutes}:${seconds}`);
+            }, 1000)
+          );
+        } else if (intervalID !== null) {
+          clearInterval(intervalID);
+          setIntervalID(null);
+        }
+      }),
+      30000
+    );
+
+    return () => clearInterval(matchIntervalID);
+  }, []);
 
   if (matchData == null) {
     return null;
@@ -211,16 +234,27 @@ const Match = () => {
       <main id="match-facts-wrapper">
         <div className="full-screen-match-content">
           <div className="match-page">
-            <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
-            <MatchEventsInfo
+            <MatchGeneralInfo
+              showHeader={isHeaderShown}
               data={matchData}
-              newData={newData}
-              isChoosingEvent={isChoosingEvent}
-              chosenEvents={reviewEvents}
-              addEventToReview={addEventToReview}
+              currentTime={currentTime}
             />
-            <MatchSubsInfo data={matchData} />
-            <MatchStatsInfo data={matchData.statistics} />
+            {matchData?.events.length > 0 ? (
+              <MatchEventsInfo
+                data={matchData}
+                newData={newData}
+                isChoosingEvent={isChoosingEvent}
+                chosenEvents={reviewEvents}
+                addEventToReview={addEventToReview}
+              />
+            ) : null}
+            {matchData?.lineups.length > 0 &&
+            matchData.lineups[0]?.formation !== null ? (
+              <MatchSubsInfo data={matchData} />
+            ) : null}
+            {matchData?.statistics.length > 0 ? (
+              <MatchStatsInfo data={matchData.statistics} />
+            ) : null}
           </div>
           {["fan", "expert"].includes(user?.type) ? (
             <MatchRefRatingColumn

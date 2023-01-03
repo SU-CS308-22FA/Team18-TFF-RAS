@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
-const MatchGeneralInfo = ({ showHeader, data }) => {
-  console.log(data);
+const MatchGeneralInfo = ({ showHeader, data, currentTime }) => {
+  const status = data?.fixture?.status?.short;
+  console.log("STATUS:" + status);
 
   return (
     <div className="container card-css">
@@ -78,12 +79,55 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                   </div>
                 </a>
                 <div className="css-match-info-wrapper">
-                  <span className="css-match-info-topRow">
+                  {/* <span className="css-match-info-topRow">
                     {data.goals.home} - {data.goals.away}
                   </span>
                   <span className="css-match-info-bottomRow">
                     {data.fixture.status.long}
-                  </span>
+                  </span> */}
+                  {["TBD"].includes(status) ? (
+                    <span className="css-match-info-topRow">TBD</span>
+                  ) : ["NS", "PST", "CANC", "ABD", "AWD", "WO"].includes(
+                      status
+                    ) ? (
+                    <>
+                      <span
+                        className="css-match-info-topRow"
+                        style={
+                          status != "NS"
+                            ? { textDecoration: "line-through" }
+                            : {}
+                        }
+                      >
+                        {new Date(data.fixture.date).toTimeString().slice(0, 5)}
+                      </span>
+                      {status === "NS" ? null : (
+                        <span className="css-match-info-bottomRow">
+                          {data.fixture.status.long}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <span className="css-match-info-topRow">
+                        {data.goals.home} - {data.goals.away}
+                      </span>
+                      <span className="css-match-info-bottomRow">
+                        {[
+                          "HT",
+                          "BT",
+                          "P",
+                          "SUSP",
+                          "INT",
+                          "FT",
+                          "AET",
+                          "PEN",
+                        ].includes(status)
+                          ? data.fixture.status.long
+                          : currentTime}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <a>
                   <div className="team-markup-apply-hover1">
@@ -119,12 +163,53 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                 </div>
               </a>
               <div className="css-match-info-wrapper">
-                <span className="css-match-info-topRow">
-                  {data.goals.home} - {data.goals.away}
-                </span>
-                <span className="css-match-info-bottomRow">
-                  {data.fixture.status.long}
-                </span>
+                {/* <span className="css-match-info-topRow">
+                    {data.goals.home} - {data.goals.away}
+                  </span>
+                  <span className="css-match-info-bottomRow">
+                    {data.fixture.status.long}
+                  </span> */}
+                {["TBD"].includes(status) ? (
+                  <span className="css-match-info-topRow">TBD</span>
+                ) : ["NS", "PST", "CANC", "ABD", "AWD", "WO"].includes(
+                    status
+                  ) ? (
+                  <>
+                    <span
+                      className="css-match-info-topRow"
+                      style={
+                        status != "NS" ? { textDecoration: "line-through" } : {}
+                      }
+                    >
+                      {new Date(data.fixture.date).toTimeString().slice(0, 5)}
+                    </span>
+                    {status === "NS" ? null : (
+                      <span className="css-match-info-bottomRow">
+                        {data.fixture.status.long}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span className="css-match-info-topRow">
+                      {data.goals.home} - {data.goals.away}
+                    </span>
+                    <span className="css-match-info-bottomRow">
+                      {[
+                        "HT",
+                        "BT",
+                        "P",
+                        "SUSP",
+                        "INT",
+                        "FT",
+                        "AET",
+                        "PEN",
+                      ].includes(status)
+                        ? data.fixture.status.long
+                        : currentTime}
+                    </span>
+                  </>
+                )}
               </div>
               <a>
                 <div className="team-markup-apply-hover1">
@@ -361,11 +446,13 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
 MatchGeneralInfo.propTypes = {
   showHeader: PropTypes.bool,
   data: PropTypes.object,
+  currentTime: PropTypes.string,
 };
 
 MatchGeneralInfo.defaultProps = {
   showHeader: false,
   data: {},
+  currentTime: "",
 };
 
 export default MatchGeneralInfo;
