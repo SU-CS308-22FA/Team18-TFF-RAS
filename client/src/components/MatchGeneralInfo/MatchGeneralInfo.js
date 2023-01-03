@@ -100,7 +100,19 @@ const MatchGeneralInfo = ({ showHeader, data, currentTime }) => {
                       >
                         {new Date(data.fixture.date).toTimeString().slice(0, 5)}
                       </span>
-                      {status === "NS" ? null : (
+                      {status === "NS" ? (
+                        moment(data.fixture.date).format("M/D/YY") ===
+                        moment(new Date()).format("M/D/YY") ? (
+                          "Today"
+                        ) : moment(data.fixture.date).format("M/D/YY") ===
+                          moment(
+                            new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+                          ).format("M/D/YY") ? (
+                          "Tomorrow"
+                        ) : (
+                          moment(data.fixture.date).format("M/D/YY")
+                        )
+                      ) : (
                         <span className="css-match-info-bottomRow">
                           {data.fixture.status.long}
                         </span>
@@ -182,7 +194,19 @@ const MatchGeneralInfo = ({ showHeader, data, currentTime }) => {
                     >
                       {new Date(data.fixture.date).toTimeString().slice(0, 5)}
                     </span>
-                    {status === "NS" ? null : (
+                    {status === "NS" ? (
+                      moment(data.fixture.date).format("M/D/YY") ===
+                      moment(new Date()).format("M/D/YY") ? (
+                        "Today"
+                      ) : moment(data.fixture.date).format("M/D/YY") ===
+                        moment(
+                          new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+                        ).format("M/D/YY") ? (
+                        "Tomorrow"
+                      ) : (
+                        moment(data.fixture.date).format("M/D/YY")
+                      )
+                    ) : (
                       <span className="css-match-info-bottomRow">
                         {data.fixture.status.long}
                       </span>
