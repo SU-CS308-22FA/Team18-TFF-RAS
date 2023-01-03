@@ -3,7 +3,8 @@ import { MdQueryStats, MdPersonAddAlt1 } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 import { AiFillExclamationCircle } from "react-icons/ai";
-import { AiTwotoneContainer } from "react-icons/ai";
+import { TbBook2 } from "react-icons/tb";
+
 
 const links = [
   {
@@ -46,7 +47,7 @@ const links = [
     id: 7,
     text: "reports",
     path: "reports",
-    icon: <AiTwotoneContainer />,
+    icon: <TbBook2 />,
   },
 ];
 

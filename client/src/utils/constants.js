@@ -152,7 +152,7 @@ const referees = [
   {
     name: "Abdulkadir Bitigen",
     id: "20372",
-    apiName: ["Abdulkadir Bitigen"],
+    apiName: ["Abdulkadir Bitigen", "A. Bitigen"],
     image: "http://ankahaber.net/public/upload/Haber/11025/11025_12638.Jpeg",
   },
 ];

@@ -37,6 +37,7 @@ const Match = () => {
     review: storedReview,
     eventReviews: storedEventReviews,
     loading,
+    user,
   } = useAppContext();
   console.log(storedRating);
   console.log(storedReview);
@@ -113,6 +114,7 @@ const Match = () => {
       rating,
       match: matchData.fixture.id,
       referee: refID,
+      ratingType: user.type,
     };
 
     // check for review
@@ -220,34 +222,41 @@ const Match = () => {
             <MatchSubsInfo data={matchData} />
             <MatchStatsInfo data={matchData.statistics} />
           </div>
-          <MatchRefRatingColumn
-            setRating={setRating}
-            rating={rating}
-            reviewEvents={reviewEvents}
-            setReviewEvents={setReviewEvents}
-            matchData={matchData}
-            newData={newData}
-            isDeleteModalOpen={isDeleteModalOpen}
-            setIsDeleteModalOpen={setIsDeleteModalOpen}
-            isChoosingEvent={isChoosingEvent}
-            setIsChoosingEvent={setIsChoosingEvent}
-            generalReview={generalReview}
-            setGeneralReview={setGeneralReview}
-            reviewEventsComments={reviewEventsComments}
-            setReviewEventsComments={setReviewEventsComments}
-            onReviewSubmit={onReviewSubmit}
-            eventToBeDeleted={eventToBeDeleted}
-            setEventToBeDeleted={setEventToBeDeleted}
-            showError={showError}
-            ratingGiven={ratingGiven}
-            storedRating={storedRating}
-            storedReview={storedReview}
-            storedEventReviews={storedEventReviews}
-            refereeName={refereeName}
-            refereeImage={refereeImage}
-            loading={loading}
-            refID={refID}
-          />
+          {["fan", "expert"].includes(user?.type) ? (
+            <MatchRefRatingColumn
+              setRating={setRating}
+              rating={rating}
+              reviewEvents={reviewEvents}
+              setReviewEvents={setReviewEvents}
+              matchData={matchData}
+              newData={newData}
+              isDeleteModalOpen={isDeleteModalOpen}
+              setIsDeleteModalOpen={setIsDeleteModalOpen}
+              isChoosingEvent={isChoosingEvent}
+              setIsChoosingEvent={setIsChoosingEvent}
+              generalReview={generalReview}
+              setGeneralReview={setGeneralReview}
+              reviewEventsComments={reviewEventsComments}
+              setReviewEventsComments={setReviewEventsComments}
+              onReviewSubmit={onReviewSubmit}
+              eventToBeDeleted={eventToBeDeleted}
+              setEventToBeDeleted={setEventToBeDeleted}
+              showError={showError}
+              ratingGiven={ratingGiven}
+              storedRating={storedRating}
+              storedReview={storedReview}
+              storedEventReviews={storedEventReviews}
+              refereeName={refereeName}
+              refereeImage={refereeImage}
+              loading={loading}
+              refID={refID}
+            />
+          ) : (
+            <div className="not-a-fan-container">
+              Only fans and experts can rate and leave reviews on referees'
+              performances
+            </div>
+          )}
         </div>
       </main>
     </MatchPageWrapper>

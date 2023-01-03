@@ -345,6 +345,19 @@ const Wrapper = styled.main`
     font-size: 16px;
     color: white;
   }
+
+  .not-a-fan-container {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    height: 500px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    text-align: center;
+  }
 `;
 
 export default Wrapper;

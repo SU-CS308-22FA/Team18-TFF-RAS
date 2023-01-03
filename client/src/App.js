@@ -11,6 +11,7 @@ import {
   Referee,
   Referees,
   DueReports,
+  EditReport,
 } from "./pages/dashboard";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -48,6 +49,7 @@ function App() {
           <Route path="/referee-assignment" element={<RefereeAssignment />} />
 
             <Route path="reports" element={<DueReports />} />
+            <Route path="/edit-report" element={<EditReport />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<Landing />} />
