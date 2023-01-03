@@ -315,8 +315,7 @@ const Wrapper = styled.main`
     gap: 10px;
   }
 
-  a,
-  button {
+  a {
     text-decoration: none;
     color: var(--GlobalColorScheme-Text-textDefault);
     outline: none;
@@ -422,6 +421,16 @@ const Wrapper = styled.main`
     background-color: rgb(255, 70, 70);
     border-radius: 3px;
     margin-right: 10px;
+  }
+
+  .objections-div {
+    margin-top: 15px;
+  }
+
+  .objections-helper-text {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
   }
 `;
 

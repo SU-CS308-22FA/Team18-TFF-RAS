@@ -7,9 +7,13 @@ import {
   getUpcomingMatches,
 } from "../../utils/api";
 import MatchItem from "../../components/MatchItem/MatchItem";
+import Button from "@mui/material/Button";
 import { referees } from "../../utils/constants";
+import { useNavigate } from "react-router";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [latestMatches, setLatestMatches] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
   const [topReferees, setTopReferees] = useState([]);
@@ -18,7 +22,7 @@ const Home = () => {
   const { user, getRefereesRatings, refereesRatings } = useAppContext();
 
   useEffect(() => {
-    getLatestMatches().then((results) => {
+    getLatestMatches(user?.type === "fan" ? 7 : 5).then((results) => {
       setLatestMatches(results);
     });
     getUpcomingMatches().then((results) => {
@@ -129,6 +133,89 @@ const Home = () => {
               <p className="no-matches-container">No matches</p>
             )}
           </div>
+          {["expert", "club", "investigator"].includes(user?.type) ? (
+            <div className="objections-div">
+              <p className="objections-helper-text">
+                {user?.type === "investigator"
+                  ? "Investigate and resolve expert and club objections."
+                  : "Have an objection about a referee's performance in a certain match? Make it here."}
+              </p>
+              <Button onClick={() => navigate("/objection")} variant="outlined">
+                {user?.type === "investigator"
+                  ? "Check Objections"
+                  : "Make An Objection"}
+              </Button>
+            </div>
+          ) : null}
+          {["observer"].includes(user?.type) ? (
+            <div className="objections-div">
+              <p className="objections-helper-text">
+                Have un-added observer reports? Manage and add your reports
+                here.
+              </p>
+              <Button onClick={() => navigate("/reports")} variant="outlined">
+                Manage Reports
+              </Button>
+            </div>
+          ) : null}
+          {["assigner"].includes(user?.type) ? (
+            <div className="objections-div">
+              <p className="objections-helper-text">
+                Assign referees to unassigned matches here.
+              </p>
+              <Button onClick={() => navigate("/")} variant="outlined">
+                Assign Referees
+              </Button>
+            </div>
+          ) : null}
+          {user?.type === "fan" ? (
+            <>
+              <div className="title-container referees-title">
+                <h3>Top referees</h3>
+                <a href="/referees">See All</a>
+              </div>
+              <div
+                className="matches-container"
+                style={
+                  topReferees.length > 0
+                    ? {}
+                    : { alignItems: "center", justifyItems: "center" }
+                }
+              >
+                {topReferees.length > 0 ? (
+                  topReferees.slice(0, 3).map((referee, idx) => (
+                    <div key={idx} className="referee-container">
+                      <div className="referee-info-container">
+                        <img
+                          alt=""
+                          className="image referee-image"
+                          width="42"
+                          height="42"
+                          src={referee.image}
+                        />
+                        <a
+                          href={"/referees/" + referee.id}
+                          className="styled-link"
+                        >
+                          {referee.name}
+                        </a>
+                      </div>
+                      <span className="referee-rating-span">
+                        {referee.displayValue}
+                        {referee.displayValue !== "-" ? "/5.00" : ""}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="no-matches-container">No stats</p>
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+      {user?.type === "fan" ? null : (
+        <>
           <div className="title-container referees-title">
             <h3>Top referees</h3>
             <a href="/referees">See All</a>
@@ -166,8 +253,8 @@ const Home = () => {
               <p className="no-matches-container">No stats</p>
             )}
           </div>
-        </div>
-      </div>
+        </>
+      )}
       <section className="css-league-table-section">
         <div className="card-css">
           <div>

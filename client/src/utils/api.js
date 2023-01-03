@@ -46,12 +46,12 @@ const getUpcomingMatches = async () => {
   }
 };
 
-const getLatestMatches = async () => {
+const getLatestMatches = async (numMatches = 7) => {
   try {
     const { data } = await axios.get(
       "https://api-football-v1.p.rapidapi.com/v3/fixtures",
       {
-        params: { last: "7", league: "203", season: "2022" },
+        params: { last: numMatches.toString(), league: "203", season: "2022" },
         headers: {
           "X-RapidAPI-Key": process.env.REACT_APP_FOOTBALL_API_ACCESS_KEY,
           "X-RapidAPI-Host": process.env.REACT_APP_FOOTBALL_API_HOST,
