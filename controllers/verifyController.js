@@ -8,7 +8,9 @@ const verify = async (req, res) => {
   const user = await User.findOne({ _id: req.user.userId });
   const email = user.email;
   console.log(email);
-
+  if (user.isVerified) {
+    throw new BadRequestError("User is already verified");
+  }
   const code = crypto.randomBytes(32).toString("hex");
   const existingToken = await verificationToken.findOne({ email });
   if (existingToken) {
@@ -37,12 +39,16 @@ const verifyUser = async (req, res) => {
   });
   if (!emailToken) {
     res.status(400);
+    console.log("Invalid verification token");
     throw new BadRequestError("Invalid verification token");
   }
 
   if (email !== emailToken.email) {
     res.status(400);
-    throw new BadRequestError("User not authorized");
+    console.log("User not authorized");
+    throw new BadRequestError(
+      "User not authorized, Please log in and try again"
+    );
   }
 
   const verifiedUser = await User.updateOne(
