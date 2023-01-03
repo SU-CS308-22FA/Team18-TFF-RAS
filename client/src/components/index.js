@@ -6,6 +6,7 @@ import BigSidebar from "./BigSidebar";
 import SmallSidebar from "./SmallSidebar";
 import NavLinks from "./NavLinks";
 import ReportContainer from "./ReportContainer";
+import ReportForm from "./ReportForm";
 
 export {
   Logo,
@@ -16,4 +17,5 @@ export {
   SmallSidebar,
   NavLinks,
   ReportContainer,
+  ReportForm,
 };

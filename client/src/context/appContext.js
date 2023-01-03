@@ -31,6 +31,7 @@ import {
   UPDATE_OBJECTION_SUCCESS,
   UPDATE_OBJECTION_ERROR,
   HANDLE_CHANGE,
+  CLEAR_VALUES,
   CREATE_RATING_BEGIN,
   CREATE_RATING_SUCCESS,
   CREATE_RATING_ERROR,
@@ -48,6 +49,10 @@ import {
   GET_REFEREE_RATINGS_ERROR,
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
+  SET_EDIT_REPORT,
+  EDIT_REPORT_SUCCESS,
+  EDIT_REPORT_BEGIN,
+  EDIT_REPORT_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -57,6 +62,7 @@ const userLocation = localStorage.getItem("location");
 
 const initialState = {
   isLoading: false,
+  isLoadingReport: false,
   isDeleting: false,
   showAlert: false,
   alertText: "",
@@ -86,6 +92,13 @@ const initialState = {
   numDueReports: 0,
   DueReportPage: 1,
   numofDueReportPages: 1,
+  isEditingReport: false,
+  editReportId: "",
+  final_grade: 0,
+  strictness: 0,
+  accuracy: 0,
+  fairness: 0,
+  comments: "",
 };
 
 const AppContext = React.createContext();
@@ -105,7 +118,9 @@ const AppProvider = ({ children }) => {
       dispatch({ type: CLEAR_ALERT });
     }, 3000);
   };
-
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
   const clearModal = () => {
     dispatch({ type: CLEAR_MODAL });
   };
@@ -503,6 +518,32 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
+  const setEditReport = (id) => {
+    dispatch({ type: SET_EDIT_REPORT, payload: { id } });
+  };
+  const editReport = async () => {
+    dispatch({ type: EDIT_REPORT_BEGIN });
+    try {
+      const { fairness, final_grade, accuracy, strictness, comments } = state;
+
+      await authFetch.post(`/reports/${state.editReportId}`, {
+        fairness,
+        final_grade,
+        accuracy,
+        strictness,
+        comments,
+      });
+      dispatch({ type: EDIT_REPORT_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: EDIT_REPORT_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
 
   return (
     <AppContext.Provider
@@ -511,6 +552,7 @@ const AppProvider = ({ children }) => {
         displayAlert,
         registerUser,
         loginUser,
+        clearValues,
         toggleSidebar,
         logoutUser,
         updateUser,
@@ -527,6 +569,8 @@ const AppProvider = ({ children }) => {
         clearModal,
         handleChange,
         getRefereeRatings,
+        editReport,
+        setEditReport,
       }}
     >
       {children}

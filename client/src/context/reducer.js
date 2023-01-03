@@ -1,6 +1,7 @@
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
+  CLEAR_VALUES,
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -45,6 +46,10 @@ import {
   GET_REFEREE_RATINGS_ERROR,
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
+  SET_EDIT_REPORT,
+  EDIT_REPORT_BEGIN,
+  EDIT_REPORT_SUCCESS,
+  EDIT_REPORT_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -432,6 +437,61 @@ const reducer = (state, action) => {
       dueReports: action.payload.dueReports,
       numDueReports: action.payload.numDueReports,
       numofDueReportPages: action.payload.numofDueReportPages,
+    };
+  }
+  if (action.type === SET_EDIT_REPORT) {
+    const report = state.dueReports.find(
+      (report) => report._id === action.payload.id
+    );
+    const { _id, final_grade, strictness, accuracy, fairness, comment } =
+      report;
+    return {
+      ...state,
+      isEditingReport: true,
+      editReportId: _id,
+      final_grade,
+      strictness,
+      accuracy,
+      fairness,
+      comment,
+    };
+  }
+  if (action.type === CLEAR_VALUES) {
+    const initialState = {
+      isEditingReport: false,
+      editReportId: "",
+      final_grade: 0,
+      strictness: 0,
+      accuracy: 0,
+      fairness: 0,
+      comment: "",
+    };
+
+    return {
+      ...state,
+      ...initialState,
+    };
+  }
+  if (action.type === EDIT_REPORT_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === EDIT_REPORT_SUCCESS) {
+    return {
+      ...state,
+      isEditingReport: false,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Report Submitted!",
+    };
+  }
+  if (action.type === EDIT_REPORT_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
     };
   }
 

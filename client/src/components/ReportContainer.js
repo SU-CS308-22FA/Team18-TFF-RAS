@@ -20,7 +20,7 @@ const ReportContainer = () => {
     return <Loading center />;
   }
 
-  if (dueReports.Length === 0) {
+  if (numDueReports === 0) {
     return (
       <Wrapper>
         <h2>All reports have been submitted</h2>
