@@ -162,6 +162,25 @@ app.get("/api/assignment/get-matches-with-no-ref/", async(req,res) => {
   let data = await Fixture.find({Refs: []}).select("Refs Teams Observers Time MatchID");
   res.json(data);
 })
+
+app.get("/api/assignment/get-occupied-refs-to-date/:date", async(req,res) => {
+  let games = await Fixture.find({});
+  let refs = await RefereesAndRatings.find({})
+  // get data
+  games = games.filter((game) => {
+    return (
+      game.Time.date === req.params.date
+    )
+  })
+  let occupiedRefs = []
+  games.forEach((games) => {
+    if (games.Refs != [])
+    {
+      occupiedRefs.push(games.Refs[0].name);
+    }
+  })
+  res.json(occupiedRefs);
+})
 //-----------------------------
 
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {

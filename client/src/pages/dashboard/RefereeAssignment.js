@@ -1,11 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import Wrapper from "../../assets/wrappers/RegisterPage";
 import axios from "axios"
-import { Logo, FormRow } from "../../components"
 import { ButtonGroup } from '@mui/material';
 import { Button } from '@mui/material';
-import { useAppContext } from '../../context/appContext';
-import { style } from '@mui/system';
 
 
 const RefereeAssignment = () => 
@@ -38,7 +35,14 @@ const RefereeAssignment = () =>
   });
   const [selectedRef, setSelectedRef] = useState("");
   const [selectedMatch, setSelectedMatch] = useState("");
+  const [sortVal, setSortVal] = useState("");
+  const[occupiedRefs, setOccupiedRefs] = useState([]);
 
+  const getOccupiedRefsToDate = async (date) => {
+    const response = await axios.get("/api/assignment/get-occupied-refs-to-date/" + date);
+    const data = await response.data;
+    setOccupiedRefs(data);
+  }
   
   const getRatings = async () => {
     const response = await axios.get("/api/referees/get-refRatings/");
@@ -114,6 +118,45 @@ const RefereeAssignment = () =>
           )
   }
 
+
+
+  const handleFanClick = () => {
+    const temp = allRatings.sort((ref1, ref2) => {
+      return ref2.fanRating - ref1.fanRating;
+    })
+    setAllRatings(temp);
+    setDisplay({...display, showRefs:false});
+    setDisplay({...display, showRefs:true});
+  }
+
+  const handleExpertClick = () => {
+    const temp = allRatings.sort((ref1, ref2) => {
+      return ref2.expertRating - ref1.expertRating;
+    })
+    setAllRatings(temp);
+    setDisplay({...display, showRefs:false});
+    setDisplay({...display, showRefs:true});
+  }
+
+  const handleAvgClick = () => {
+    const temp = allRatings.sort((ref1, ref2) => {
+      return ref2.avgRating - ref1.avgRating;
+    })
+    setAllRatings(temp);
+    setDisplay({...display, showRefs:false});
+    setDisplay({...display, showRefs:true});
+  }
+
+  const Sort = () => {
+    return (
+    <ButtonGroup fullWidth={true} disableElevation={true} variant="contained" aria-label="outlined primary button group" style={{ maxWidth: "250px", display: "flex", margin: "auto", marginTop: "1.5rem"}}>
+        <Button onClick={handleFanClick}>Fan</Button>
+        <Button onClick={handleExpertClick}>Expert</Button>
+        <Button onClick={handleAvgClick}>Avg</Button>
+      </ButtonGroup>
+          )
+  }
+
   const handleAssignedRefChange = (event, ref) => {
     setAssignedRef({
       referee: ref.referee,
@@ -133,6 +176,7 @@ const RefereeAssignment = () =>
       Time: match.Time,
     })
     setSelectedMatch(event.target.value)
+    getOccupiedRefsToDate(assignedMatch.Time.date);
   }
     
     return (
@@ -140,27 +184,30 @@ const RefereeAssignment = () =>
           {!display.showRefs? <PageSwap/> : null}
       <div>
         {display.showRefs? !display.showRefReview ?      
-              <div> <PageSwap/> <div className="container-ref">{allRatings.map((ref) => {
-            return ( // mapping referees
-              <div key={ref._id} className="form-ref">
-                <h5>{ref.referee} </h5>
-                <div style={{display: "inline-block"}}>
-                <button type="submit" className="btn" onClick={() => handleReviewClick(ref)}>
-              Reviews
-            </button>
-              <label>
-                <input 
-                type="checkbox"
-                value={ref.referee}
-                checked={selectedRef === ref.referee}
-                onChange={(event) => handleAssignedRefChange(event, ref)}
-                style={{marginLeft: "15rem", marginRight: "0.3rem"}}
-                />
-                  Assign me
-                </label>
+              <div><div> <PageSwap/> <Sort/>  </div> <div className="container-ref">{allRatings.map((ref) => {
+            if (!occupiedRefs.includes(ref.referee))
+            {
+                return ( // mapping referees
+                <div key={ref._id} className="form-ref">
+                  <h5>{ref.referee} </h5>
+                  <div style={{display: "inline-block"}}>
+                  <button type="submit" className="btn" onClick={() => handleReviewClick(ref)}>
+                Reviews
+              </button>
+                <label>
+                  <input 
+                  type="checkbox"
+                  value={ref.referee}
+                  checked={selectedRef === ref.referee}
+                  onChange={(event) => handleAssignedRefChange(event, ref)}
+                  style={{marginLeft: "15rem", marginRight: "0.3rem"}}
+                  />
+                    Assign me
+                  </label>
+                  </div>
                 </div>
-              </div>
-            );
+              );
+            }
           })}</div></div>
           : 
           (reviews != false && reviews[0].review != false) ? 
@@ -189,8 +236,10 @@ const RefereeAssignment = () =>
               {
                 return ( // mapping matches
                   <div key={game._id} className="form-ref">
-                  <h4>Home: {game.Teams.home}</h4> 
-                  <h4>Away: {game.Teams.away}</h4>
+                  <h5>Home: {game.Teams.home}</h5> 
+                  <h5>Away: {game.Teams.away}</h5>
+                  <h5>Date: {game.Time.date} </h5>
+                  <h5>hour: {game.Time.hour} </h5>
                   <label >
                   <input 
                     type="checkbox"
@@ -244,7 +293,7 @@ const RefereeAssignment = () =>
               </div>
             }                
       </div>
-      {console.log("refs: ", allRatings, "matches: ", allMatches)} {/* remove later */}
+      {console.log(allRatings)}
     </>
     )
 }
