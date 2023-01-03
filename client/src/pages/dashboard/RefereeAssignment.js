@@ -35,13 +35,20 @@ const RefereeAssignment = () =>
   });
   const [selectedRef, setSelectedRef] = useState("");
   const [selectedMatch, setSelectedMatch] = useState("");
-  const [sortVal, setSortVal] = useState("");
   const[occupiedRefs, setOccupiedRefs] = useState([]);
 
   const getOccupiedRefsToDate = async (date) => {
     const response = await axios.get("/api/assignment/get-occupied-refs-to-date/" + date);
     const data = await response.data;
     setOccupiedRefs(data);
+    setAssignedRef({
+      referee: "",
+      refereeId: "",
+      fanVote: 0,
+      expertVote: 0,
+      avgVote: 0,
+    });
+    setSelectedRef("");
   }
   
   const getRatings = async () => {
@@ -178,6 +185,10 @@ const RefereeAssignment = () =>
     setSelectedMatch(event.target.value)
     getOccupiedRefsToDate(assignedMatch.Time.date);
   }
+
+  const handleSubmitButton = () => {
+
+  }
     
     return (
       <>
@@ -260,29 +271,41 @@ const RefereeAssignment = () =>
             <div style={{display:"flex"}}>
               <div className='form'>
                 {assignedRef.referee != false ? 
-                <>
-                <h5>
-                  Referee: 
-                </h5>  
-                  <p> {assignedRef.referee}</p>
-                  {/* <button type="submit" className="btn" onClick={() => handleReviewClick(ref)}> */}
-                  <button type="submit" className='btn' onClick={handleResetButton}> Reset </button>                
-                  </>
+                <div>
+                  <h5>
+                    Referee: 
+                    <p> {assignedRef.referee}</p>
+                  </h5>  
+                  <h5 style={{marginTop: "3.2rem"}}>Fan Rating: {assignedRef.fanVote}</h5>
+                  <h5 style={{marginTop: "3.2rem"}}>Expert Rating: {assignedRef.expertVote}</h5>
+                  <h5 style={{marginTop: "3.2rem"}}>Average Rating: {assignedRef.avgVote}</h5>
+                    <button type="submit" className='btn' onClick={handleResetButton} style={{display: "flex"}}> Reset </button>                
+                  </div>
                   : 
-                  <p style={{margin: "auto", padding: "auto", textAlign: "center"}}> Please choose a referee from Referees </p> }
+                  <p style={{margin: "auto", padding: "auto", textAlign: "center"}}> Please choose a referee from Referees <br/>
+                  Also please choose a match first</p> }
                   </div>
               <div className='form'>
                 {assignedMatch.Id !== 0 ? 
                 <>
-                <h5>
-                  Match:
+                <h5>Home:
+                <p>
+                   {assignedMatch.Home}
+                </p>
                 </h5>
+                <h5>Away:
                 <p>
-                  Home: {assignedMatch.Home}
+                  {assignedMatch.Away}
                 </p>
-                <p>
-                  Away: {assignedMatch.Away}
-                </p>
+                </h5>
+                <h5>Date:
+                  <p>{assignedMatch.Time.date}</p>
+                </h5>
+                <h5>Time:
+                  <p>{assignedMatch.Time.hour}</p>
+                </h5>
+                <button type="submit" className='btn' onClick={handleSubmitButton} style={{display: "flex"}}> Submit </button>                
+
                 </>
                 :
                 <p style={{textAlign: "center"}}>
