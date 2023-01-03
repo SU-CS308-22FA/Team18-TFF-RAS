@@ -264,7 +264,7 @@ const Match = () => {
             ) : null}
           </div>
           {["fan", "expert"].includes(user?.type) &&
-          ["FT", "PEN", "AET"].includes(matchData?.fixture?.status) ? (
+          ["FT", "PEN", "AET"].includes(matchData?.fixture?.status?.short) ? (
             <MatchRefRatingColumn
               setRating={setRating}
               rating={rating}

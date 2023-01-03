@@ -83,7 +83,7 @@ const referees = [
   },
   {
     name: "Hüseyin Göçek",
-    apiName: ["H. Göçek"],
+    apiName: ["H. Göçek", "Huseyin Gocek"],
     id: "19493",
     image:
       "https://img.a.transfermarkt.technology/portrait/big/964-1592093214.jpeg?lm=1",
