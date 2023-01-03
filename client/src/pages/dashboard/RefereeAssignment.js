@@ -12,7 +12,7 @@ const RefereeAssignment = () =>
     showMathces: false,
     showRefReview: false,
   })    
-
+  const [refresh, setRefresh] = useState(false);
   const [allRatings, setAllRatings] = useState([]);
   const [allMatches, setAllMatches] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -74,6 +74,10 @@ const RefereeAssignment = () =>
     //   createAndUpdateRatings(ref.id);
     // })
   }, [])
+
+  useEffect(() => {
+      getMatches();
+  }, [refresh])
   //------------------------
   
   const handleRefClick = () => {
@@ -174,6 +178,11 @@ const RefereeAssignment = () =>
     })
     setSelectedRef(event.target.value)
   }
+  
+  useEffect(() => {
+    getOccupiedRefsToDate(assignedMatch.Time.date);
+  }, [assignedMatch])
+  
 
   const handleAssignedMatchChange = (event, match) => {
     setAssignedMatch({
@@ -183,11 +192,19 @@ const RefereeAssignment = () =>
       Time: match.Time,
     })
     setSelectedMatch(event.target.value)
-    getOccupiedRefsToDate(assignedMatch.Time.date);
   }
 
-  const handleSubmitButton = () => {
-    
+  const handleSubmitButton = async () => {
+    if(assignedRef.referee != false && assignedMatch.Id !== 0)
+    {
+      let sendData = await axios.get("/api/assign-referee/" + assignedRef.referee + "&" + assignedMatch.Id)
+      handleResetButton();
+      setRefresh(!refresh)
+    }
+    else
+    {
+      console.log("Provide all values!")
+    }
   }
     
     return (
@@ -196,6 +213,7 @@ const RefereeAssignment = () =>
       <div>
         {display.showRefs? !display.showRefReview ?      
               <div><div> <PageSwap/> <Sort/>  </div> <div className="container-ref">{allRatings.map((ref) => {
+                console.log("occupied: ", occupiedRefs);
             if (!occupiedRefs.includes(ref.referee))
             {
                 return ( // mapping referees
@@ -304,8 +322,12 @@ const RefereeAssignment = () =>
                 <h5>Time:
                   <p>{assignedMatch.Time.hour}</p>
                 </h5>
-                <button type="submit" className='btn' onClick={handleSubmitButton} style={{display: "flex"}}> Submit </button>                
-
+                {
+                assignedRef.referee && assignedMatch.Id !== 0 ? 
+                <button type="submit" className='btn' onClick={() => handleSubmitButton()} style={{display: "flex"}}> Submit </button>
+                :
+                <button type="submit" className='btn' onClick={handleResetButton} style={{display: "flex"}}> Reset </button>                
+                }
                 </>
                 :
                 <p style={{textAlign: "center"}}>
@@ -316,7 +338,6 @@ const RefereeAssignment = () =>
               </div>
             }                
       </div>
-      {console.log(allRatings)}
     </>
     )
 }

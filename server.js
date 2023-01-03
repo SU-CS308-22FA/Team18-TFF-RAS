@@ -174,12 +174,26 @@ app.get("/api/assignment/get-occupied-refs-to-date/:date", async(req,res) => {
   })
   let occupiedRefs = []
   games.forEach((games) => {
-    if (games.Refs != [])
+    if (games.Refs != false && games.Refs[0].name != false)
     {
       occupiedRefs.push(games.Refs[0].name);
     }
   })
   res.json(occupiedRefs);
+})
+
+app.get("/api/assign-referee/:refName&:matchId", async (req,res) => {
+    const ref = req.params.refName;
+    const match = req.params.matchId;
+    console.log("ref: ", ref, " match: ", match);
+    const data = await Fixture.updateOne(
+    { MatchID: match },
+    { $set: { Refs: [{
+      name: ref,
+      duty: "Hakem"
+    }]} }
+  );
+  res.json(data);
 })
 //-----------------------------
 
