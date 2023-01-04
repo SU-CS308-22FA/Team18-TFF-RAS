@@ -4,6 +4,8 @@ import axios from "axios";
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
+  CLEAR_VERIFIED,
+  CLEAR_PASSWORD_CHANGED,
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -65,6 +67,14 @@ import {
   VERIFY_USER_BEGIN,
   VERIFY_USER_SUCCESS,
   VERIFY_USER_ERROR,
+  SEND_RESET_PASSWORD_EMAIL_BEGIN,
+  SEND_RESET_PASSWORD_EMAIL_SUCCESS,
+  SEND_RESET_PASSWORD_EMAIL_ERROR,
+  DIFFERENT_PASSWORD_ALERT,
+  RESET_PASSWORD_BEGIN,
+  RESET_PASSWORD_ERROR,
+  RESET_PASSWORD_SUCCESS,
+  CLEAR_EMAIL_SENT,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -116,6 +126,10 @@ const initialState = {
   isVerifying: false,
   verified: false,
   verificationEmailSending: false,
+  resetPasswordEmailSending: false,
+  resetPasswordEmailSent: false,
+  isResetting: false,
+  passwordChanged: false,
 };
 
 const AppContext = React.createContext();
@@ -128,6 +142,29 @@ const AppProvider = ({ children }) => {
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
     clearAlert();
+  };
+
+  const differentPasswordAlert = () => {
+    dispatch({ type: DIFFERENT_PASSWORD_ALERT });
+    clearAlert();
+  };
+
+  const clearPasswordChanged = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_PASSWORD_CHANGED });
+    }, 3000);
+  };
+
+  const clearEmailSent = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_EMAIL_SENT });
+    }, 3000);
+  };
+
+  const clearVerified = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_VERIFIED });
+    }, 3000);
   };
 
   const clearAlert = () => {
@@ -281,6 +318,52 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const sendResetPassword = async (email) => {
+    dispatch({ type: SEND_RESET_PASSWORD_EMAIL_BEGIN });
+    try {
+      const response = await axios.post("api/v1/auth/resetPassword", {
+        email,
+      });
+      const { message } = response.data;
+      dispatch({
+        type: SEND_RESET_PASSWORD_EMAIL_SUCCESS,
+        payload: { message },
+      });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: SEND_RESET_PASSWORD_EMAIL_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearEmailSent();
+    clearAlert();
+  };
+
+  const resetPassword = async (password, emailToken) => {
+    dispatch({ type: RESET_PASSWORD_BEGIN });
+    try {
+      const response = await axios.post(
+        `/api/v1/auth//reset_password/${emailToken}`,
+        { password }
+      );
+      const { message } = response.data;
+      dispatch({
+        type: RESET_PASSWORD_SUCCESS,
+        payload: { message },
+      });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: RESET_PASSWORD_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearPasswordChanged();
+    clearAlert();
+  };
+
   const loginUser = async (currentUser) => {
     dispatch({ type: LOGIN_USER_BEGIN });
     try {
@@ -428,15 +511,16 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const getAllRefRatings = async (id) => { // Kerim's
+  const getAllRefRatings = async (id) => {
+    // Kerim's
     dispatch({ type: GET_ALLRATING_BEGIN });
     try {
       const ratigns = await authFetch.get("/ratings/" + id);
       dispatch({
         type: GET_ALLRATING_SUCCESS,
         payload: {
-          ratigns
-        }
+          ratigns,
+        },
       });
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -447,7 +531,7 @@ const AppProvider = ({ children }) => {
         });
       }
     }
-  }
+  };
 
   const getRefereeRatings = async (refID) => {
     dispatch({ type: GET_REFEREE_RATINGS_BEGIN });
@@ -641,6 +725,7 @@ const AppProvider = ({ children }) => {
         payload: { msg: error.response.data.msg },
       });
     }
+    clearVerified();
     clearAlert();
   };
 
@@ -674,6 +759,11 @@ const AppProvider = ({ children }) => {
         setEditReport,
         sendVerifyEmail,
         verifyUser,
+        sendResetPassword,
+        resetPassword,
+        differentPasswordAlert,
+        clearPasswordChanged,
+        clearVerified,
       }}
     >
       {children}

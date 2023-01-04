@@ -1,12 +1,8 @@
 {
   "files": {
-<<<<<<< HEAD
-    "main.css": "/static/css/main.06ea8a38.css",
-    "main.js": "/static/js/main.6f954712.js",
-=======
     "main.css": "/static/css/main.90c7e20a.css",
-    "main.js": "/static/js/main.c7c2e264.js",
->>>>>>> develop
+
+    "main.js": "/static/js/main.395d739b.js",
     "static/media/tffLogo.png": "/static/media/tffLogo.30357abfff30f0998400.png",
     "static/media/roboto-all-500-normal.woff": "/static/media/roboto-all-500-normal.0ab669b7a0d19b178f57.woff",
     "static/media/roboto-all-700-normal.woff": "/static/media/roboto-all-700-normal.a457fde362a540fcadff.woff",
@@ -55,6 +51,9 @@
     "static/media/roboto-greek-ext-700-normal.woff2": "/static/media/roboto-greek-ext-700-normal.bd9854c751441ccc1a70.woff2",
     "index.html": "/index.html",
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> develop
     "static/media/card-red.svg": "/static/media/card-red.1525cf97598ef2cdf139cd0951f80478.svg",
     "static/media/card-yellow.svg": "/static/media/card-yellow.c45b63a3725f9ef87ead9e84f0c86710.svg",
     "static/media/full-time-circle.svg": "/static/media/full-time-circle.0d432438d1df6cf8ae1fb6ebaf40f76f.svg",
@@ -65,6 +64,7 @@
     "static/media/referee-stats-red-card-icon.svg": "/static/media/referee-stats-red-card-icon.ad0d349297c32f9c015a3823b7c4e70b.svg",
     "static/media/lineup-card-yellow.svg": "/static/media/lineup-card-yellow.ed52e54e9b945d49547efaf4bf556aeb.svg",
     "static/media/referee-stats-penalty-icon.svg": "/static/media/referee-stats-penalty-icon.349986ba66d2bf67ae6dd4fe4779f861.svg",
+<<<<<<< HEAD
     "main.06ea8a38.css.map": "/static/css/main.06ea8a38.css.map",
     "main.6f954712.js.map": "/static/js/main.6f954712.js.map"
   },
@@ -82,12 +82,18 @@
     "static/media/referee-stats-red-card-icon.svg": "/static/media/referee-stats-red-card-icon.931eeca085e0eeaf157031a939cb7056.svg",
     "static/media/lineup-card-yellow.svg": "/static/media/lineup-card-yellow.452850a95855de2ef0426c884a112970.svg",
     "static/media/referee-stats-penalty-icon.svg": "/static/media/referee-stats-penalty-icon.6f303631990334fbf10ebee205348ac1.svg",
+=======
+>>>>>>> develop
     "main.90c7e20a.css.map": "/static/css/main.90c7e20a.css.map",
-    "main.c7c2e264.js.map": "/static/js/main.c7c2e264.js.map"
+    "main.395d739b.js.map": "/static/js/main.395d739b.js.map"
   },
   "entrypoints": [
     "static/css/main.90c7e20a.css",
+<<<<<<< HEAD
     "static/js/main.c7c2e264.js"
+>>>>>>> develop
+=======
+    "static/js/main.395d739b.js"
 >>>>>>> develop
   ]
 }
