@@ -20,7 +20,7 @@ const verify = async (req, res) => {
   const Base =
     process.env.NODE_ENV !== "production"
       ? `${process.env.BASE_URL}`
-      : "https://team18-tff-ras-production.up.railway.app/";
+      : "https://team18-tff-ras-production.up.railway.app/verify/";
   const url = `${Base}${emailToken.code}`;
   try {
     await sendEmail(user.email, "Account verification", url);
