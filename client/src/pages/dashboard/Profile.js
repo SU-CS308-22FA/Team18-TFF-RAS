@@ -12,6 +12,8 @@ const Profile = () => {
     isLoading,
     deleteUser,
     isDeleting,
+    sendVerifyEmail,
+    verificationEmailSending,
   } = useAppContext();
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
@@ -72,6 +74,14 @@ const Profile = () => {
             onClick={() => deleteUser(user)}
           >
             {isDeleting ? "Please Wait..." : "delete account"}
+          </button>
+          <button
+            className="btn btn-block"
+            type="button"
+            disabled={verificationEmailSending}
+            onClick={() => sendVerifyEmail(user)}
+          >
+            {verificationEmailSending ? "Please Wait..." : "verify account"}
           </button>
         </div>
       </form>
