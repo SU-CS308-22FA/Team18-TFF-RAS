@@ -69,6 +69,9 @@ import {
   RESET_PASSWORD_ERROR,
   RESET_PASSWORD_SUCCESS,
   DIFFERENT_PASSWORD_ALERT,
+  CLEAR_EMAIL_SENT,
+  CLEAR_PASSWORD_CHANGED,
+  CLEAR_VERIFIED,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -639,6 +642,24 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
+    };
+  }
+  if (action.type === CLEAR_PASSWORD_CHANGED) {
+    return {
+      ...state,
+      passwordChanged: false,
+    };
+  }
+  if (action.type === CLEAR_VERIFIED) {
+    return {
+      ...state,
+      verified: false,
+    };
+  }
+  if (action.type === CLEAR_EMAIL_SENT) {
+    return {
+      ...state,
+      resetPasswordEmailSent: false,
     };
   }
   throw new Error(`no such action : ${action.type}`);

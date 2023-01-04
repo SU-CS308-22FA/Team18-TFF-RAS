@@ -4,6 +4,8 @@ import axios from "axios";
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
+  CLEAR_VERIFIED,
+  CLEAR_PASSWORD_CHANGED,
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_ERROR,
@@ -72,6 +74,7 @@ import {
   RESET_PASSWORD_BEGIN,
   RESET_PASSWORD_ERROR,
   RESET_PASSWORD_SUCCESS,
+  CLEAR_EMAIL_SENT,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -144,6 +147,24 @@ const AppProvider = ({ children }) => {
   const differentPasswordAlert = () => {
     dispatch({ type: DIFFERENT_PASSWORD_ALERT });
     clearAlert();
+  };
+
+  const clearPasswordChanged = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_PASSWORD_CHANGED });
+    }, 3000);
+  };
+
+  const clearEmailSent = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_EMAIL_SENT });
+    }, 3000);
+  };
+
+  const clearVerified = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_VERIFIED });
+    }, 3000);
   };
 
   const clearAlert = () => {
@@ -316,6 +337,7 @@ const AppProvider = ({ children }) => {
         });
       }
     }
+    clearEmailSent();
     clearAlert();
   };
 
@@ -338,6 +360,7 @@ const AppProvider = ({ children }) => {
         payload: { msg: error.response.data.msg },
       });
     }
+    clearPasswordChanged();
     clearAlert();
   };
 
@@ -702,6 +725,7 @@ const AppProvider = ({ children }) => {
         payload: { msg: error.response.data.msg },
       });
     }
+    clearVerified();
     clearAlert();
   };
 
@@ -738,6 +762,8 @@ const AppProvider = ({ children }) => {
         sendResetPassword,
         resetPassword,
         differentPasswordAlert,
+        clearPasswordChanged,
+        clearVerified,
       }}
     >
       {children}
