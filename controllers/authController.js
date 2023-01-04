@@ -89,4 +89,31 @@ const deleteUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Success! Account removed" });
 };
 
+const passwordEmail = async (req, res) => {
+  const email = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    res.status(400);
+    throw new BadRequestError("No account with that email exists");
+  }
+  const code = crypto.randomBytes(32).toString("hex");
+  const existingToken = await passwordToken.findOne({ email });
+  if (existingToken) {
+    await passwordToken.deleteMany({ email: email });
+  }
+  const emailToken = await passwordToken.create({ code, email });
+  const Base =
+    process.env.NODE_ENV !== "production"
+      ? `${process.env.BASE_URL}`
+      : "https://team18-tff-ras-production.up.railway.app/";
+  const url = `${Base}verify/${emailToken.code}`;
+  try {
+    await sendEmail(user.email, "Account verification", url);
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.status(201).json({ message: "An email has been sent to your inbox" });
+};
+
 export { register, login, updateUser, deleteUser };
