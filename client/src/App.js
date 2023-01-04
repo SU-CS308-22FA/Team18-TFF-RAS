@@ -1,5 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Register, Landing, Error, ProtectedRoute } from "./pages";
+import {
+  Register,
+  Landing,
+  Error,
+  ProtectedRoute,
+  ForgotPassword,
+  ChangePassword,
+} from "./pages";
 import {
   Home,
   Matches,
@@ -46,13 +53,18 @@ function App() {
             <Route path="referees" element={<Referees />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/objection" element={<Objection />} />
-          <Route path="/referee-assignment" element={<RefereeAssignment />} />
+            <Route path="/referee-assignment" element={<RefereeAssignment />} />
 
             <Route path="reports" element={<DueReports />} />
             <Route path="/edit-report" element={<EditReport />} />
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/ForgotPassword" element={<ForgotPassword />} />
+          <Route
+            path="/reset-password/:emailToken"
+            element={<ChangePassword />}
+          />
           <Route path="/referee-page" element={<Referees />} />
           <Route path="/matches/:id" element={<Match />} />
           <Route path="/referees/:id" element={<Referee />} />

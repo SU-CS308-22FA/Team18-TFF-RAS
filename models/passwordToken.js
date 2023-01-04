@@ -12,4 +12,4 @@ const passwordTokenSchema = mongoose.Schema({
   createdAt: { type: Date, default: Date.now, expires: 3600 },
 });
 
-export default mongoose.model("verificationToken", passwordTokenSchema);
+export default mongoose.model("passwordToken", passwordTokenSchema);

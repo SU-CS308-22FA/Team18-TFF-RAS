@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Logo, FormRow, Alert } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { useAppContext } from "../context/appContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { citiesTurkey } from "../utils/constants";
 const initialState = {
   name: "",
@@ -119,6 +119,13 @@ const Register = () => {
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           submit
         </button>
+        <p>
+          {values.isMember && (
+            <Link to="/ForgotPassword" className="member-btn">
+              Forgot Password?
+            </Link>
+          )}
+        </p>
         <p>
           {values.isMember ? "Not a member yet? " : "Already a member? "}
           <button type="button" onClick={toggleMember} className="member-btn">

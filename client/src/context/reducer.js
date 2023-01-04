@@ -56,6 +56,13 @@ import {
   EDIT_REPORT_BEGIN,
   EDIT_REPORT_SUCCESS,
   EDIT_REPORT_ERROR,
+  SEND_RESET_PASSWORD_EMAIL_BEGIN,
+  SEND_RESET_PASSWORD_EMAIL_SUCCESS,
+  SEND_RESET_PASSWORD_EMAIL_ERROR,
+  RESET_PASSWORD_BEGIN,
+  RESET_PASSWORD_ERROR,
+  RESET_PASSWORD_SUCCESS,
+  DIFFERENT_PASSWORD_ALERT,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -67,6 +74,14 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: "Please provide all values!",
+    };
+  }
+  if (action.type === DIFFERENT_PASSWORD_ALERT) {
+    return {
+      ...state,
+      showAlert: true,
+      alertType: "danger",
+      alertText: "Passwords do not match",
     };
   }
   if (action.type === CLEAR_ALERT) {
@@ -527,6 +542,50 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === SEND_RESET_PASSWORD_EMAIL_BEGIN) {
+    return { ...state, resetPasswordEmailSending: true };
+  }
+  if (action.type === SEND_RESET_PASSWORD_EMAIL_SUCCESS) {
+    return {
+      ...state,
+      ResetPasswordEmailSending: false,
+      resetPasswordEmailSent: true,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.message,
+    };
+  }
+  if (action.type === SEND_RESET_PASSWORD_EMAIL_ERROR) {
+    return {
+      ...state,
+      resetPasswordEmailSending: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === RESET_PASSWORD_BEGIN) {
+    return { ...state, isResetting: true };
+  }
+  if (action.type === RESET_PASSWORD_SUCCESS) {
+    return {
+      ...state,
+      isResetting: false,
+      passwordChanged: true,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Password Successfully Changed!...",
+    };
+  }
+  if (action.type === RESET_PASSWORD_ERROR) {
+    return {
+      ...state,
+      isResetting: false,
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
