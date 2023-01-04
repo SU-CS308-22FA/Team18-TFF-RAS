@@ -51,13 +51,13 @@ const verifyUser = async (req, res) => {
     );
   }
 
-  const verifiedUser = await User.updateOne(
+  await User.updateOne(
     { _id: req.user.userId },
     { $set: { isVerified: true } }
   );
-
+  const verifiedUser = await User.findOne({ _id: req.user.userId });
   await emailToken.remove();
-  res.status(200).json({ message: "verified successfully" });
+  res.status(200).json({ user: verifiedUser, msg: "verified successfully" });
 };
 
 export { verify, verifyUser };

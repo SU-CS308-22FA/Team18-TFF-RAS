@@ -1,29 +1,39 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Wrapper from "../../assets/wrappers/VerifyPage";
+import { Alert } from "../../components";
 import Loading from "../../components/Loading";
 import { useAppContext } from "../../context/appContext";
 
 const Verify = () => {
   const { emailToken } = useParams();
-  const { user, isVerifying, verifyUser, verified } = useAppContext();
+  const { user, isVerifying, verifyUser, verified, showAlert } =
+    useAppContext();
   const navigate = useNavigate();
-  verifyUser(emailToken);
-  if (isVerifying) {
-    return <Loading center />;
-  }
+  //;
   useEffect(() => {
-    if (user.isVerified) {
+    if (!verified) {
+      verifyUser(emailToken);
+    }
+  }, []);
+  useEffect(() => {
+    if (verified) {
       setTimeout(() => {
         navigate("/");
       }, 3000);
     }
-  }, [user.isVerified, navigate]);
+  }, [verified, navigate]);
+  if (isVerifying) {
+    return (
+      <Wrapper className="full-page">
+        <Loading center />
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper className="full-page">
-      <div>
-        <h3>Verify page</h3>
-      </div>
+      <div>{verified ? "verified successfully" : "verification failed"}</div>
     </Wrapper>
   );
 };

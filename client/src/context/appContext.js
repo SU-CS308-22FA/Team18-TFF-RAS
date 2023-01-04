@@ -110,6 +110,7 @@ const initialState = {
   fairness: 0,
   comments: "",
   isVerifying: false,
+  verified: false,
   verificationEmailSending: false,
 };
 
@@ -604,11 +605,13 @@ const AppProvider = ({ children }) => {
   const verifyUser = async (emailToken) => {
     dispatch({ type: VERIFY_USER_BEGIN });
     try {
-      const { message } = await authFetch.get(`/verify/${emailToken}`);
+      const { user, message } = await authFetch.get(`/verify/${emailToken}`);
       dispatch({
         type: VERIFY_USER_SUCCESS,
-        payload: { message },
+        payload: { user, message },
       });
+      const { location } = user.location;
+      addUserToLocalStorage({ user, token, location });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -616,6 +619,7 @@ const AppProvider = ({ children }) => {
         payload: { msg: error.response.data.msg },
       });
     }
+    clearAlert();
   };
 
   return (

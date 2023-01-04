@@ -554,6 +554,8 @@ const reducer = (state, action) => {
     return {
       ...state,
       isVerifying: false,
+      user: action.payload.user,
+      verified: true,
       showAlert: true,
       alertType: "success",
       alertText: action.payload.message,

@@ -10,6 +10,9 @@ const Wrapper = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
+  h4 {
+    margin-bottom: 0.5rem;
+  }
   h3 {
     margin-bottom: 0.5rem;
   }
