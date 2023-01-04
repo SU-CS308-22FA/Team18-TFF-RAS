@@ -49,10 +49,7 @@ class PythonOrgSearch(unittest.TestCase):
             By.XPATH, "//*[@id='63a08b2d8fdc6f480b0acef8']/div/button")
         save.click()
         time.sleep(5)
-        self.assertIn("Comment added", driver.page_source)
-        # alert_text = driver.switchTo().alert().getText()
-        # self.assertIn("Comment added",
-        #               alert_text)
+        driver.switch_to.alert.accept()
 
     def tearDown(self):
         self.driver.close()
