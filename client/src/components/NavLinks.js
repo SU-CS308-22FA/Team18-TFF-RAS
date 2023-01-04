@@ -7,14 +7,18 @@ const NavLinks = ({ toggleSidebar }) => {
   const { user } = useAppContext();
   let newLinks = [...links];
 
-  if (user.type === "expert") {
-    newLinks = links.filter(
-      (link) => link.path !== "objection" && link.path !== "reports"
-    );
+  if (!["expert", "club", "investigator"].includes(user?.type)) {
+    newLinks = newLinks.filter((link) => link.path !== "objection");
   }
-  if (user.type !== "observer" && user.type !== "expert") {
-    newLinks = links.filter((link) => link.path !== "reports");
+
+  if (!["observer", "expert"].includes(user?.type)) {
+    newLinks = newLinks.filter((link) => link.path !== "reports");
   }
+
+  if (!["assigner"].includes(user?.type)) {
+    newLinks = newLinks.filter((link) => link.path !== "referee-assignment");
+  }
+
   return (
     <div className="nav-links">
       {newLinks.map((link) => {

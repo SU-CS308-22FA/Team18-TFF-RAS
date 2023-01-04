@@ -15,39 +15,50 @@ const MatchSubsInfo = ({ data }) => {
     const { id, name, number, grid } = data.lineups[0].startXI[i].player;
     homeStarting11[grid] = { name, number };
 
-    for (let j = 0; j < data.players[0].players.length; j++) {
-      const currentPlayer = data.players[0].players[j].player;
-      if (currentPlayer.id === id) {
-        homeStarting11[grid].photo = currentPlayer.photo;
-        const currentStats = data.players[0].players[j].statistics[0];
-        homeStarting11[grid].cards = { ...currentStats.cards };
-        homeStarting11[grid].goals = currentStats.goals.total
-          ? currentStats.goals.total
-          : 0;
-        homeStarting11[grid].assists = currentStats.goals.assists
-          ? currentStats.goals.assists
-          : 0;
-        homeStarting11[grid].rating = currentStats.games.rating;
+    if (data.players.length === 0) {
+      homeStarting11[grid].photo =
+        "https://w7.pngwing.com/pngs/753/432/png-transparent-user-profile-2018-in-sight-user-conference-expo-business-default-business-angle-service-people-thumbnail.png";
+      homeStarting11[grid].cards = { yellow: 0, red: 0 };
+      homeStarting11[grid].goals = 0;
+      homeStarting11[grid].assists = 0;
+      homeStarting11[grid].rating = null;
+      homeStarting11[grid].subOut = null;
+      homeStarting11[grid].ownGoals = 0;
+    } else {
+      for (let j = 0; j < data.players[0].players.length; j++) {
+        const currentPlayer = data.players[0].players[j].player;
+        if (currentPlayer.id === id) {
+          homeStarting11[grid].photo = currentPlayer.photo;
+          const currentStats = data.players[0].players[j].statistics[0];
+          homeStarting11[grid].cards = { ...currentStats.cards };
+          homeStarting11[grid].goals = currentStats.goals.total
+            ? currentStats.goals.total
+            : 0;
+          homeStarting11[grid].assists = currentStats.goals.assists
+            ? currentStats.goals.assists
+            : 0;
+          homeStarting11[grid].rating = currentStats.games.rating;
 
-        // check for sub and own goals
-        homeStarting11[grid].subOut = null;
-        homeStarting11[grid].ownGoals = 0;
-        for (let k = 0; k < data.events.length; k++) {
-          if (
-            data.events[k].type === "subst" &&
-            data.events[k].player.id === id
-          ) {
-            homeStarting11[grid].subOut = data.events[k].time.elapsed;
-          } else if (
-            data.events[k].type === "Goal" &&
-            data.events[k].detail === "Own Goal" &&
-            data.events[k].player.id === id
-          ) {
-            homeStarting11[grid].ownGoals++;
+          // check for sub and own goals
+          homeStarting11[grid].subOut = null;
+          homeStarting11[grid].ownGoals = 0;
+          for (let k = 0; k < data.events.length; k++) {
+            if (
+              data.events[k].type === "subst" &&
+              data.events[k].player.id === id
+            ) {
+              homeStarting11[grid].subOut = data.events[k].time.elapsed;
+            } else if (
+              data.events[k].type === "Goal" &&
+              data.events[k].detail === "Own Goal" &&
+              data.events[k].player.id === id
+            ) {
+              homeStarting11[grid].ownGoals++;
+            }
           }
-        }
 
-        break;
+          break;
+        }
       }
     }
   }
@@ -60,39 +71,50 @@ const MatchSubsInfo = ({ data }) => {
     const { id, name, number, grid } = data.lineups[1].startXI[i].player;
     awayStarting11[grid] = { name, number };
 
-    for (let j = 0; j < data.players[1].players.length; j++) {
-      const currentPlayer = data.players[1].players[j].player;
-      if (currentPlayer.id === id) {
-        awayStarting11[grid].photo = currentPlayer.photo;
-        const currentStats = data.players[1].players[j].statistics[0];
-        awayStarting11[grid].cards = { ...currentStats.cards };
-        awayStarting11[grid].goals = currentStats.goals.total
-          ? currentStats.goals.total
-          : 0;
-        awayStarting11[grid].assists = currentStats.goals.assists
-          ? currentStats.goals.assists
-          : 0;
-        awayStarting11[grid].rating = currentStats.games.rating;
+    if (data.players.length === 0) {
+      awayStarting11[grid].photo =
+        "https://w7.pngwing.com/pngs/753/432/png-transparent-user-profile-2018-in-sight-user-conference-expo-business-default-business-angle-service-people-thumbnail.png";
+      awayStarting11[grid].cards = { yellow: 0, red: 0 };
+      awayStarting11[grid].goals = 0;
+      awayStarting11[grid].assists = 0;
+      awayStarting11[grid].rating = null;
+      awayStarting11[grid].subOut = null;
+      awayStarting11[grid].ownGoals = 0;
+    } else {
+      for (let j = 0; j < data.players[1].players.length; j++) {
+        const currentPlayer = data.players[1].players[j].player;
+        if (currentPlayer.id === id) {
+          awayStarting11[grid].photo = currentPlayer.photo;
+          const currentStats = data.players[1].players[j].statistics[0];
+          awayStarting11[grid].cards = { ...currentStats.cards };
+          awayStarting11[grid].goals = currentStats.goals.total
+            ? currentStats.goals.total
+            : 0;
+          awayStarting11[grid].assists = currentStats.goals.assists
+            ? currentStats.goals.assists
+            : 0;
+          awayStarting11[grid].rating = currentStats.games.rating;
 
-        // check for sub and own goals
-        awayStarting11[grid].subOut = null;
-        awayStarting11[grid].ownGoals = 0;
-        for (let k = 0; k < data.events.length; k++) {
-          if (
-            data.events[k].type === "subst" &&
-            data.events[k].player.id === id
-          ) {
-            awayStarting11[grid].subOut = data.events[k].time.elapsed;
-          } else if (
-            data.events[k].type === "Goal" &&
-            data.events[k].detail === "Own Goal" &&
-            data.events[k].player.id === id
-          ) {
-            awayStarting11[grid].ownGoals++;
+          // check for sub and own goals
+          awayStarting11[grid].subOut = null;
+          awayStarting11[grid].ownGoals = 0;
+          for (let k = 0; k < data.events.length; k++) {
+            if (
+              data.events[k].type === "subst" &&
+              data.events[k].player.id === id
+            ) {
+              awayStarting11[grid].subOut = data.events[k].time.elapsed;
+            } else if (
+              data.events[k].type === "Goal" &&
+              data.events[k].detail === "Own Goal" &&
+              data.events[k].player.id === id
+            ) {
+              awayStarting11[grid].ownGoals++;
+            }
           }
-        }
 
-        break;
+          break;
+        }
       }
     }
   }
@@ -102,39 +124,50 @@ const MatchSubsInfo = ({ data }) => {
     const { id, name, number } = data.lineups[0].substitutes[i].player;
     let subToAdd = { name, number };
 
-    for (let j = 0; j < data.players[0].players.length; j++) {
-      const currentPlayer = data.players[0].players[j].player;
-      if (currentPlayer.id === id) {
-        subToAdd.photo = currentPlayer.photo;
-        const currentStats = data.players[0].players[j].statistics[0];
-        subToAdd.cards = { ...currentStats.cards };
-        subToAdd.goals = currentStats.goals.total
-          ? currentStats.goals.total
-          : 0;
-        subToAdd.assists = currentStats.goals.assists
-          ? currentStats.goals.assists
-          : 0;
-        subToAdd.rating = currentStats.games.rating;
+    if (data.players.length === 0) {
+      subToAdd.photo =
+        "https://w7.pngwing.com/pngs/753/432/png-transparent-user-profile-2018-in-sight-user-conference-expo-business-default-business-angle-service-people-thumbnail.png";
+      subToAdd.cards = { yellow: 0, red: 0 };
+      subToAdd.goals = 0;
+      subToAdd.assists = 0;
+      subToAdd.rating = null;
+      subToAdd.subIn = 100;
+      subToAdd.ownGoals = 0;
+    } else {
+      for (let j = 0; j < data.players[0].players.length; j++) {
+        const currentPlayer = data.players[0].players[j].player;
+        if (currentPlayer.id === id) {
+          subToAdd.photo = currentPlayer.photo;
+          const currentStats = data.players[0].players[j].statistics[0];
+          subToAdd.cards = { ...currentStats.cards };
+          subToAdd.goals = currentStats.goals.total
+            ? currentStats.goals.total
+            : 0;
+          subToAdd.assists = currentStats.goals.assists
+            ? currentStats.goals.assists
+            : 0;
+          subToAdd.rating = currentStats.games.rating;
 
-        // check for sub and own goals
-        subToAdd.subIn = 100;
-        subToAdd.ownGoals = 0;
-        for (let k = 0; k < data.events.length; k++) {
-          if (
-            data.events[k].type === "subst" &&
-            data.events[k].assist.id === id
-          ) {
-            subToAdd.subIn = data.events[k].time.elapsed;
-          } else if (
-            data.events[k].type === "Goal" &&
-            data.events[k].detail === "Own Goal" &&
-            data.events[k].player.id === id
-          ) {
-            subToAdd.ownGoals++;
+          // check for sub and own goals
+          subToAdd.subIn = 100;
+          subToAdd.ownGoals = 0;
+          for (let k = 0; k < data.events.length; k++) {
+            if (
+              data.events[k].type === "subst" &&
+              data.events[k].assist.id === id
+            ) {
+              subToAdd.subIn = data.events[k].time.elapsed;
+            } else if (
+              data.events[k].type === "Goal" &&
+              data.events[k].detail === "Own Goal" &&
+              data.events[k].player.id === id
+            ) {
+              subToAdd.ownGoals++;
+            }
           }
-        }
 
-        break;
+          break;
+        }
       }
     }
 
@@ -149,39 +182,50 @@ const MatchSubsInfo = ({ data }) => {
     const { id, name, number } = data.lineups[1].substitutes[i].player;
     let subToAdd = { name, number };
 
-    for (let j = 0; j < data.players[1].players.length; j++) {
-      const currentPlayer = data.players[1].players[j].player;
-      if (currentPlayer.id === id) {
-        subToAdd.photo = currentPlayer.photo;
-        const currentStats = data.players[1].players[j].statistics[0];
-        subToAdd.cards = { ...currentStats.cards };
-        subToAdd.goals = currentStats.goals.total
-          ? currentStats.goals.total
-          : 0;
-        subToAdd.assists = currentStats.goals.assists
-          ? currentStats.goals.assists
-          : 0;
-        subToAdd.rating = currentStats.games.rating;
+    if (data.players.length === 0) {
+      subToAdd.photo =
+        "https://w7.pngwing.com/pngs/753/432/png-transparent-user-profile-2018-in-sight-user-conference-expo-business-default-business-angle-service-people-thumbnail.png";
+      subToAdd.cards = { yellow: 0, red: 0 };
+      subToAdd.goals = 0;
+      subToAdd.assists = 0;
+      subToAdd.rating = null;
+      subToAdd.subIn = 100;
+      subToAdd.ownGoals = 0;
+    } else {
+      for (let j = 0; j < data.players[1].players.length; j++) {
+        const currentPlayer = data.players[1].players[j].player;
+        if (currentPlayer.id === id) {
+          subToAdd.photo = currentPlayer.photo;
+          const currentStats = data.players[1].players[j].statistics[0];
+          subToAdd.cards = { ...currentStats.cards };
+          subToAdd.goals = currentStats.goals.total
+            ? currentStats.goals.total
+            : 0;
+          subToAdd.assists = currentStats.goals.assists
+            ? currentStats.goals.assists
+            : 0;
+          subToAdd.rating = currentStats.games.rating;
 
-        // check for sub and own goals
-        subToAdd.subIn = 100;
-        subToAdd.ownGoals = 0;
-        for (let k = 0; k < data.events.length; k++) {
-          if (
-            data.events[k].type === "subst" &&
-            data.events[k].assist.id === id
-          ) {
-            subToAdd.subIn = data.events[k].time.elapsed;
-          } else if (
-            data.events[k].type === "Goal" &&
-            data.events[k].detail === "Own Goal" &&
-            data.events[k].player.id === id
-          ) {
-            subToAdd.ownGoals++;
+          // check for sub and own goals
+          subToAdd.subIn = 100;
+          subToAdd.ownGoals = 0;
+          for (let k = 0; k < data.events.length; k++) {
+            if (
+              data.events[k].type === "subst" &&
+              data.events[k].assist.id === id
+            ) {
+              subToAdd.subIn = data.events[k].time.elapsed;
+            } else if (
+              data.events[k].type === "Goal" &&
+              data.events[k].detail === "Own Goal" &&
+              data.events[k].player.id === id
+            ) {
+              subToAdd.ownGoals++;
+            }
           }
-        }
 
-        break;
+          break;
+        }
       }
     }
 
@@ -328,21 +372,24 @@ const MatchSubsInfo = ({ data }) => {
                                 </div>
                               </div>
                             )}
-                            <div className="lineup-player-rating-container">
-                              <div
-                                className="player-rating-styled-left"
-                                style={{
-                                  backgroundColor:
-                                    parseFloat(currentPlayer.rating) >= 6.9
-                                      ? "rgb(30, 200, 83)"
-                                      : parseFloat(currentPlayer.rating) >= 5.0
-                                      ? "rgb(240, 128, 34)"
-                                      : "rgb(229, 94, 91)",
-                                }}
-                              >
-                                <span>{currentPlayer.rating}</span>
+                            {currentPlayer.rating === null ? null : (
+                              <div className="lineup-player-rating-container">
+                                <div
+                                  className="player-rating-styled-left"
+                                  style={{
+                                    backgroundColor:
+                                      parseFloat(currentPlayer.rating) >= 6.9
+                                        ? "rgb(30, 200, 83)"
+                                        : parseFloat(currentPlayer.rating) >=
+                                          5.0
+                                        ? "rgb(240, 128, 34)"
+                                        : "rgb(229, 94, 91)",
+                                  }}
+                                >
+                                  <span>{currentPlayer.rating}</span>
+                                </div>
                               </div>
-                            </div>
+                            )}
                             <div className="middle-lineup-badges-container">
                               {currentPlayer.cards.yellow > 0 ? (
                                 <div className="lineup-card-badge-container">
@@ -440,21 +487,24 @@ const MatchSubsInfo = ({ data }) => {
                                 </div>
                               </div>
                             )}
-                            <div className="lineup-player-rating-container">
-                              <div
-                                className="player-rating-styled-left"
-                                style={{
-                                  backgroundColor:
-                                    parseFloat(currentPlayer.rating) >= 6.9
-                                      ? "rgb(30, 200, 83)"
-                                      : parseFloat(currentPlayer.rating) >= 5.0
-                                      ? "rgb(240, 128, 34)"
-                                      : "rgb(229, 94, 91)",
-                                }}
-                              >
-                                <span>{currentPlayer.rating}</span>
+                            {currentPlayer.rating === null ? null : (
+                              <div className="lineup-player-rating-container">
+                                <div
+                                  className="player-rating-styled-left"
+                                  style={{
+                                    backgroundColor:
+                                      parseFloat(currentPlayer.rating) >= 6.9
+                                        ? "rgb(30, 200, 83)"
+                                        : parseFloat(currentPlayer.rating) >=
+                                          5.0
+                                        ? "rgb(240, 128, 34)"
+                                        : "rgb(229, 94, 91)",
+                                  }}
+                                >
+                                  <span>{currentPlayer.rating}</span>
+                                </div>
                               </div>
-                            </div>
+                            )}
                             <div className="middle-lineup-badges-container">
                               {currentPlayer.cards.yellow > 0 ? (
                                 <div className="lineup-card-badge-container">

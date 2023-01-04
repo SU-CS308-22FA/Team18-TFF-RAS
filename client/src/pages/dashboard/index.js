@@ -9,6 +9,7 @@ import EditReport from "./EditReport";
 import SharedLayout from "./SharedLayout";
 import Objection from "./Objection";
 import Verify from "./Verify";
+import RefereeAssignment from "./RefereeAssignment";
 
 export {
   Home,
@@ -22,4 +23,5 @@ export {
   SharedLayout,
   Objection,
   Verify,
+  RefereeAssignment,
 };

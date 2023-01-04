@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import MatchPageWrapper from "../../../assets/wrappers/MatchPage";
 import MatchGeneralInfo from "../../../components/MatchGeneralInfo/MatchGeneralInfo";
 import MatchEventsInfo from "../../../components/MatchEventsInfo/MatchEventsInfo";
 import MatchSubsInfo from "../../../components/MatchSubsInfo/MatchSubsInfo";
 import MatchStatsInfo from "../../../components/MatchStatsInfo/MatchStatsInfo";
+import ModalVideo from "react-modal-video";
 
 import DefaultReferee from "../../../assets/images/default_referee.jpeg";
 
@@ -16,11 +17,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import "../../../components/MatchGeneralInfo/MatchGeneralInfo.css";
-import { getMatch } from "../../../utils/api";
+import { getMatch, getVideos } from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import MatchRefRatingColumn from "../../../components/MatchRefRatingColumn/MatchRefRatingColumn";
 import { referees } from "../../../utils/constants";
 import { useAppContext } from "../../../context/appContext";
+
+import "react-modal-video/scss/modal-video.scss";
+import VideosContainer from "../../../components/VideosContainer";
 
 const Match = () => {
   const { id } = useParams();
@@ -37,11 +41,8 @@ const Match = () => {
     review: storedReview,
     eventReviews: storedEventReviews,
     loading,
+    user,
   } = useAppContext();
-  console.log(storedRating);
-  console.log(storedReview);
-  console.log(storedEventReviews);
-  console.log("ENDD");
 
   const [isHeaderShown, setIsHeaderShown] = useState(false);
   const [matchData, setMatchData] = useState(null);
@@ -56,6 +57,14 @@ const Match = () => {
   const [showError, setShowError] = useState(false);
   const [refereeName, setRefereeName] = useState("");
   const [refereeImage, setRefereeImage] = useState(DefaultReferee);
+  const [currentTime, setCurrentTime] = useState("");
+  const [videos, setVideos] = useState([]);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [videoURL, setVideoURL] = useState("");
+
+  console.log(videos);
+
+  const intervalIdRef = useRef(null);
 
   // sort and filter events
   const newData = [];
@@ -82,7 +91,9 @@ const Match = () => {
       }
       newData.push(currentEvent);
     }
-    newData.push({ type: "full-time" });
+    if (["FT", "PEN", "AET"].includes(matchData.fixture.status.short)) {
+      newData.push({ type: "full-time" });
+    }
   }
 
   const addEventToReview = (idx) => {
@@ -113,6 +124,7 @@ const Match = () => {
       rating,
       match: matchData.fixture.id,
       referee: refID,
+      ratingType: user.type,
     };
 
     // check for review
@@ -140,27 +152,154 @@ const Match = () => {
   useEffect(() => {
     getMatch(id).then((data) => {
       setMatchData(data);
-      const currentReferee = referees.find((refereeObject) =>
-        refereeObject?.apiName.includes(
-          data.fixture.referee.indexOf(",") === -1
-            ? data.fixture.referee
-            : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
-        )
-      );
-      // getReferee(currentReferee.id);
-      setRefID(currentReferee.id);
-      setRefereeName(currentReferee.name);
-      if (currentReferee?.image) {
-        setRefereeImage(currentReferee?.image);
+
+      // get videos
+      getVideos(
+        data.teams.home.name,
+        data.teams.away.name,
+        data.league.round.slice(data.league.round.length - 2)
+      ).then((results) => {
+        if (results?.events) {
+          setVideos(results.events);
+        }
+      });
+
+      // set referee
+      if (data?.fixture?.referee !== null) {
+        const currentReferee = referees.find((refereeObject) =>
+          refereeObject?.apiName.includes(
+            data.fixture.referee.indexOf(",") === -1
+              ? data.fixture.referee
+              : data.fixture.referee.slice(0, data.fixture.referee.indexOf(","))
+          )
+        );
+        // getReferee(currentReferee.id);
+        setRefID(currentReferee.id);
+        setRefereeName(currentReferee.name);
+        if (currentReferee?.image) {
+          setRefereeImage(currentReferee?.image);
+        }
+      }
+
+      // get rating
+      getRating(data.fixture.id);
+
+      // handle current time
+      if (["1H", "2H", "ET"].includes(data.fixture.status.short)) {
+        const { timestamp } = data.fixture;
+        let seconds = new Date().getTime() - timestamp * 1000;
+        seconds = Math.floor(seconds / 1000);
+        let minutes =
+          data.fixture.status.elapsed !== 45
+            ? Math.max(0, data.fixture.status.elapsed - 1)
+            : Math.floor(seconds / 60) - 3;
+        const delay = Math.floor(seconds / 60) - minutes;
+        seconds %= 60;
+        setCurrentTime(
+          `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+            seconds >= 10 ? seconds : "0" + seconds.toString()
+          }`
+        );
+        intervalIdRef.current = setInterval(() => {
+          const { timestamp } = data.fixture;
+          let seconds = new Date().getTime() - timestamp * 1000;
+          seconds = Math.floor(seconds / 1000);
+          let minutes = Math.floor(seconds / 60) - delay;
+          // minutes = Math.max(0, data.fixture.status.elapsed - 1);
+          seconds %= 60;
+          setCurrentTime(
+            `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+              seconds >= 10 ? seconds : "0" + seconds.toString()
+            }`
+          );
+        }, 1000);
       }
     });
-  }, []);
+    const matchIntervalID = setInterval(
+      () =>
+        getMatch(id).then((data) => {
+          setMatchData(data);
 
-  useEffect(() => {
-    if (matchData != null) {
-      getRating(matchData.fixture.id);
-    }
-  }, [matchData]);
+          // get videos
+          getVideos(
+            data.teams.home.name,
+            data.teams.away.name,
+            data.league.round.slice(data.league.round.length - 2)
+          ).then((results) => {
+            if (results?.events) {
+              setVideos(results.events);
+            }
+          });
+
+          // set referee
+          if (data?.fixture?.referee !== null) {
+            const currentReferee = referees.find((refereeObject) =>
+              refereeObject?.apiName.includes(
+                data.fixture.referee.indexOf(",") === -1
+                  ? data.fixture.referee
+                  : data.fixture.referee.slice(
+                      0,
+                      data.fixture.referee.indexOf(",")
+                    )
+              )
+            );
+            // getReferee(currentReferee.id);
+            setRefID(currentReferee.id);
+            setRefereeName(currentReferee.name);
+            if (currentReferee?.image) {
+              setRefereeImage(currentReferee?.image);
+            }
+          }
+
+          // get rating
+          getRating(data.fixture.id);
+
+          // handle current time
+          console.log(intervalIdRef.current);
+          if (
+            ["1H", "2H", "ET"].includes(data.fixture.status.short) &&
+            intervalIdRef.current === null
+          ) {
+            const { timestamp } = data.fixture;
+            let seconds = new Date().getTime() - timestamp * 1000;
+            seconds = Math.floor(seconds / 1000);
+            let minutes =
+              data.fixture.status.elapsed !== 45
+                ? Math.max(0, data.fixture.status.elapsed - 1)
+                : Math.floor(seconds / 60) - 3;
+            const delay = Math.floor(seconds / 60) - minutes;
+            seconds %= 60;
+            setCurrentTime(
+              `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+                seconds >= 10 ? seconds : "0" + seconds.toString()
+              }`
+            );
+            intervalIdRef.current = setInterval(() => {
+              const { timestamp } = data.fixture;
+              let seconds = new Date().getTime() - timestamp * 1000;
+              seconds = Math.floor(seconds / 1000);
+              let minutes = Math.floor(seconds / 60) - delay;
+              // minutes = Math.max(0, data.fixture.status.elapsed - 1);
+              seconds %= 60;
+              setCurrentTime(
+                `${minutes >= 10 ? minutes : "0" + minutes.toString()}:${
+                  seconds >= 10 ? seconds : "0" + seconds.toString()
+                }`
+              );
+            }, 1000);
+          } else if (
+            !["1H", "2H", "ET"].includes(data.fixture.status.short) &&
+            intervalIdRef.current !== null
+          ) {
+            clearInterval(intervalIdRef.current);
+            intervalIdRef.current = null;
+          }
+        }),
+      30000
+    );
+
+    return () => clearInterval(matchIntervalID);
+  }, []);
 
   if (matchData == null) {
     return null;
@@ -168,6 +307,12 @@ const Match = () => {
 
   return (
     <MatchPageWrapper>
+      <ModalVideo
+        channel="custom"
+        url={videoURL}
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
+      />
       <Dialog open={showModal} onClose={clearModal}>
         {/* <DialogTitle>{"Delete this event review?"}</DialogTitle> */}
         <DialogContent>
@@ -209,45 +354,82 @@ const Match = () => {
       <main id="match-facts-wrapper">
         <div className="full-screen-match-content">
           <div className="match-page">
-            <MatchGeneralInfo showHeader={isHeaderShown} data={matchData} />
-            <MatchEventsInfo
+            <MatchGeneralInfo
+              showHeader={isHeaderShown}
               data={matchData}
-              newData={newData}
-              isChoosingEvent={isChoosingEvent}
-              chosenEvents={reviewEvents}
-              addEventToReview={addEventToReview}
+              currentTime={currentTime}
             />
-            <MatchSubsInfo data={matchData} />
-            <MatchStatsInfo data={matchData.statistics} />
+            {matchData?.events.length > 0 ? (
+              <MatchEventsInfo
+                data={matchData}
+                newData={newData}
+                isChoosingEvent={isChoosingEvent}
+                chosenEvents={reviewEvents}
+                addEventToReview={addEventToReview}
+                videos={videos}
+                setVideoURL={setVideoURL}
+                setIsVideoOpen={setIsVideoOpen}
+              />
+            ) : null}
+            {matchData?.lineups.length > 0 &&
+            matchData.lineups[0]?.formation !== null ? (
+              <MatchSubsInfo data={matchData} />
+            ) : null}
+            {matchData?.statistics.length > 0 ? (
+              <MatchStatsInfo data={matchData.statistics} />
+            ) : null}
           </div>
-          <MatchRefRatingColumn
-            setRating={setRating}
-            rating={rating}
-            reviewEvents={reviewEvents}
-            setReviewEvents={setReviewEvents}
-            matchData={matchData}
-            newData={newData}
-            isDeleteModalOpen={isDeleteModalOpen}
-            setIsDeleteModalOpen={setIsDeleteModalOpen}
-            isChoosingEvent={isChoosingEvent}
-            setIsChoosingEvent={setIsChoosingEvent}
-            generalReview={generalReview}
-            setGeneralReview={setGeneralReview}
-            reviewEventsComments={reviewEventsComments}
-            setReviewEventsComments={setReviewEventsComments}
-            onReviewSubmit={onReviewSubmit}
-            eventToBeDeleted={eventToBeDeleted}
-            setEventToBeDeleted={setEventToBeDeleted}
-            showError={showError}
-            ratingGiven={ratingGiven}
-            storedRating={storedRating}
-            storedReview={storedReview}
-            storedEventReviews={storedEventReviews}
-            refereeName={refereeName}
-            refereeImage={refereeImage}
-            loading={loading}
-            refID={refID}
-          />
+          {["fan", "expert"].includes(user?.type) &&
+          ["FT", "PEN", "AET"].includes(matchData?.fixture?.status?.short) ? (
+            <MatchRefRatingColumn
+              setRating={setRating}
+              rating={rating}
+              reviewEvents={reviewEvents}
+              setReviewEvents={setReviewEvents}
+              matchData={matchData}
+              newData={newData}
+              isDeleteModalOpen={isDeleteModalOpen}
+              setIsDeleteModalOpen={setIsDeleteModalOpen}
+              isChoosingEvent={isChoosingEvent}
+              setIsChoosingEvent={setIsChoosingEvent}
+              generalReview={generalReview}
+              setGeneralReview={setGeneralReview}
+              reviewEventsComments={reviewEventsComments}
+              setReviewEventsComments={setReviewEventsComments}
+              onReviewSubmit={onReviewSubmit}
+              eventToBeDeleted={eventToBeDeleted}
+              setEventToBeDeleted={setEventToBeDeleted}
+              showError={showError}
+              ratingGiven={ratingGiven}
+              storedRating={storedRating}
+              storedReview={storedReview}
+              storedEventReviews={storedEventReviews}
+              refereeName={refereeName}
+              refereeImage={refereeImage}
+              loading={loading}
+              refID={refID}
+              videos={videos}
+              setIsVideoOpen={setIsVideoOpen}
+              setVideoURL={setVideoURL}
+            />
+          ) : (
+            <div>
+              <div className="not-a-fan-container">
+                {!["fan", "expert"].includes(user?.type)
+                  ? "Only fans and experts can rate and leave reviews on referees' performances."
+                  : `Rating and review for ${
+                      matchData?.fixture?.referee !== null
+                        ? matchData.fixture.referee
+                        : "the referee"
+                    }'s performance in this match will be opened once match is finished.`}
+              </div>
+              <VideosContainer
+                videos={videos}
+                setIsVideoOpen={setIsVideoOpen}
+                setVideoURL={setVideoURL}
+              />
+            </div>
+          )}
         </div>
       </main>
     </MatchPageWrapper>

@@ -27,12 +27,16 @@ const Objection = () => {
 
   const {createObjection, deleteObjection ,updateObjection, alertText} = useAppContext();
   const { user } = useAppContext();
-  if (user.type == "investigator") {
-    setIsInvestigator(true);
-  }
-  else if (user.type == "expert"||user.type == "club") {
-    setIsClubOrExp(true);
-  }
+  useEffect(() => {
+    if (user.type == "investigator") {
+      setIsInvestigator(true);
+      console.log(user.type);
+    }
+    else if ((user.type == "expert" || user.type == "club")) {
+      setIsClubOrExp(true);
+      console.log(user.type);
+    }
+  }, []);
 
   useEffect(() => {
     if (alertText === "Updated") {
@@ -156,6 +160,7 @@ const Objection = () => {
 }, [sortingValue]);
 
   const handleInvestigationSubmit = (id) => {
+    
     console.log(id);
       setShowInput(false);
       setIsLoading(true);
@@ -164,14 +169,19 @@ const Objection = () => {
       setSearchId("");
   }
 
+  useEffect(() => {
+    if (!isLoading) {
+      window.scrollTo(0, 3500);
+    }
+  }, [isLoading])
+
+  
+
     async function getRefereeObjections(id) { // API
       try {
         const response = await axios.get(`${baseURL + id}`);
         const data = response.data;
         setRefObjections(data);
-        console.log("refObjections: ",refObjections);
-        setEnd(refObjections.End);
-        console.log("end: ", end);
         setIsLoading(false);
       }
       catch (error) {
@@ -287,109 +297,55 @@ if(isInvestigator)
             </section>
           </section>
         </div>
-            : 
-          isLoading? <div>Loading...</div> : <div>
-            
-            <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "50px",
-            }}>
+          {isLoading ? <div>Loading...</div> :
+          <div>  
+            <div style={{display: "flex", justifyContent: "space-between", padding: "50px"}}>
               <h3>New Objections</h3>
               <h3>In progress</h3>
               <h3>Closed Objections</h3>
             </div>
-          
-            <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "50px",
-            }}
-          >
-            <div
-              onDrop={drop1}
-              onDragOver={dragOver1}
-              id="board-1"
-              style={{
-                border: "1px solid #222",
-                padding: 20,
-              }}
-            >
-              
-              {refObjections.NoDecisions.map((obj) => {
-            return (
-              <div key={obj._id} className="card w-100"
-                    id={obj._id}
-                    draggable
-                    onDragStart={dragStart}
-                    onDragOver={dragOver}
-              >
-                <div className="card-body">
-                  <h4 className="card-header">Objection:</h4>
-                  <p className="card-text"> {obj.anObjection}</p>
-                  <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.NoDecisions];const idx = refObjections.NoDecisions.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, NoDecisions: temp});}} labelText="My decision:"/>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+            <div style={{display: "flex",justifyContent: "space-between",padding: "50px",}}>
+            <div onDrop={drop1} onDragOver={dragOver1} id="board-1" style={{border: "1px solid #222",padding: 20}}>
+              {Array.isArray(refObjections.NoDecisions) && refObjections.NoDecisions.map((obj) => {
+              return (
+                <div key={obj._id} className="card w-100" id={obj._id} draggable onDragStart={dragStart} onDragOver={dragOver}>
+                  <div className="card-body">
+                    <h4 className="card-header">Objection:</h4>
+                    <p className="card-text"> {obj.anObjection}</p>
+                    <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.NoDecisions];const idx = refObjections.NoDecisions.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, NoDecisions: temp});}} labelText="My decision:"/>
+                    <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+                  </div>
                 </div>
-              </div>
-            )})}
+              )})}
             </div>
-            <div
-              id="board-2"
-              onDrop={drop2}
-              onDragOver={dragOver1}
-              style={{
-                border: "1px solid #222",
-                padding: 20,
-              }}
-            >
-              {refObjections.InReview.map((obj) => {
-            return (
-              <div key={obj._id} className="card w-100"
-                id={obj._id}
-                    draggable
-                    onDragStart={dragStart}
-                    onDragOver={dragOver}
-              >
-                <div className="card-body">
-                  <h4 className="card-header">Objection:</h4>
-                  <p className="card-text"> {obj.anObjection}</p>
-                  <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.InReview];const idx = refObjections.InReview.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, InReview: temp});}} labelText="My decision:"/>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+            <div id="board-2" onDrop={drop2} onDragOver={dragOver1} style={{border: "1px solid #222", padding: 20}}>
+              {Array.isArray(refObjections.InReview) && refObjections.InReview.map((obj) => {
+              return (
+                <div key={obj._id} className="card w-100" id={obj._id} draggable onDragStart={dragStart} onDragOver={dragOver}>
+                  <div className="card-body">
+                    <h4 className="card-header">Objection:</h4>
+                    <p className="card-text"> {obj.anObjection}</p>
+                    <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.InReview];const idx = refObjections.InReview.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, InReview: temp});}} labelText="My decision:"/>
+                    <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+                  </div>
                 </div>
-              </div>
-            )})}
+              )})}
             </div>
-            <div
-              id="board-3"
-              onDrop={drop3}
-              onDragOver={dragOver1}
-              style={{
-                border: "1px solid #222",
-                padding: 20,
-              }}
-            >
-              {refObjections.End.map((obj) => {
-            return (
-              <div key={obj._id} className="card w-100"
-                    id={obj._id}
-                    draggable
-                    onDragStart={dragStart}
-                    onDragOver={dragOver}
-              >
-                <div className="card-body">
-                  <h4 className="card-header">Objection:</h4>
-                  <p className="card-text"> {obj.anObjection}</p>
-                  <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.End];const idx = refObjections.End.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, End: temp});}} labelText="My decision:"/>
-                  <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+            <div id="board-3" onDrop={drop3} onDragOver={dragOver1} style={{border: "1px solid #222",padding: 20}}>
+              {Array.isArray(refObjections.End) && refObjections.End.map((obj) => {
+              return (
+                <div key={obj._id} className="card w-100" id={obj._id} draggable onDragStart={dragStart} onDragOver={dragOver}>
+                  <div className="card-body">
+                    <h4 className="card-header">Objection:</h4>
+                    <p className="card-text"> {obj.anObjection}</p>
+                    <FormRow type="text" name="newComment" value={obj.comment} id="textfieldToClose" handleChange={(e) => {const temp = [...refObjections.End];const idx = refObjections.End.findIndex((item) => item._id === obj._id);temp[idx] = {...obj, comment: e.target.value};setRefObjections({...refObjections, End: temp});}} labelText="My decision:"/>
+                    <button type="button" className="btn btn-primary btn-sm" onClick={() => handleSave(obj)}>Save</button>
+                  </div>
                 </div>
-              </div>
-            )})}
+              )})}
             </div>
           </div>
-          
-          </div>
+        </div>}
     </WrapperRef>
   )  
 }
@@ -401,39 +357,26 @@ else if(isClubOrExp){
               <Logo/>
               <h3>Objection</h3>
             </div>
-            <FormRow
-              type="text"
-              name="referee"
-              value={objection.referee}
-              handleChange={handleChange}
-              placeholder="Enter first letters capital and 1 whitespace between words..."
-              />
-            <FormRow
-              type="text"
-              name="anObjection"
-              value={objection.anObjection}
-              handleChange={handleChange}
-              labelText="Objection"
-              placeholder="Enter your objection here..."
-              />
+            <FormRow type="text" name="referee" value={objection.referee} handleChange={handleChange} placeholder="Enter first letters capital and 1 whitespace between words..."/>
+            <FormRow type="text" name="anObjection" value={objection.anObjection} handleChange={handleChange} labelText="Objection" placeholder="Enter your objection here..."/>
             <button type="submit" className="btn" onClick={handleSubmit}>
               Submit
             </button>
-          {objection.showError ? (
-            <h4 className="form-error">
-              {(objection.referee &&
-                objection.anObjection) ? null:
-                "ERROR!!! Please fill all the blanks."}
-            </h4>
-          ) : null}
+            {objection.showError ? (
+              <h4 className="form-error">
+                {(objection.referee &&
+                  objection.anObjection) ? null:
+                  "ERROR!!! Please fill all the blanks."}
+              </h4>
+            ) : null}
           </form>
       </Wrapper>
     );
-  } 
-  else{
+  }
+else{
     return(
-      <Wrapper className="full-page">
-      <div>You are not authorized to enter this page.</div>
+  <Wrapper className="full-page">
+    <div>You are not authorized to enter this page.</div>
   </Wrapper>
     );
   }

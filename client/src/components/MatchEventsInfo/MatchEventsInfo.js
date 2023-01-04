@@ -10,8 +10,11 @@ import VarIcon from "../../assets/images/var-icon.svg";
 import MissedPenaltyIcon from "../../assets/images/penalty-missed.svg";
 import PropTypes from "prop-types";
 
+import VideoIcon from "@mui/icons-material/PlayCircleFilled";
+
 import "../MatchGeneralInfo/MatchGeneralInfo.css";
 import { getEventTimeString } from "../../utils/helper";
+import { Button } from "@mui/material";
 
 const HalfTime = () => (
   <li className="event-item-container">
@@ -37,12 +40,24 @@ const MatchEventsInfo = ({
   isChoosingEvent,
   chosenEvents,
   addEventToReview,
+  videos,
+  setIsVideoOpen,
+  setVideoURL,
 }) => {
+  console.log(videos);
+
   let home = 0;
   let away = 0;
 
   let homeCards = [];
   let awayCards = [];
+
+  const goalVideos = videos.filter((video) => video.side !== null);
+
+  const openVideo = (url) => {
+    setVideoURL(url);
+    setIsVideoOpen(true);
+  };
 
   return (
     <div className="events card-css">
@@ -59,6 +74,20 @@ const MatchEventsInfo = ({
             if (event.team.name === data.teams.home.name) {
               if (event.type === "Goal") {
                 home++;
+
+                let videoUrl = "";
+                for (let i = 0; i < videos.length; i++) {
+                  const currentVideo = videos[i];
+                  if (
+                    currentVideo.minute === event.time.elapsed &&
+                    currentVideo.side === "Home"
+                  ) {
+                    videoUrl = currentVideo.videoUrl;
+                    break;
+                  }
+                }
+                videoUrl = goalVideos[home + away - 1]?.videoUrl;
+
                 if (event.detail === "Normal Goal") {
                   if (event?.assist?.name) {
                     // if home goal with assist
@@ -102,6 +131,21 @@ const MatchEventsInfo = ({
                         <span className="events-event-time">
                           {getEventTimeString(event)}
                         </span>
+                        {videoUrl !== "" ? (
+                          <div className="event-meat-applyHover-right">
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openVideo(videoUrl);
+                              }}
+                              className="show-video-button"
+                              variant={"contained"}
+                              startIcon={<VideoIcon htmlColor="white" />}
+                            >
+                              Watch Video Highlight
+                            </Button>
+                          </div>
+                        ) : null}
                       </li>
                     );
                   } else {
@@ -141,6 +185,21 @@ const MatchEventsInfo = ({
                         <span className="events-event-time">
                           {getEventTimeString(event)}
                         </span>
+                        {videoUrl !== "" ? (
+                          <div className="event-meat-applyHover-right">
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openVideo(videoUrl);
+                              }}
+                              className="show-video-button"
+                              variant={"contained"}
+                              startIcon={<VideoIcon htmlColor="white" />}
+                            >
+                              Watch Video Highlight
+                            </Button>
+                          </div>
+                        ) : null}
                       </li>
                     );
                   }
@@ -184,6 +243,21 @@ const MatchEventsInfo = ({
                       <span className="events-event-time">
                         {getEventTimeString(event)}
                       </span>
+                      {videoUrl !== "" ? (
+                        <div className="event-meat-applyHover-right">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideo(videoUrl);
+                            }}
+                            className="show-video-button"
+                            variant={"contained"}
+                            startIcon={<VideoIcon htmlColor="white" />}
+                          >
+                            Watch Video Highlight
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 } else if (event.detail === "Own Goal") {
@@ -226,6 +300,21 @@ const MatchEventsInfo = ({
                       <span className="events-event-time">
                         {getEventTimeString(event)}
                       </span>
+                      {videoUrl !== "" ? (
+                        <div className="event-meat-applyHover-right">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideo(videoUrl);
+                            }}
+                            className="show-video-button"
+                            variant={"contained"}
+                            startIcon={<VideoIcon htmlColor="white" />}
+                          >
+                            Watch Video Highlight
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 }
@@ -261,6 +350,18 @@ const MatchEventsInfo = ({
                   );
                 } else {
                   // if home player got red card
+                  let videoUrl = "";
+                  for (let i = 0; i < videos.length; i++) {
+                    const currentVideo = videos[i];
+                    if (
+                      currentVideo.minute === event.time.elapsed &&
+                      currentVideo.description.includes("Kırmızı kart")
+                    ) {
+                      videoUrl = currentVideo.videoUrl;
+                      break;
+                    }
+                  }
+
                   return (
                     <li
                       key={idx}
@@ -291,6 +392,21 @@ const MatchEventsInfo = ({
                       <span className="events-event-time">
                         {getEventTimeString(event)}
                       </span>
+                      {videoUrl !== "" ? (
+                        <div className="event-meat-applyHover-right">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideo(videoUrl);
+                            }}
+                            className="show-video-button"
+                            variant={"contained"}
+                            startIcon={<VideoIcon htmlColor="white" />}
+                          >
+                            Watch Video Highlight
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 }
@@ -359,6 +475,20 @@ const MatchEventsInfo = ({
             } else {
               if (event.type === "Goal") {
                 away++;
+
+                let videoUrl = "";
+                for (let i = 0; i < videos.length; i++) {
+                  const currentVideo = videos[i];
+                  if (
+                    currentVideo.minute === event.time.elapsed &&
+                    currentVideo.side === "Away"
+                  ) {
+                    videoUrl = currentVideo.videoUrl;
+                    break;
+                  }
+                }
+                videoUrl = goalVideos[home + away - 1]?.videoUrl;
+
                 if (event.detail === "Normal Goal") {
                   if (event?.assist?.name) {
                     // if away goal with assist
@@ -402,6 +532,22 @@ const MatchEventsInfo = ({
                         <span className="events-event-time">
                           {getEventTimeString(event)}
                         </span>
+                        {videoUrl !== "" ? (
+                          <div className="event-meat-applyHover-left">
+                            <div />
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openVideo(videoUrl);
+                              }}
+                              className="show-video-button"
+                              variant={"contained"}
+                              startIcon={<VideoIcon htmlColor="white" />}
+                            >
+                              Watch Video Highlight
+                            </Button>
+                          </div>
+                        ) : null}
                       </li>
                     );
                   } else {
@@ -441,6 +587,22 @@ const MatchEventsInfo = ({
                         <span className="events-event-time">
                           {getEventTimeString(event)}
                         </span>
+                        {videoUrl !== "" ? (
+                          <div className="event-meat-applyHover-left">
+                            <div />
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openVideo(videoUrl);
+                              }}
+                              className="show-video-button"
+                              variant={"contained"}
+                              startIcon={<VideoIcon htmlColor="white" />}
+                            >
+                              Watch Video Highlight
+                            </Button>
+                          </div>
+                        ) : null}
                       </li>
                     );
                   }
@@ -484,6 +646,22 @@ const MatchEventsInfo = ({
                       <span className="events-event-time">
                         {getEventTimeString(event)}
                       </span>
+                      {videoUrl !== "" ? (
+                        <div className="event-meat-applyHover-left">
+                          <div />
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideo(videoUrl);
+                            }}
+                            className="show-video-button"
+                            variant={"contained"}
+                            startIcon={<VideoIcon htmlColor="white" />}
+                          >
+                            Watch Video Highlight
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 } else if (event.detail === "Own Goal") {
@@ -526,6 +704,22 @@ const MatchEventsInfo = ({
                       <span className="events-event-time">
                         {getEventTimeString(event)}
                       </span>
+                      {videoUrl !== "" ? (
+                        <div className="event-meat-applyHover-left">
+                          <div />
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideo(videoUrl);
+                            }}
+                            className="show-video-button"
+                            variant={"contained"}
+                            startIcon={<VideoIcon htmlColor="white" />}
+                          >
+                            Watch Video Highlight
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 }
@@ -561,6 +755,18 @@ const MatchEventsInfo = ({
                   );
                 } else {
                   // if away player got red card
+                  let videoUrl = "";
+                  for (let i = 0; i < videos.length; i++) {
+                    const currentVideo = videos[i];
+                    if (
+                      currentVideo.minute === event.time.elapsed &&
+                      currentVideo.description.includes("Kırmızı kart")
+                    ) {
+                      videoUrl = currentVideo.videoUrl;
+                      break;
+                    }
+                  }
+
                   return (
                     <li
                       key={idx}
@@ -591,6 +797,22 @@ const MatchEventsInfo = ({
                       <span className="events-event-time">
                         {getEventTimeString(event)}
                       </span>
+                      {videoUrl !== "" ? (
+                        <div className="event-meat-applyHover-left">
+                          <div />
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideo(videoUrl);
+                            }}
+                            className="show-video-button"
+                            variant={"contained"}
+                            startIcon={<VideoIcon htmlColor="white" />}
+                          >
+                            Watch Video Highlight
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 }
@@ -670,6 +892,9 @@ MatchEventsInfo.propTypes = {
   isChoosingEvent: PropTypes.bool,
   chosenEvents: PropTypes.array,
   addEventToReview: PropTypes.func,
+  videos: PropTypes.array,
+  setIsVideoOpen: PropTypes.func,
+  setVideoURL: PropTypes.fun,
 };
 
 MatchEventsInfo.defaultProps = {
@@ -678,6 +903,9 @@ MatchEventsInfo.defaultProps = {
   isChoosingEvent: false,
   chosenEvents: [],
   addEventToReview: null,
+  videos: [],
+  setIsVideoOpen: null,
+  setVideoURL: null,
 };
 
 export default MatchEventsInfo;

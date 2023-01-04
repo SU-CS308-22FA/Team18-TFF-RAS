@@ -77,13 +77,13 @@ const referees = [
   },
   {
     name: "Kadir Sağlam",
-    apiName: ["K. Sağlam"],
+    apiName: ["K. Sağlam", "Kadir Saglam"],
     id: "20668",
     image: "http://kayserispor.gen.tr/uploads/kadir-saglam.jpg",
   },
   {
     name: "Hüseyin Göçek",
-    apiName: ["H. Göçek"],
+    apiName: ["H. Göçek", "Huseyin Gocek"],
     id: "19493",
     image:
       "https://img.a.transfermarkt.technology/portrait/big/964-1592093214.jpeg?lm=1",
@@ -152,7 +152,7 @@ const referees = [
   {
     name: "Abdulkadir Bitigen",
     id: "20372",
-    apiName: ["Abdulkadir Bitigen"],
+    apiName: ["Abdulkadir Bitigen", "A. Bitigen"],
     image: "http://ankahaber.net/public/upload/Haber/11025/11025_12638.Jpeg",
   },
 ];

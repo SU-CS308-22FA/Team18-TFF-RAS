@@ -11,13 +11,13 @@ import {
 // import moment from "moment";
 
 const createRating = async (req, res) => {
-  const { rating: ratingValue, match, referee } = req.body;
+  const { rating: ratingValue, match, referee, ratingType } = req.body;
   if (!ratingValue || !match || !referee) {
     throw new BadRequestError("Please provide all values");
   }
 
   req.body.createdBy = req.user.userId;
-  req.body.ratingType = "fan";
+  // req.body.ratingType = "fan";
 
   const rating = await Rating.create(req.body);
 

@@ -47,6 +47,9 @@ import {
   GET_REFEREE_RATINGS_BEGIN,
   GET_REFEREE_RATINGS_SUCCESS,
   GET_REFEREE_RATINGS_ERROR,
+  GET_ALLRATING_BEGIN,
+  GET_ALLRATING_SUCCESS,
+  GET_ALLRATING_ERROR,
   GET_DUE_REPORTS_BEGIN,
   GET_DUE_REPORTS_SUCCESS,
   GET_REFEREES_RATINGS_BEGIN,
@@ -98,6 +101,7 @@ const initialState = {
   overallSentiment: "-",
   fanSentiment: "-",
   expertSentiment: "-",
+  ratings: [],
   dueReports: [],
   numDueReports: 0,
   DueReportPage: 1,
@@ -424,6 +428,27 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getAllRefRatings = async (id) => { // Kerim's
+    dispatch({ type: GET_ALLRATING_BEGIN });
+    try {
+      const ratigns = await authFetch.get("/ratings/" + id);
+      dispatch({
+        type: GET_ALLRATING_SUCCESS,
+        payload: {
+          ratigns
+        }
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      if (error.response.status !== 401) {
+        dispatch({
+          type: GET_ALLRATING_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  }
+
   const getRefereeRatings = async (refID) => {
     dispatch({ type: GET_REFEREE_RATINGS_BEGIN });
     try {
@@ -484,7 +509,6 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(JSON.stringify(error));
       if (error.response.status !== 401) {
         dispatch({
           type: GET_REFEREE_RATINGS_ERROR,
@@ -506,7 +530,6 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(JSON.stringify(error));
       if (error.response.status !== 401) {
         dispatch({
           type: GET_REFEREES_RATINGS_ERROR,
@@ -523,7 +546,6 @@ const AppProvider = ({ children }) => {
 
       // no token
       const { user, location } = data;
-      console.log(token);
 
       dispatch({
         type: UPDATE_USER_SUCCESS,
@@ -646,6 +668,7 @@ const AppProvider = ({ children }) => {
         clearModal,
         handleChange,
         getRefereeRatings,
+        getAllRefRatings,
         getRefereesRatings,
         editReport,
         setEditReport,
