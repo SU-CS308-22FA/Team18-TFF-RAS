@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Wrapper from "../../assets/wrappers/RegisterPage";
 import axios from "axios"
-import { ButtonGroup } from '@mui/material';
+import { Alert, ButtonGroup } from '@mui/material';
 import { Button } from '@mui/material';
 
 
@@ -35,8 +35,16 @@ const RefereeAssignment = () =>
   });
   const [selectedRef, setSelectedRef] = useState("");
   const [selectedMatch, setSelectedMatch] = useState("");
-  const[occupiedRefs, setOccupiedRefs] = useState([]);
+  const [occupiedRefs, setOccupiedRefs] = useState([]);
+  const [notification, setNotification] = useState(false);
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setNotification()
+  //   }, 3000)  
+  // }, [notification])
+  
+  
   const getOccupiedRefsToDate = async (date) => {
     const response = await axios.get("/api/assignment/get-occupied-refs-to-date/" + date);
     const data = await response.data;
@@ -200,6 +208,10 @@ const RefereeAssignment = () =>
       let sendData = await axios.get("/api/assign-referee/" + assignedRef.referee + "&" + assignedMatch.Id)
       handleResetButton();
       setRefresh(!refresh)
+      setNotification(true);
+      setTimeout(() => {
+        setNotification(false)
+      }, 2000)
     }
     else
     {
@@ -286,6 +298,7 @@ const RefereeAssignment = () =>
               })}
             </div>
             :
+            <div>
             <div style={{display:"flex"}}>
               <div className='form'>
                 {assignedRef.referee != false ? 
@@ -335,6 +348,13 @@ const RefereeAssignment = () =>
                 </p>
                 }
               </div>
+                </div>
+                {
+                notification == true ? 
+              <h3 style={{textAlign: "center",backgroundColor: "lightgreen", maxWidth: "500px", margin: "auto"}}>Successful</h3>  
+                :
+                <></>
+              }
               </div>
             }                
       </div>
