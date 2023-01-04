@@ -52,6 +52,8 @@ const MatchEventsInfo = ({
   let homeCards = [];
   let awayCards = [];
 
+  const goalVideos = videos.filter((video) => video.side !== null);
+
   const openVideo = (url) => {
     setVideoURL(url);
     setIsVideoOpen(true);
@@ -84,6 +86,7 @@ const MatchEventsInfo = ({
                     break;
                   }
                 }
+                videoUrl = goalVideos[home + away - 1]?.videoUrl;
 
                 if (event.detail === "Normal Goal") {
                   if (event?.assist?.name) {
@@ -484,6 +487,7 @@ const MatchEventsInfo = ({
                     break;
                   }
                 }
+                videoUrl = goalVideos[home + away - 1]?.videoUrl;
 
                 if (event.detail === "Normal Goal") {
                   if (event?.assist?.name) {
