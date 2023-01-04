@@ -59,6 +59,12 @@ import {
   EDIT_REPORT_SUCCESS,
   EDIT_REPORT_BEGIN,
   EDIT_REPORT_ERROR,
+  SEND_VERIFY_EMAIL_BEGIN,
+  SEND_VERIFY_EMAIL_SUCCESS,
+  SEND_VERIFY_EMAIL_ERROR,
+  VERIFY_USER_BEGIN,
+  VERIFY_USER_SUCCESS,
+  VERIFY_USER_ERROR,
   SEND_RESET_PASSWORD_EMAIL_BEGIN,
   SEND_RESET_PASSWORD_EMAIL_SUCCESS,
   SEND_RESET_PASSWORD_EMAIL_ERROR,
@@ -114,6 +120,9 @@ const initialState = {
   accuracy: 0,
   fairness: 0,
   comments: "",
+  isVerifying: false,
+  verified: false,
+  verificationEmailSending: false,
   resetPasswordEmailSending: false,
   resetPasswordEmailSent: false,
   isResetting: false,
@@ -390,6 +399,28 @@ const AppProvider = ({ children }) => {
     }
   );
 
+  const sendVerifyEmail = async () => {
+    dispatch({ type: SEND_VERIFY_EMAIL_BEGIN });
+    try {
+      const { data } = await authFetch.post("/verify/");
+
+      // no token
+      const { message } = data;
+
+      dispatch({
+        type: SEND_VERIFY_EMAIL_SUCCESS,
+        payload: { message },
+      });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: SEND_VERIFY_EMAIL_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
   // ratings
   const createRating = async (ratingDetails) => {
     dispatch({ type: CREATE_RATING_BEGIN });
@@ -654,6 +685,26 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const verifyUser = async (emailToken) => {
+    dispatch({ type: VERIFY_USER_BEGIN });
+    try {
+      const { user, message } = await authFetch.get(`/verify/${emailToken}`);
+      dispatch({
+        type: VERIFY_USER_SUCCESS,
+        payload: { user, message },
+      });
+      const { location } = user.location;
+      addUserToLocalStorage({ user, token, location });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: VERIFY_USER_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -682,6 +733,8 @@ const AppProvider = ({ children }) => {
         getRefereesRatings,
         editReport,
         setEditReport,
+        sendVerifyEmail,
+        verifyUser,
         sendResetPassword,
         resetPassword,
         differentPasswordAlert,

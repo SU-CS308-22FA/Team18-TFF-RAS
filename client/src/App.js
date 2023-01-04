@@ -19,6 +19,7 @@ import {
   Referees,
   DueReports,
   EditReport,
+  Verify,
 } from "./pages/dashboard";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -68,6 +69,7 @@ function App() {
           <Route path="/referee-page" element={<Referees />} />
           <Route path="/matches/:id" element={<Match />} />
           <Route path="/referees/:id" element={<Referee />} />
+          <Route path="/verify/:emailToken" element={<Verify />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </BrowserRouter>

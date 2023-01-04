@@ -56,6 +56,12 @@ import {
   EDIT_REPORT_BEGIN,
   EDIT_REPORT_SUCCESS,
   EDIT_REPORT_ERROR,
+  SEND_VERIFY_EMAIL_BEGIN,
+  SEND_VERIFY_EMAIL_SUCCESS,
+  SEND_VERIFY_EMAIL_ERROR,
+  VERIFY_USER_BEGIN,
+  VERIFY_USER_ERROR,
+  VERIFY_USER_SUCCESS,
   SEND_RESET_PASSWORD_EMAIL_BEGIN,
   SEND_RESET_PASSWORD_EMAIL_SUCCESS,
   SEND_RESET_PASSWORD_EMAIL_ERROR,
@@ -547,6 +553,50 @@ const reducer = (state, action) => {
       alertText: action.payload.msg,
     };
   }
+  if (action.type === SEND_VERIFY_EMAIL_BEGIN) {
+    return { ...state, verificationEmailSending: true };
+  }
+  if (action.type === SEND_VERIFY_EMAIL_SUCCESS) {
+    return {
+      ...state,
+      verificationEmailSending: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.message,
+    };
+  }
+  if (action.type === SEND_VERIFY_EMAIL_ERROR) {
+    return {
+      ...state,
+      verificationEmailSending: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === VERIFY_USER_BEGIN) {
+    return { ...state, isVerifying: true };
+  }
+  if (action.type === VERIFY_USER_SUCCESS) {
+    return {
+      ...state,
+      isVerifying: false,
+      user: action.payload.user,
+      verified: true,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.message,
+    };
+  }
+  if (action.type === VERIFY_USER_ERROR) {
+    return {
+      ...state,
+      isVerifying: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
   if (action.type === SEND_RESET_PASSWORD_EMAIL_BEGIN) {
     return { ...state, resetPasswordEmailSending: true };
   }
@@ -591,7 +641,6 @@ const reducer = (state, action) => {
       alertText: action.payload.msg,
     };
   }
-
   throw new Error(`no such action : ${action.type}`);
 };
 
