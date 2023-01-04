@@ -11,7 +11,7 @@ import time
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome('../../../../chromedriver')
+        self.driver = webdriver.Chrome('../chromedriver')
 
     def test_search_in_tff_ras(self):
         driver = self.driver
@@ -32,28 +32,30 @@ class PythonOrgSearch(unittest.TestCase):
         ###
 
         # continue with what you want
-        assignmentPage = driver.find_element(
+        assignment_page = driver.find_element(
             By.XPATH, "//*[@id='root']/section/main/aside[2]/div/div/div/a[5]")
-        assignmentPage.click()
+        time.sleep(1)
+        assignment_page.click()
         time.sleep(2)
-        matchPage = driver.find_element(
-            By.XPATH, "// *[@id='root']/section/main/div/div/div[1]/button[3]")
-        matchPage.click()
+        match_page = driver.find_element(
+            By.XPATH, "//*[@id='root']/section/main/div/div/div[1]/button[3]")
+        match_page.click()
         time.sleep(2)
         match = driver.find_element(By.CSS_SELECTOR, "input[type='checkbox']")
+        time.sleep(1)
         match.click()
         time.sleep(1)
-        refPage = driver.find_element(
+        ref_page = driver.find_element(
             By.XPATH, "//*[@id='root']/section/main/div/div/div[1]/button[2]")
-        refPage.click()
-        time.sleep(4)
+        ref_page.click()
+        time.sleep(3)
         ref = driver.find_element(By.CSS_SELECTOR, "input[type='checkbox']")
         ref.click()
         time.sleep(1)
-        homePage = driver.find_element(
+        home_page = driver.find_element(
             By.XPATH, "//*[@id='root']/section/main/div/div/div/div/div[1]/div[1]/button[1]")
-        homePage.click()
-        time.sleep(4)
+        home_page.click()
+        time.sleep(3)
         submit = driver.find_element(
             By.XPATH, "//*[@id='root']/section/main/div/div/div[2]/div/div[2]/button")
         submit.click()
