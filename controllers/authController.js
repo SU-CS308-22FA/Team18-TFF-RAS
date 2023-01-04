@@ -105,8 +105,8 @@ const passwordEmail = async (req, res) => {
   const Base =
     process.env.NODE_ENV !== "production"
       ? `${process.env.BASE_URL}`
-      : "https://team18-tff-ras-production.up.railway.app/";
-  const url = `${Base}verify/${emailToken.code}`;
+      : "https://team18-tff-ras-production.up.railway.app/verify/";
+  const url = `${Base}${emailToken.code}`;
   try {
     await sendEmail(user.email, "Account verification", url);
   } catch (error) {
