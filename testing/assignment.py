@@ -57,11 +57,11 @@ class PythonOrgSearch(unittest.TestCase):
         home_page.click()
         time.sleep(3)
         submit = driver.find_element(
-            By.XPATH, "//*[@id='root']/section/main/div/div/div[2]/div/div[2]/button")
+            By.XPATH, "//*[@id='root']/section/main/div/div/div[2]/div/div/div[2]/button")
         submit.click()
         time.sleep(2)
 
-        self.assertIn("Please choose a match from Matches",
+        self.assertIn("Successful",
                       driver.page_source)
         time.sleep(2)
 

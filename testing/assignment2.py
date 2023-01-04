@@ -56,11 +56,15 @@ class PythonOrgSearch(unittest.TestCase):
             By.XPATH, "//*[@id='root']/section/main/div/div/div/div/div[1]/div[1]/button[1]")
         home_page.click()
         time.sleep(3)
-        submit = driver.find_element(
-            By.XPATH, "//*[@id='root']/section/main/div/div/div[2]/div/div[2]/button")
-        submit.click()
+        reset = driver.find_element(
+            By.XPATH, "//*[@id='root']/section/main/div/div/div[2]/div/div/div[1]/div/button")
+        reset.click()
         time.sleep(2)
 
+        self.assertIn("Please choose a referee from Referees",
+                      driver.page_source)
+        self.assertIn("Also please choose a match first",
+                      driver.page_source)
         self.assertIn("Please choose a match from Matches",
                       driver.page_source)
         time.sleep(2)
