@@ -5,6 +5,8 @@ import CardYellow from "../../assets/images/card-yellow.svg";
 import CardRed from "../../assets/images/card-red.svg";
 import CardDoubleYellow from "../../assets/images/card-double-yellow.svg";
 import VarIcon from "../../assets/images/var-icon.svg";
+import VideoThumbnail from "react-video-thumbnail";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -18,6 +20,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VideoIcon from "@mui/icons-material/PlayCircleFilled";
 
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
@@ -26,6 +29,7 @@ import {
   getReviewEventTimeString,
 } from "../../utils/helper";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const MatchRefRatingColumn = ({
   setRating,
@@ -54,6 +58,9 @@ const MatchRefRatingColumn = ({
   refereeImage,
   loading,
   refID,
+  videos,
+  setIsVideoOpen,
+  setVideoURL,
 }) => {
   const eventReviewsToShow = ratingGiven
     ? Object.keys(storedEventReviews)
@@ -319,6 +326,41 @@ const MatchRefRatingColumn = ({
           </div>
         </section>
       </div>
+      {videos.length > 0 ? (
+        <div className="videos-container">
+          <h2 className="videos-header">Highlights</h2>
+          {videos.map((video, index) => {
+            const [shown, setIsShown] = useState(false);
+
+            return (
+              <div key={index} className="highlight-container">
+                <div
+                  className="thumbnail-container"
+                  onClick={() => {
+                    setVideoURL(video.videoUrl);
+                    setIsVideoOpen(true);
+                  }}
+                >
+                  <VideoThumbnail
+                    videoUrl={video.videoUrl}
+                    thumbnailHandler={(thumbnail) => {
+                      console.log(thumbnail);
+                      setIsShown(true);
+                    }}
+                    width={260}
+                    height={146.25}
+                    style={{ display: shown ? "block" : "none" }}
+                  />
+                  <VideoIcon className="play-icon" htmlColor="white" />
+                </div>
+                <p>
+                  {video.minute}', {video.description}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 };

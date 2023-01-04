@@ -10,7 +10,6 @@ const Matches = () => {
   const [matches, setMatches] = useState([]);
 
   const onDateSelect = (newDate) => {
-    console.log(moment(newDate).format("YYYY-MM-DD"));
     setCurrentDate(newDate);
   };
 
@@ -44,7 +43,7 @@ const Matches = () => {
                 .toTimeString()
                 .slice(0, 5)}
               matchScore={match.goals.home + "-" + match.goals.away}
-              currentTime={73}
+              currentTime={match?.fixture?.status?.elapsed}
               status={match.fixture.status.short}
             />
           ))

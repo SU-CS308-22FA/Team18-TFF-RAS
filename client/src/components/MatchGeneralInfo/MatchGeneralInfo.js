@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
-const MatchGeneralInfo = ({ showHeader, data }) => {
-  console.log(data);
+const MatchGeneralInfo = ({ showHeader, data, currentTime }) => {
+  const status = data?.fixture?.status?.short;
 
   return (
     <div className="container card-css">
@@ -78,12 +78,67 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                   </div>
                 </a>
                 <div className="css-match-info-wrapper">
-                  <span className="css-match-info-topRow">
+                  {/* <span className="css-match-info-topRow">
                     {data.goals.home} - {data.goals.away}
                   </span>
                   <span className="css-match-info-bottomRow">
                     {data.fixture.status.long}
-                  </span>
+                  </span> */}
+                  {["TBD"].includes(status) ? (
+                    <span className="css-match-info-topRow">TBD</span>
+                  ) : ["NS", "PST", "CANC", "ABD", "AWD", "WO"].includes(
+                      status
+                    ) ? (
+                    <>
+                      <span
+                        className="css-match-info-topRow"
+                        style={
+                          status != "NS"
+                            ? { textDecoration: "line-through" }
+                            : {}
+                        }
+                      >
+                        {new Date(data.fixture.date).toTimeString().slice(0, 5)}
+                      </span>
+                      {status === "NS" ? (
+                        moment(data.fixture.date).format("M/D/YY") ===
+                        moment(new Date()).format("M/D/YY") ? (
+                          "Today"
+                        ) : moment(data.fixture.date).format("M/D/YY") ===
+                          moment(
+                            new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+                          ).format("M/D/YY") ? (
+                          "Tomorrow"
+                        ) : (
+                          moment(data.fixture.date).format("M/D/YY")
+                        )
+                      ) : (
+                        <span className="css-match-info-bottomRow">
+                          {data.fixture.status.long}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <span className="css-match-info-topRow">
+                        {data.goals.home} - {data.goals.away}
+                      </span>
+                      <span className="css-match-info-bottomRow">
+                        {[
+                          "HT",
+                          "BT",
+                          "P",
+                          "SUSP",
+                          "INT",
+                          "FT",
+                          "AET",
+                          "PEN",
+                        ].includes(status)
+                          ? data.fixture.status.long
+                          : currentTime}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <a>
                   <div className="team-markup-apply-hover1">
@@ -119,12 +174,65 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                 </div>
               </a>
               <div className="css-match-info-wrapper">
-                <span className="css-match-info-topRow">
-                  {data.goals.home} - {data.goals.away}
-                </span>
-                <span className="css-match-info-bottomRow">
-                  {data.fixture.status.long}
-                </span>
+                {/* <span className="css-match-info-topRow">
+                    {data.goals.home} - {data.goals.away}
+                  </span>
+                  <span className="css-match-info-bottomRow">
+                    {data.fixture.status.long}
+                  </span> */}
+                {["TBD"].includes(status) ? (
+                  <span className="css-match-info-topRow">TBD</span>
+                ) : ["NS", "PST", "CANC", "ABD", "AWD", "WO"].includes(
+                    status
+                  ) ? (
+                  <>
+                    <span
+                      className="css-match-info-topRow"
+                      style={
+                        status != "NS" ? { textDecoration: "line-through" } : {}
+                      }
+                    >
+                      {new Date(data.fixture.date).toTimeString().slice(0, 5)}
+                    </span>
+                    {status === "NS" ? (
+                      moment(data.fixture.date).format("M/D/YY") ===
+                      moment(new Date()).format("M/D/YY") ? (
+                        "Today"
+                      ) : moment(data.fixture.date).format("M/D/YY") ===
+                        moment(
+                          new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+                        ).format("M/D/YY") ? (
+                        "Tomorrow"
+                      ) : (
+                        moment(data.fixture.date).format("M/D/YY")
+                      )
+                    ) : (
+                      <span className="css-match-info-bottomRow">
+                        {data.fixture.status.long}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span className="css-match-info-topRow">
+                      {data.goals.home} - {data.goals.away}
+                    </span>
+                    <span className="css-match-info-bottomRow">
+                      {[
+                        "HT",
+                        "BT",
+                        "P",
+                        "SUSP",
+                        "INT",
+                        "FT",
+                        "AET",
+                        "PEN",
+                      ].includes(status)
+                        ? data.fixture.status.long
+                        : currentTime}
+                    </span>
+                  </>
+                )}
               </div>
               <a>
                 <div className="team-markup-apply-hover1">
@@ -299,55 +407,57 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
                     </span>
                   </a>
                 </li>
-                <li className="info-box-item">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 25 25"
-                  >
-                    <g id="ic-referee-24px">
-                      <g id="Group_6810">
-                        <path
-                          fill="none"
-                          id="Rectangle_5981"
-                          d="M0 0H25V25H0z"
-                          className="cls-1"
-                        ></path>
-                        <path
-                          fill="none"
-                          id="Rectangle_5982"
-                          d="M0 0H25V25H0z"
-                          className="cls-1"
-                        ></path>
+                {data?.fixture?.referee !== null ? (
+                  <li className="info-box-item">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 25 25"
+                    >
+                      <g id="ic-referee-24px">
+                        <g id="Group_6810">
+                          <path
+                            fill="none"
+                            id="Rectangle_5981"
+                            d="M0 0H25V25H0z"
+                            className="cls-1"
+                          ></path>
+                          <path
+                            fill="none"
+                            id="Rectangle_5982"
+                            d="M0 0H25V25H0z"
+                            className="cls-1"
+                          ></path>
+                        </g>
+                        <g id="Group_6890" transform="translate(0 4.114)">
+                          <path
+                            fill="rgba(159, 159, 159, 1)"
+                            id="Path_4330"
+                            d="M107.8 258.077h3.985a1.152 1.152 0 0 0 .816-.313c.266-.245.538-.491.8-.73l.58-.526a.959.959 0 0 0 .3-1.258l-.754-1.894c-.79-1.987-1.607-4.042-2.428-6.057l-.185-.458a22.079 22.079 0 0 0-1.282-2.8 5.523 5.523 0 0 0-5.093-2.942h-9.38a4.417 4.417 0 0 0-3.537 1.723 7.31 7.31 0 0 0-1.64 4.035 9.11 9.11 0 0 0 1.588 6.41 5.35 5.35 0 0 0 4.718 2.478c.614-.021 1.241-.016 1.847-.012.368 0 .748.005 1.123 0 .136 0 .181.028.227.149.135.351.282.7.424 1.044l.176.423a.993.993 0 0 0 1.076.72h6.639zm4.069-3.433h-2.229c-2.033 0-4.136 0-6.2.007-.181 0-.251-.049-.324-.229l-.639-1.589c-1.017-2.529-2.068-5.145-3.131-7.705a10.687 10.687 0 0 0-.755-1.4c-.12-.2-.243-.4-.358-.606a1.251 1.251 0 0 0-.07-.109H104.989a3.189 3.189 0 0 1 2.364 1.091 6.4 6.4 0 0 1 1.286 2.1c.859 2.115 1.727 4.268 2.566 6.351l.787 1.952c.016.04.03.081.046.131-.062.002-.115.006-.167.006z"
+                            className="cls-2"
+                            transform="translate(-89.93 -241.106)"
+                          ></path>
+                          <path
+                            fill="rgba(159, 159, 159, 1)"
+                            id="Path_4331"
+                            d="M320.33 382.914h-4.63a.683.683 0 0 1-.633-.423l-.6-1.459a.685.685 0 0 1 .633-.947h4.628a.683.683 0 0 1 .633.423l.6 1.459a.685.685 0 0 1-.633.947z"
+                            className="cls-2"
+                            transform="translate(-301.7 -372.214)"
+                          ></path>
+                        </g>
                       </g>
-                      <g id="Group_6890" transform="translate(0 4.114)">
-                        <path
-                          fill="rgba(159, 159, 159, 1)"
-                          id="Path_4330"
-                          d="M107.8 258.077h3.985a1.152 1.152 0 0 0 .816-.313c.266-.245.538-.491.8-.73l.58-.526a.959.959 0 0 0 .3-1.258l-.754-1.894c-.79-1.987-1.607-4.042-2.428-6.057l-.185-.458a22.079 22.079 0 0 0-1.282-2.8 5.523 5.523 0 0 0-5.093-2.942h-9.38a4.417 4.417 0 0 0-3.537 1.723 7.31 7.31 0 0 0-1.64 4.035 9.11 9.11 0 0 0 1.588 6.41 5.35 5.35 0 0 0 4.718 2.478c.614-.021 1.241-.016 1.847-.012.368 0 .748.005 1.123 0 .136 0 .181.028.227.149.135.351.282.7.424 1.044l.176.423a.993.993 0 0 0 1.076.72h6.639zm4.069-3.433h-2.229c-2.033 0-4.136 0-6.2.007-.181 0-.251-.049-.324-.229l-.639-1.589c-1.017-2.529-2.068-5.145-3.131-7.705a10.687 10.687 0 0 0-.755-1.4c-.12-.2-.243-.4-.358-.606a1.251 1.251 0 0 0-.07-.109H104.989a3.189 3.189 0 0 1 2.364 1.091 6.4 6.4 0 0 1 1.286 2.1c.859 2.115 1.727 4.268 2.566 6.351l.787 1.952c.016.04.03.081.046.131-.062.002-.115.006-.167.006z"
-                          className="cls-2"
-                          transform="translate(-89.93 -241.106)"
-                        ></path>
-                        <path
-                          fill="rgba(159, 159, 159, 1)"
-                          id="Path_4331"
-                          d="M320.33 382.914h-4.63a.683.683 0 0 1-.633-.423l-.6-1.459a.685.685 0 0 1 .633-.947h4.628a.683.683 0 0 1 .633.423l.6 1.459a.685.685 0 0 1-.633.947z"
-                          className="cls-2"
-                          transform="translate(-301.7 -372.214)"
-                        ></path>
-                      </g>
-                    </g>
-                  </svg>
-                  <span id="referee-name-match-info">
-                    {data.fixture.referee.indexOf(",") === -1
-                      ? data.fixture.referee
-                      : data.fixture.referee.slice(
-                          0,
-                          data.fixture.referee.indexOf(",")
-                        )}
-                  </span>
-                </li>
+                    </svg>
+                    <span id="referee-name-match-info">
+                      {data.fixture.referee.indexOf(",") === -1
+                        ? data.fixture.referee
+                        : data.fixture.referee.slice(
+                            0,
+                            data.fixture.referee.indexOf(",")
+                          )}
+                    </span>
+                  </li>
+                ) : null}
                 <li className="info-box-item"></li>
               </ul>
             </section>
@@ -361,11 +471,13 @@ const MatchGeneralInfo = ({ showHeader, data }) => {
 MatchGeneralInfo.propTypes = {
   showHeader: PropTypes.bool,
   data: PropTypes.object,
+  currentTime: PropTypes.string,
 };
 
 MatchGeneralInfo.defaultProps = {
   showHeader: false,
   data: {},
+  currentTime: "",
 };
 
 export default MatchGeneralInfo;

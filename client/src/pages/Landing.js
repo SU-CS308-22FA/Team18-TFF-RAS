@@ -13,14 +13,8 @@ const Landing = () => {
         {/* info */}
         <div className="info">
           <h1>
-            tff <span>ras</span> app
+            TFF <span>RAS</span> app
           </h1>
-          <p>
-            I'm baby tumeric swag cred post-ironic intelligentsia 3 wolf moon,
-            tofu art party shoreditch ascot affogato glossier taiyaki.
-            Farm-to-table slow-carb bespoke, food truck enamel pin tacos iPhone
-            tbh blue bottle DIY tumeric green juice letterpress.
-          </p>
           <Link to="/register" className="btn btn-hero">
             Login/Register
           </Link>

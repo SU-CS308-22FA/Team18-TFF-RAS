@@ -56,6 +56,12 @@ import {
   EDIT_REPORT_BEGIN,
   EDIT_REPORT_SUCCESS,
   EDIT_REPORT_ERROR,
+  SEND_VERIFY_EMAIL_BEGIN,
+  SEND_VERIFY_EMAIL_SUCCESS,
+  SEND_VERIFY_EMAIL_ERROR,
+  VERIFY_USER_BEGIN,
+  VERIFY_USER_ERROR,
+  VERIFY_USER_SUCCESS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -369,8 +375,6 @@ const reducer = (state, action) => {
       expertSentiment,
     } = action.payload;
 
-    console.log(JSON.stringify(action.payload));
-
     return {
       ...state,
       isLoading: false,
@@ -407,8 +411,6 @@ const reducer = (state, action) => {
   }
   if (action.type === GET_REFEREES_RATINGS_SUCCESS) {
     const { referees } = action.payload;
-
-    console.log(JSON.stringify(action.payload));
 
     return {
       ...state,
@@ -460,7 +462,6 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === HANDLE_CHANGE) {
-    console.log({ [action.payload.name]: action.payload.value });
     return {
       ...state,
       [action.payload.name]: action.payload.value,
@@ -532,6 +533,50 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === SEND_VERIFY_EMAIL_BEGIN) {
+    return { ...state, verificationEmailSending: true };
+  }
+  if (action.type === SEND_VERIFY_EMAIL_SUCCESS) {
+    return {
+      ...state,
+      verificationEmailSending: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.message,
+    };
+  }
+  if (action.type === SEND_VERIFY_EMAIL_ERROR) {
+    return {
+      ...state,
+      verificationEmailSending: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === VERIFY_USER_BEGIN) {
+    return { ...state, isVerifying: true };
+  }
+  if (action.type === VERIFY_USER_SUCCESS) {
+    return {
+      ...state,
+      isVerifying: false,
+      user: action.payload.user,
+      verified: true,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.message,
+    };
+  }
+  if (action.type === VERIFY_USER_ERROR) {
+    return {
+      ...state,
+      isVerifying: false,
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,

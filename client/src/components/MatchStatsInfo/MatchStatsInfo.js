@@ -2,7 +2,6 @@ import "../MatchGeneralInfo/MatchGeneralInfo.css";
 import PropTypes from "prop-types";
 
 const MatchStatsInfo = ({ data }) => {
-  console.log(data);
   let homeStatistics = data[0].statistics;
   let awayStatistics = data[1].statistics;
 

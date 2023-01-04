@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-import cron from 'node-cron';
+import cron from "node-cron";
 import dotenv from "dotenv";
 dotenv.config();
 import bodyParser from "body-parser";
@@ -25,7 +25,7 @@ import ratingsRouter from "./routes/ratingsRoutes.js";
 import objectionsRouter from "./routes/objectionRoutes.js";
 import refereesRouter from "./routes/refereeRoutes.js";
 import reportRouter from "./routes/reportRoutes.js";
-
+import verifyRouter from "./routes/verifyRoutes.js";
 import sentiment from "./sentimentAnalysis.js";
 
 //web-scrape stuff
@@ -35,7 +35,7 @@ import RefereeFunc from "./controllers/refereesController.js";
 import Fixture from "./models/Fixture.js";
 import Rating from "./models/Rating.js";
 import RefereesAndRatings from "./models/RefereesAndRatings.js";
-import Objections from "./models/Objection.js"
+import Objections from "./models/Objection.js";
 import Video from "./controllers/videoClip.js";
 
 // middleware
@@ -80,7 +80,9 @@ app.use("/api/v1/ratings", authenticateUser, ratingsRouter);
 app.use("/api/v1/objections", authenticateUser, objectionsRouter);
 app.use("/api/v1/referees", authenticateUser, refereesRouter);
 app.use("/api/v1/reports", reportRouter);
+app.use("/api/v1/verify", verifyRouter);
 app.get("/api/videoClipsOfMatch/:home&:away&:round", async (req, res) => {
+  console.log(JSON.stringify(req.params.home));
   let data = await Video.getMatchWithHighlights(
     req.params.home,
     req.params.away,
@@ -111,90 +113,105 @@ app.get("/api/referees/", async (req, res) => {
 //   res.json(data);
 // })
 //---------------------------------------------------------------------
-app.get("/api/referees/create-refRatings/:id", async(req,res) => {
-    let data = await RefereesAndRatings.find({ refereeId: req.params.id } );
-    //--------------------------  DO ANYWAYS
-    let reviews = [];
-    let all = await Rating.find({referee: req.params.id,});
-    let avgRating = 0;
-    let totalFan = 1;
-    let totalExpert = 1;
-    let fanRating = 0;
-    let expertRating = 0;
-    all.forEach((rate) => {
-      avgRating += rate.rating;
-      rate.ratingType === "fan" ? (totalFan++, fanRating += rate.rating): (totalExpert++, expertRating += rate.rating)  
-      reviews.push({
-        review: rate.review,
-        reviewType: rate.ratingType,
-        createdBy: rate.createdBy,
-        matchId: rate.match
-      })
-    })
-    totalFan = totalFan === 1 ? totalFan: totalFan-1;
-    totalExpert = totalExpert === 1 ? totalExpert: totalExpert-1;
-    all.length = all.length === 0 ? 1: all.length;
-    fanRating /= totalFan;
-    expertRating /= totalExpert;
-    avgRating /= all.length;
+app.get("/api/referees/create-refRatings/:id", async (req, res) => {
+  let data = await RefereesAndRatings.find({ refereeId: req.params.id });
+  //--------------------------  DO ANYWAYS
+  let reviews = [];
+  let all = await Rating.find({ referee: req.params.id });
+  let avgRating = 0;
+  let totalFan = 1;
+  let totalExpert = 1;
+  let fanRating = 0;
+  let expertRating = 0;
+  all.forEach((rate) => {
+    avgRating += rate.rating;
+    rate.ratingType === "fan"
+      ? (totalFan++, (fanRating += rate.rating))
+      : (totalExpert++, (expertRating += rate.rating));
+    reviews.push({
+      review: rate.review,
+      reviewType: rate.ratingType,
+      createdBy: rate.createdBy,
+      matchId: rate.match,
+    });
+  });
+  totalFan = totalFan === 1 ? totalFan : totalFan - 1;
+  totalExpert = totalExpert === 1 ? totalExpert : totalExpert - 1;
+  all.length = all.length === 0 ? 1 : all.length;
+  fanRating /= totalFan;
+  expertRating /= totalExpert;
+  avgRating /= all.length;
   //----------------------------
-  if (data == false)
-    {
-      let referee = await Referee.find({refID: req.params.id}).select("name -_id");
-      referee = referee[0].name;
-      const refereeId = req.params.id;
-      data = await RefereesAndRatings.create({ referee, refereeId, avgRating, fanRating, expertRating, reviews }) // pull this data from database
-    }
-    else
-    {
-      data  = await RefereesAndRatings.updateOne({refereeId: req.params.id}, {$set: {avgRating, fanRating, expertRating, reviews}});
-    }
-    res.json(data);
-})
-
-app.get("/api/referees/get-refRatings/", async(req,res) => {
-  let data  = await RefereesAndRatings.find({});
+  if (data == false) {
+    let referee = await Referee.find({ refID: req.params.id }).select(
+      "name -_id"
+    );
+    referee = referee[0].name;
+    const refereeId = req.params.id;
+    data = await RefereesAndRatings.create({
+      referee,
+      refereeId,
+      avgRating,
+      fanRating,
+      expertRating,
+      reviews,
+    }); // pull this data from database
+  } else {
+    data = await RefereesAndRatings.updateOne(
+      { refereeId: req.params.id },
+      { $set: { avgRating, fanRating, expertRating, reviews } }
+    );
+  }
   res.json(data);
-})
+});
 
-
-app.get("/api/assignment/get-matches-with-no-ref/", async(req,res) => {
-  let data = await Fixture.find({Refs: []}).select("Refs Teams Observers Time MatchID");
+app.get("/api/referees/get-refRatings/", async (req, res) => {
+  let data = await RefereesAndRatings.find({});
   res.json(data);
-})
+});
 
-app.get("/api/assignment/get-occupied-refs-to-date/:date", async(req,res) => {
-  let games = await Fixture.find({});
-  let refs = await RefereesAndRatings.find({})
-  // get data
-  games = games.filter((game) => {
-    return (
-      game.Time.date === req.params.date
-    )
-  })
-  let occupiedRefs = []
-  games.forEach((games) => {
-    if (games.Refs != false && games.Refs[0].name != false)
-    {
-      occupiedRefs.push(games.Refs[0].name);
-    }
-  })
-  res.json(occupiedRefs);
-})
-
-app.get("/api/assign-referee/:refName&:matchId", async (req,res) => {
-    const ref = req.params.refName;
-    const match = req.params.matchId;
-    console.log("ref: ", ref, " match: ", match);
-    const data = await Fixture.updateOne(
-    { MatchID: match },
-    { $set: { Refs: [{
-      name: ref,
-      duty: "Hakem"
-    }]} }
+app.get("/api/assignment/get-matches-with-no-ref/", async (req, res) => {
+  let data = await Fixture.find({ Refs: [] }).select(
+    "Refs Teams Observers Time MatchID"
   );
   res.json(data);
-})
+});
+
+app.get("/api/assignment/get-occupied-refs-to-date/:date", async (req, res) => {
+  let games = await Fixture.find({});
+  let refs = await RefereesAndRatings.find({});
+  // get data
+  games = games.filter((game) => {
+    return game.Time.date === req.params.date;
+  });
+  let occupiedRefs = [];
+  games.forEach((games) => {
+    if (games.Refs != false && games.Refs[0].name != false) {
+      occupiedRefs.push(games.Refs[0].name);
+    }
+  });
+  res.json(occupiedRefs);
+});
+
+app.get("/api/assign-referee/:refName&:matchId", async (req, res) => {
+  const ref = req.params.refName;
+  const match = req.params.matchId;
+  console.log("ref: ", ref, " match: ", match);
+  const data = await Fixture.updateOne(
+    { MatchID: match },
+    {
+      $set: {
+        Refs: [
+          {
+            name: ref,
+            duty: "Hakem",
+          },
+        ],
+      },
+    }
+  );
+  res.json(data);
+});
 //-----------------------------
 
 app.get("/api/v1/sentimentAnalysis/:id", async (req, res) => {
@@ -274,8 +291,7 @@ app.put("/api/setComment/:id&:comment", async (req, res) => {
   res.json(data);
 });
 
-
-cron.schedule('10 22 * * 0', () => {
+cron.schedule("10 22 * * 0", () => {
   RefereeFunc.refreshRefs();
 });
 

@@ -1,7 +1,12 @@
 {
   "files": {
+<<<<<<< HEAD
     "main.css": "/static/css/main.06ea8a38.css",
     "main.js": "/static/js/main.6f954712.js",
+=======
+    "main.css": "/static/css/main.90c7e20a.css",
+    "main.js": "/static/js/main.c7c2e264.js",
+>>>>>>> develop
     "static/media/tffLogo.png": "/static/media/tffLogo.30357abfff30f0998400.png",
     "static/media/roboto-all-500-normal.woff": "/static/media/roboto-all-500-normal.0ab669b7a0d19b178f57.woff",
     "static/media/roboto-all-700-normal.woff": "/static/media/roboto-all-700-normal.a457fde362a540fcadff.woff",
@@ -49,6 +54,7 @@
     "static/media/roboto-greek-ext-300-normal.woff2": "/static/media/roboto-greek-ext-300-normal.35b9d6be04b95f0f0530.woff2",
     "static/media/roboto-greek-ext-700-normal.woff2": "/static/media/roboto-greek-ext-700-normal.bd9854c751441ccc1a70.woff2",
     "index.html": "/index.html",
+<<<<<<< HEAD
     "static/media/card-red.svg": "/static/media/card-red.1525cf97598ef2cdf139cd0951f80478.svg",
     "static/media/card-yellow.svg": "/static/media/card-yellow.c45b63a3725f9ef87ead9e84f0c86710.svg",
     "static/media/full-time-circle.svg": "/static/media/full-time-circle.0d432438d1df6cf8ae1fb6ebaf40f76f.svg",
@@ -65,5 +71,23 @@
   "entrypoints": [
     "static/css/main.06ea8a38.css",
     "static/js/main.6f954712.js"
+=======
+    "static/media/card-red.svg": "/static/media/card-red.52c4daa5a19ce60d3aea4dfd60b33f2f.svg",
+    "static/media/card-yellow.svg": "/static/media/card-yellow.7e1c60d090b073049a5c0f32de19ff9a.svg",
+    "static/media/full-time-circle.svg": "/static/media/full-time-circle.bd1375c4bdcdbc4f94b600be73b1ec28.svg",
+    "static/media/half-time-circle.svg": "/static/media/half-time-circle.16915ccb889deff569ba5ed9150a0b27.svg",
+    "static/media/player-sub-out.svg": "/static/media/player-sub-out.31677277d8a50ea1de521a4a43eea5e7.svg",
+    "static/media/referee-stats-yellow-card-icon.svg": "/static/media/referee-stats-yellow-card-icon.84233a68dfadb25bc7463957977c389c.svg",
+    "static/media/penalty-missed.svg": "/static/media/penalty-missed.991d3d2df0499f095c33b733c997313b.svg",
+    "static/media/referee-stats-red-card-icon.svg": "/static/media/referee-stats-red-card-icon.931eeca085e0eeaf157031a939cb7056.svg",
+    "static/media/lineup-card-yellow.svg": "/static/media/lineup-card-yellow.452850a95855de2ef0426c884a112970.svg",
+    "static/media/referee-stats-penalty-icon.svg": "/static/media/referee-stats-penalty-icon.6f303631990334fbf10ebee205348ac1.svg",
+    "main.90c7e20a.css.map": "/static/css/main.90c7e20a.css.map",
+    "main.c7c2e264.js.map": "/static/js/main.c7c2e264.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.90c7e20a.css",
+    "static/js/main.c7c2e264.js"
+>>>>>>> develop
   ]
 }

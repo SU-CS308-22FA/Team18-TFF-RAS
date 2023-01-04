@@ -30,7 +30,6 @@ const Referee = () => {
     fanSentiment,
     expertSentiment,
   } = useAppContext();
-  console.log("REFEREE: " + JSON.stringify(referee));
 
   let homeAvgGoal = "-";
   let awayAvgGoal = "-";
