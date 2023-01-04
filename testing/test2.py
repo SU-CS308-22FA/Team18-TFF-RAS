@@ -36,7 +36,7 @@ class PythonOrgSearch(unittest.TestCase):
             By.XPATH, "//*[@id='root']/section/main/aside[2]/div/div/div/a[5]")
         objection.click()
         time.sleep(2)
-        self.assertIn("Referees", driver.page_source)
+        self.assertIn("New Objections", driver.page_source)
 
     def tearDown(self):
         self.driver.close()

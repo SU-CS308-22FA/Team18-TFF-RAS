@@ -28,9 +28,14 @@ class PythonOrgSearch(unittest.TestCase):
         password.send_keys(Keys.RETURN)
         element_present = EC.presence_of_element_located((By.CLASS_NAME, "text-field"))
         WebDriverWait(driver, 5).until(element_present)
+        ###
         time.sleep(2)
-        self.assertNotIn("MAKE AN OBJECTION", driver.page_source)
-        self.assertNotIn("CHECK OBJECTIONS", driver.page_source)
+        match = driver.find_element(By.XPATH, "//*[@id='root']/section/main/div/div/main/div/div[1]/div[2]/a[1]")
+        match.click()
+        time.sleep(3)
+        self.assertIn("Watch Video Highlight", driver.page_source)
+        # button = driver.find_element(By.CLASS_NAME, "highlight-container")
+        # print(button)
 
 
     def tearDown(self):
