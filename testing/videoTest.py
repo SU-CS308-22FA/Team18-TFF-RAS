@@ -21,19 +21,21 @@ class PythonOrgSearch(unittest.TestCase):
         self.assertIn("TFF RAS", driver.title)
         email = driver.find_element(By.NAME, "email")
         password = driver.find_element(By.NAME, "password")
-        email.send_keys("investigator@gmail.com")
+        email.send_keys("fan@gmail.com")
         time.sleep(2)
-        password.send_keys("investigator")
+        password.send_keys("fanfan")
         time.sleep(2)
         password.send_keys(Keys.RETURN)
         element_present = EC.presence_of_element_located((By.CLASS_NAME, "text-field"))
         WebDriverWait(driver, 5).until(element_present)
         ###
-
-        objection = driver.find_element(By.XPATH, "//*[@id='root']/section/main/aside[2]/div/div/div/a[5]")
-        objection.click()
         time.sleep(2)
-        self.assertIn("New Objections", driver.page_source)
+        match = driver.find_element(By.XPATH, "//*[@id='root']/section/main/div/div/main/div/div[1]/div[2]/a[1]")
+        match.click()
+        time.sleep(3)
+        self.assertIn("Watch Video Highlight", driver.page_source)
+        # button = driver.find_element(By.CLASS_NAME, "highlight-container")
+        # print(button)
 
 
     def tearDown(self):

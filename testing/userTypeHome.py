@@ -29,7 +29,8 @@ class PythonOrgSearch(unittest.TestCase):
         element_present = EC.presence_of_element_located((By.CLASS_NAME, "text-field"))
         WebDriverWait(driver, 5).until(element_present)
         time.sleep(2)
-        self.assertNotIn("Objections", driver.page_source)
+        self.assertNotIn("MAKE AN OBJECTION", driver.page_source)
+        self.assertNotIn("CHECK OBJECTIONS", driver.page_source)
 
 
     def tearDown(self):
