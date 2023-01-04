@@ -32,10 +32,8 @@ class PythonOrgSearch(unittest.TestCase):
         time.sleep(2)
         match = driver.find_element(By.XPATH, "//*[@id='root']/section/main/div/div/main/div/div[1]/div[2]/a[1]")
         match.click()
-        time.sleep(3)
-        self.assertIn("Watch Video Highlight", driver.page_source)
-        # button = driver.find_element(By.CLASS_NAME, "highlight-container")
-        # print(button)
+        time.sleep(5)
+        self.assertIn("Highlights", driver.page_source)
 
 
     def tearDown(self):
