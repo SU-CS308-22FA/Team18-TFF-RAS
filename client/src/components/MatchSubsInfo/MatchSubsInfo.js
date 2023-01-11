@@ -506,7 +506,7 @@ const MatchSubsInfo = ({ data }) => {
                               </div>
                             )}
                             <div className="middle-lineup-badges-container">
-                              {currentPlayer.cards.yellow > 0 ? (
+                              {currentPlayer.cards?.yellow > 0 ? (
                                 <div className="lineup-card-badge-container">
                                   <div className="badge-container">
                                     <img src={LineupCardYellow} />
